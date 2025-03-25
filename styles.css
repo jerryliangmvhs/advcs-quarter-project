@@ -1,0 +1,16 @@
+@font-face{
+    src: url(MinecraftRegular.ttf);
+    font-family: header;
+}
+h1{
+    font-family: header;
+    font-size:xx-large;
+}
+h2{
+    font-family: header;
+    font-size: larger;
+}
+p{
+    font-family: header;
+    font-size:x-small;
+}

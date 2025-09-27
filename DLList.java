@@ -14,11 +14,11 @@ public class DLList<E> {
     public Node<E> getNode(int index){
         if(index >=size/2){
             //traverse backwards
-            Node<E> current = tail;
-            for(int i=size; i>index; i--){
+            Node<E> current = tail.prev();
+            for(int i=size; i>index+1; i--){
                 current = current.prev();
             }
-            return (Node<E>)current.get();
+            return current;
         } else {
             //traverse forwards
             Node<E> current = head.next();
@@ -44,6 +44,7 @@ public class DLList<E> {
             //if the index is at the end
             //or if the linkedlist is empty
             add(data);
+            //don't do size++ here because add(data) has it already.
         }
         else if(index ==0 && size >=1){
             //if the index is at the start and theres at least one element
@@ -53,6 +54,7 @@ public class DLList<E> {
             nextNode.setPrev(newNode);
             newNode.setPrev(prevNode);
             prevNode.setNext(newNode);
+            size++;
         }
         else{
             //if the index is sandwiched
@@ -62,12 +64,12 @@ public class DLList<E> {
             nextNode.setPrev(newNode);
             prevNode.setNext(newNode);
             newNode.setPrev(prevNode);
+            size++;
         }
-        size++;
     }
     @SuppressWarnings("unchecked")
     public E get(int index){
-        return (E)(getNode(index));
+        return getNode(index).get();
     }
     public int size(){
         return size;
@@ -82,14 +84,15 @@ public class DLList<E> {
         return (E)removedNode.get();
     }
     public E set(int index, E data){
-        Node<E> replacedNode = getNode(index);
-        replacedNode.setData(data);
-        return (E)replacedNode;
+        Node<E> node = getNode(index);
+        E replacedNode = node.get();
+        node.setData(data);
+        return replacedNode;
     }
     public String toString(){
         String str = "";
         Node<E> current = head.next();
-        while(current.get() !=null){
+        while(current != tail){
             str += current.get().toString();
             current = current.next();
         }
@@ -101,7 +104,7 @@ public class DLList<E> {
         while(current.get()!=null){
             if(current.get().equals(other)){
                 remove(index);
-                size--;
+                return true;
             }
             index++;
             current = current.next();
@@ -111,5 +114,6 @@ public class DLList<E> {
     public void clear(){
         head.setNext(tail);
         tail.setPrev(head);
+        size = 0;
     }
 }

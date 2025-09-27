@@ -8,7 +8,7 @@ public class Node<E> {
         prev = null;
         this.data = data;
     }
-
+    @SuppressWarnings("unchecked")
     public E get(){
         return data;
     }

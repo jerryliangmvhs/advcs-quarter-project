@@ -19,16 +19,14 @@ public class DLList<E> {
                 current = current.prev();
             }
             return (Node<E>)current.get();
-        }
-        else if(index<size/2){
+        } else {
             //traverse forwards
-            Node<E> current = head;
+            Node<E> current = head.next();
             for(int i=0; i<index; i++){
                 current = current.next();
             }
-            return (Node<E>)current.get();
+            return current;
         }
-        return null;
     }
     public boolean add(E data){
         Node<E> newNode = new Node(data);
@@ -73,5 +71,45 @@ public class DLList<E> {
     }
     public int size(){
         return size;
+    }
+    public E remove(int index){
+        Node <E> removedNode = getNode(index);
+        Node<E> prevNode = removedNode.prev();
+        Node<E> nextNode = removedNode.next();
+        prevNode.setNext(nextNode);
+        nextNode.setPrev(prevNode);
+        size--;
+        return (E)removedNode.get();
+    }
+    public E set(int index, E data){
+        Node<E> replacedNode = getNode(index);
+        replacedNode.setData(data);
+        return (E)replacedNode;
+    }
+    public String toString(){
+        String str = "";
+        Node<E> current = head.next();
+        while(current.get() !=null){
+            str += current.get().toString();
+            current = current.next();
+        }
+        return str;
+    }
+    public boolean remove(Object other){
+        Node<E> current = head.next();
+        int index = 0;
+        while(current.get()!=null){
+            if(current.get().equals(other)){
+                remove(index);
+                size--;
+            }
+            index++;
+            current = current.next();
+        }
+        return false;
+    }
+    public void clear(){
+        head.setNext(tail);
+        tail.setPrev(head);
     }
 }

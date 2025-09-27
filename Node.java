@@ -24,4 +24,7 @@ public class Node<E> {
     public void setPrev(Node<E> prev){
         this.prev = prev;
     }
+    public void setData(E data){
+        this.data = data;
+    }
 }

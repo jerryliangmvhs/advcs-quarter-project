@@ -1,17 +1,17 @@
 import java.awt.image.BufferedImage;
 import java.awt.Graphics;
 
-public class Chicken {
+public class Farmer {
     private int x;
     private int y;
-    private BufferedImage chicken;
-    public Chicken(BufferedImage chicken, int x, int y){
+    private BufferedImage farmer;
+    public Farmer(BufferedImage farmer, int x, int y){
         this.x = x;
         this.y = y;
-        this.chicken = chicken;
+        this.farmer = farmer;
     }
     public void drawMe(Graphics g){
-        g.drawImage(chicken,x,y,null);
+        g.drawImage(farmer,x,y,null);
     }
     //for troubleshooting purposes
     public int getX(){

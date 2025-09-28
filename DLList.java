@@ -4,8 +4,8 @@ public class DLList<E> {
     private int size;
 
     public DLList(){
-        head = new Node(null);
-        tail = new Node(null);
+        head = new Node<E>(null);
+        tail = new Node<E>(null);
         head.setNext(tail);
         tail.setPrev(head);
         size = 0;
@@ -29,7 +29,7 @@ public class DLList<E> {
         }
     }
     public boolean add(E data){
-        Node<E> newNode = new Node(data);
+        Node<E> newNode = new Node<E>(data);
         Node<E> prevNode = tail.prev();
         newNode.setNext(tail);
         newNode.setPrev(prevNode);
@@ -39,7 +39,7 @@ public class DLList<E> {
         return true;
     }
     public void add(int index, E data){
-        Node<E> newNode = new Node(data);
+        Node<E> newNode = new Node<E>(data);
         if(index == size || size ==0){
             //if the index is at the end
             //or if the linkedlist is empty

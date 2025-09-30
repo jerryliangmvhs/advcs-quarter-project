@@ -13,7 +13,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 
 
-public class Screen extends JPanel implements ActionListener {
+public class Screen extends JPanel implements ActionListener, MouseListener {
+
 	private BufferedImage background, chickenImage, cowImage, farmerImage, sheepImage, pigImage, scarecrowImage;
 
 	private DLList<Chicken> chicken;
@@ -42,6 +43,7 @@ public class Screen extends JPanel implements ActionListener {
 
 	public Screen(){
 		this.setLayout(null);
+		addMouseListener(this);
 
 		addChicken = new JButton("Add Chicken");
 		addChicken.setBounds(825,50,150,30);
@@ -262,8 +264,39 @@ public class Screen extends JPanel implements ActionListener {
 	public void mousePressed(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
+
+		for(int i=0; i<chicken.size(); i++){
+			if(chicken.get(i).mouseEvent(x,y)){
+				
+			}
+		}
+		for(int i=0; i<cow.size(); i++){
+			if(cow.get(i).mouseEvent(x,y)){
+
+			}
+		}
+		for(int i=0; i<farmer.size(); i++){
+			if(farmer.get(i).mouseEvent(x,y)){
+
+			}
+		}
+		for(int i=0; i<pig.size(); i++){
+			if(pig.get(i).mouseEvent(x,y)){
+
+			}
+		}
+		for(int i=0; i<sheep.size(); i++){
+			if(sheep.get(i).mouseEvent(x,y)){
+
+			}
+		}
+		for(int i=0; i<scarecrow.size(); i++){
+			if(scarecrow.get(i).mouseEvent(x,y)){
+
+			}
+		}
+
 		repaint();
-		
 	}
     public void mouseReleased(MouseEvent e) {}
 

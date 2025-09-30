@@ -267,46 +267,39 @@ public class Screen extends JPanel implements ActionListener, MouseListener {
 
 		for(int i=0; i<chicken.size(); i++){
 			if(chicken.get(i).mouseEvent(x,y)){
-				
+				chicken.get(i).playSound();
 			}
 		}
 		for(int i=0; i<cow.size(); i++){
 			if(cow.get(i).mouseEvent(x,y)){
-
+				cow.get(i).playSound();
 			}
 		}
 		for(int i=0; i<farmer.size(); i++){
 			if(farmer.get(i).mouseEvent(x,y)){
-
+				farmer.get(i).playSound();
 			}
 		}
 		for(int i=0; i<pig.size(); i++){
 			if(pig.get(i).mouseEvent(x,y)){
-
+				pig.get(i).playSound();
 			}
 		}
 		for(int i=0; i<sheep.size(); i++){
 			if(sheep.get(i).mouseEvent(x,y)){
-
+				sheep.get(i).playSound();
 			}
 		}
 		for(int i=0; i<scarecrow.size(); i++){
 			if(scarecrow.get(i).mouseEvent(x,y)){
-
+				scarecrow.get(i).playSound();
 			}
 		}
 
 		repaint();
 	}
     public void mouseReleased(MouseEvent e) {}
-
-
     public void mouseEntered(MouseEvent e) {}
-
-
     public void mouseExited(MouseEvent e) {}
-
-
     public void mouseClicked(MouseEvent e) {}
-
 }

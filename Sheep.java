@@ -1,5 +1,8 @@
 import java.awt.image.BufferedImage;
 import java.awt.Graphics;
+import java.net.URL;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 
 public class Sheep {
     private int x;
@@ -33,6 +36,16 @@ public class Sheep {
             return true;
         }
         return false;
+    }
+    public void playSound() {
+        try {
+            URL url = this.getClass().getClassLoader().getResource("sounds/sheep.wav");
+            Clip clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(url));
+            clip.start();
+        } catch (Exception exc) {
+            exc.printStackTrace(System.out);
+        }
     }
 
 }

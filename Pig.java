@@ -1,5 +1,9 @@
 import java.awt.image.BufferedImage;
 import java.awt.Graphics;
+import java.net.URL;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+
 
 public class Pig {
     private int x;
@@ -33,6 +37,16 @@ public class Pig {
             return true;
         }
         return false;
+    }
+    public void playSound() {
+        try {
+            URL url = this.getClass().getClassLoader().getResource("sounds/pig.wav");
+            Clip clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(url));
+            clip.start();
+        } catch (Exception exc) {
+            exc.printStackTrace(System.out);
+        }
     }
 
 }

@@ -6,9 +6,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JButton;
 
 
-public class Screen extends JPanel {
+public class Screen extends JPanel implements ActionListener {
 	private BufferedImage background, chickenImage, cowImage, farmerImage, sheepImage, pigImage, scarecrowImage;
 
 	private DLList<Chicken> chicken;
@@ -50,5 +53,9 @@ public class Screen extends JPanel {
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		g.drawImage(background,0,0,800,600,null);
+	}
+
+	public void actionPerformed(ActionEvent e){
+		
 	}
 }

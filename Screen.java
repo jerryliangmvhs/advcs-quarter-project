@@ -11,6 +11,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
+import java.awt.Font;
 
 
 public class Screen extends JPanel implements ActionListener, MouseListener {
@@ -38,6 +41,10 @@ public class Screen extends JPanel implements ActionListener, MouseListener {
 	private JButton removeSheep;
 	private JButton scramble;
 	private JButton clear;
+	private Font customFont;
+	private Font customFontBold;
+
+	private Color buttonColor = new Color(25,130,50);
 
 
 
@@ -45,74 +52,139 @@ public class Screen extends JPanel implements ActionListener, MouseListener {
 		this.setLayout(null);
 		addMouseListener(this);
 
+		try{
+			customFont = Font.createFont(Font.TRUETYPE_FONT,new File("fonts/MinecraftRegular.ttf")).deriveFont(10f);
+			customFontBold = Font.createFont(Font.TRUETYPE_FONT,new File("fonts/MinecraftBold.ttf")).deriveFont(10f);
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			ge.registerFont(customFont);
+		} catch (IOException | FontFormatException e){
+			e.printStackTrace();
+  		}
+
 		addChicken = new JButton("Add Chicken");
-		addChicken.setBounds(825,50,150,30);
+		addChicken.setBounds(825,50,250,30);
 		addChicken.addActionListener(this);
+		addChicken.setBackground(buttonColor);
+		addChicken.setOpaque(true);
+		addChicken.setFont(customFontBold);
+		addChicken.setBorderPainted(false);
 		this.add(addChicken);
 
 		removeChicken = new JButton("Remove Chicken");
-		removeChicken.setBounds(825,85,150,30);
+		removeChicken.setBounds(825,85,250,30);
 		removeChicken.addActionListener(this);
+		removeChicken.setBackground(buttonColor);
+		removeChicken.setFont(customFontBold);
+		removeChicken.setOpaque(true);
+		removeChicken.setBorderPainted(false);
 		this.add(removeChicken);
 
 		addCow = new JButton("Add Cow");
-		addCow.setBounds(825,120,150,30);
+		addCow.setBounds(825,120,250,30);
 		addCow.addActionListener(this);
+		addCow.setBackground(buttonColor);
+		addCow.setFont(customFontBold);
+		addCow.setOpaque(true);
+		addCow.setBorderPainted(false);
 		this.add(addCow);
 
 		removeCow = new JButton("Remove Cow");
-		removeCow.setBounds(825,155,150,30);
+		removeCow.setBounds(825,155,250,30);
 		removeCow.addActionListener(this);
+		removeCow.setBackground(buttonColor);
+		removeCow.setOpaque(true);
+		removeCow.setBorderPainted(false);
+		removeCow.setFont(customFontBold);
 		this.add(removeCow);
 
 		addFarmer = new JButton("Add Farmer");
-		addFarmer.setBounds(825,190,150,30);
+		addFarmer.setBounds(825,190,250,30);
 		addFarmer.addActionListener(this);
+		addFarmer.setBackground(buttonColor);
+		addFarmer.setOpaque(true);
+		addFarmer.setBorderPainted(false);
+		addFarmer.setFont(customFontBold);
 		this.add(addFarmer);
 
 		removeFarmer = new JButton("Remove Farmer");
-		removeFarmer.setBounds(825,225,150,30);
+		removeFarmer.setBounds(825,225,250,30);
 		removeFarmer.addActionListener(this);
+		removeFarmer.setBackground(buttonColor);
+		removeFarmer.setOpaque(true);
+		removeFarmer.setBorderPainted(false);
+		removeFarmer.setFont(customFontBold);
 		this.add(removeFarmer);
 
 		addPig = new JButton("Add Pig");
-		addPig.setBounds(825,260,150,30);
+		addPig.setBounds(825,260,250,30);
 		addPig.addActionListener(this);
+		addPig.setBackground(buttonColor);
+		addPig.setOpaque(true);
+		addPig.setBorderPainted(false);
+		addPig.setFont(customFontBold);
 		this.add(addPig);
 
 		removePig = new JButton("Remove Pig");
-		removePig.setBounds(825,295,150,30);
+		removePig.setBounds(825,295,250,30);
 		removePig.addActionListener(this);
+		removePig.setBackground(buttonColor);
+		removePig.setOpaque(true);
+		removePig.setBorderPainted(false);
+		removePig.setFont(customFontBold);
 		this.add(removePig);
 
 		addScarecrow = new JButton("Add Scarecrow");
-		addScarecrow.setBounds(825,335,150,30);
+		addScarecrow.setBounds(825,330,250,30);
 		addScarecrow.addActionListener(this);
+		addScarecrow.setBackground(buttonColor);
+		addScarecrow.setOpaque(true);
+		addScarecrow.setBorderPainted(false);
+		addScarecrow.setFont(customFontBold);
 		this.add(addScarecrow);
 
 		removeScarecrow = new JButton("Remove Scarecrow");
-		removeScarecrow.setBounds(825,370,150,30);
+		removeScarecrow.setBounds(825,365,250,30);
 		removeScarecrow.addActionListener(this);
+		removeScarecrow.setBackground(buttonColor);
+		removeScarecrow.setOpaque(true);
+		removeScarecrow.setBorderPainted(false);
+		removeScarecrow.setFont(customFontBold);
 		this.add(removeScarecrow);
 
 		addSheep = new JButton("Add Sheep");
-		addSheep.setBounds(825,405,150,30);
+		addSheep.setBounds(825,400,250,30);
 		addSheep.addActionListener(this);
+		addSheep.setBackground(buttonColor);
+		addSheep.setOpaque(true);
+		addSheep.setBorderPainted(false);
+		addSheep.setFont(customFontBold);
 		this.add(addSheep);
 
 		removeSheep = new JButton("Remove Sheep");
-		removeSheep.setBounds(825,440,150,30);
+		removeSheep.setBounds(825,435,250,30);
 		removeSheep.addActionListener(this);
+		removeSheep.setBackground(buttonColor);
+		removeSheep.setOpaque(true);
+		removeSheep.setBorderPainted(false);
+		removeSheep.setFont(customFontBold);
 		this.add(removeSheep);
 
 		scramble = new JButton("Randomize");
-		scramble.setBounds(825,475,150,30);
+		scramble.setBounds(825,470,250,30);
 		scramble.addActionListener(this);
+		scramble.setBackground(buttonColor);
+		scramble.setOpaque(true);
+		scramble.setBorderPainted(false);
+		scramble.setFont(customFontBold);
 		this.add(scramble);
 
 		clear = new JButton("Clear");
-		clear.setBounds(825,510,150,30);
+		clear.setBounds(825,505,250,30);
 		clear.addActionListener(this);
+		clear.setBackground(buttonColor);
+		clear.setOpaque(true);
+		clear.setBorderPainted(false);
+		clear.setFont(customFontBold);
 		this.add(clear);
 
 
@@ -136,21 +208,22 @@ public class Screen extends JPanel implements ActionListener, MouseListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
 		
-		this.setFocusable(true);
+		this.setFocusable(false);
 
 		
 	}
 	@Override
 	public Dimension getPreferredSize(){
-		return new Dimension(1000,600);
+		return new Dimension(1100,600);
 	}
 	
 	@Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		g.setColor(Color.BLACK);
-		g.fillRect(0,0,1000,600);
+		g.fillRect(0,0,1100,600);
 		g.drawImage(background,0,0,800,600,null);
 
 		for(int i=0; i<chicken.size(); i++){

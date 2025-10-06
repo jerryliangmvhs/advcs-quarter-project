@@ -53,7 +53,7 @@ public class Screen extends JPanel implements ActionListener, MouseListener {
 		addMouseListener(this);
 
 		try{
-			customFont = Font.createFont(Font.TRUETYPE_FONT,new File("fonts/MinecraftRegular.ttf")).deriveFont(10f);
+			customFont = Font.createFont(Font.TRUETYPE_FONT,new File("fonts/MinecraftRegular.ttf")).deriveFont(20f);
 			customFontBold = Font.createFont(Font.TRUETYPE_FONT,new File("fonts/MinecraftBold.ttf")).deriveFont(10f);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(customFont);
@@ -226,6 +226,7 @@ public class Screen extends JPanel implements ActionListener, MouseListener {
 		g.fillRect(0,0,1100,600);
 		g.drawImage(background,0,0,800,600,null);
 
+		//draw all the figures
 		for(int i=0; i<chicken.size(); i++){
 			chicken.get(i).drawMe(g);
 		}
@@ -243,6 +244,15 @@ public class Screen extends JPanel implements ActionListener, MouseListener {
 		}
 		for(int i=0; i<sheep.size(); i++){
 			sheep.get(i).drawMe(g);
+		}
+		
+		//if there's at least one figure on the screen, let the user know you can click on them to make a sound
+		if(chicken.size()>0 || cow.size()>0 || farmer.size()>0 || pig.size()>0 || scarecrow.size()>0 || sheep.size()>0){
+			g.setColor(Color.WHITE);
+			g.fillRect(50,5,700,40);
+			g.setFont(customFont);
+			g.setColor(Color.BLACK);
+			g.drawString("Easter Egg: You can click on a figure and it will make a sound!",75,30);
 		}
 	}
 

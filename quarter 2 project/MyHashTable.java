@@ -4,7 +4,7 @@ public class MyHashTable<K,V> {
 
     @SuppressWarnings("unchecked")
     public MyHashTable(){
-        table = new DLList[9999];
+        table = new DLList[200000];
         //each slot is null by default
         keySet = new MyHashSet<K>();
     }

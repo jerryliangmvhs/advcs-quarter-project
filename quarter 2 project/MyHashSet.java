@@ -4,7 +4,7 @@ public class MyHashSet<E>{
     private DLList<E> DLList;
 
     public MyHashSet(){
-        hashArray = new Object[9999];
+        hashArray = new Object[20000];
         size = 0;
         DLList = new DLList<E>();
     }

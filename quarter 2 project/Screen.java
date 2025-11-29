@@ -1,15 +1,23 @@
 import javax.swing.JPanel;
-import java.awt.Graphics;
+import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Scanner;
+import java.awt.image.BufferedImage;
+import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
-public class Screen extends JPanel{
+public class Screen extends JPanel implements ActionListener, KeyListener, MouseListener{
 	private MyHashTable<Location,GridObject> map;
+	private Player player;
+	private BufferedImage diamondHeadIcon, bigIslandVolcanoIcon, observatoryIcon, pearlHarborIcon, theMountainIcon;
 
 	public Screen(){
+		this.setLayout(null);
 		map = new MyHashTable<Location,GridObject>();
 		try {
 			Scanner scan = new Scanner(new FileReader("Map.txt"));
@@ -50,6 +58,21 @@ public class Screen extends JPanel{
 			e.printStackTrace();
 		}
 
+		try {
+            diamondHeadIcon = ImageIO.read(new File("icons/diamond-head.png"));
+			bigIslandVolcanoIcon = ImageIO.read(new File("icons/big-island-volcano.png"));
+			observatoryIcon = ImageIO.read(new File("icons/observatory.png"));
+			pearlHarborIcon = ImageIO.read(new File("icons/pearl-harbor.png"));
+			theMountainIcon = ImageIO.read(new File("icons/the-mountain.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+		player = new Player(75,75,map);
+		this.setFocusable(true);
+		addMouseListener(this);
+		addKeyListener(this);
+
 		
 	}
 	@Override
@@ -88,5 +111,40 @@ public class Screen extends JPanel{
 				}
 			}
 		}
+		g.setColor(Color.RED);
+		g.fillRect(player.getX(),player.getY(),player.getWidth(),player.getHeight());
 	}
+
+	public void actionPerformed(ActionEvent e){
+
+	}
+	
+	public void keyPressed(KeyEvent e){
+		//up is 38, right is 39, down is 40, left is 37
+		System.out.println(e.getKeyCode());
+
+		if(e.getKeyCode()==37){
+			player.moveLeft();
+		}
+		if(e.getKeyCode()==38){
+			player.moveUp();
+		}
+		if(e.getKeyCode()==39){
+			player.moveRight();
+		}
+		if(e.getKeyCode()==40){
+			player.moveDown();
+		}
+		repaint();
+	}
+	public void keyTyped(KeyEvent e){}
+	public void keyReleased(KeyEvent e){}
+	public void mouseReleased(MouseEvent e) {}
+    public void mouseEntered(MouseEvent e) {}
+    public void mouseExited(MouseEvent e) {}
+    public void mouseClicked(MouseEvent e) {}
+	public void mousePressed(MouseEvent e){
+		System.out.println("X: " + e.getX() + "Y: " + e.getY());
+	}
+
 }

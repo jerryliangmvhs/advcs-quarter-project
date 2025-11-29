@@ -36,28 +36,28 @@ public class Player {
     }
     public void moveLeft(){
         gridBucket = map.get(new Location(row,col-1));
-        if(!gridBucket.get(0).getName().equals("water")){
+        if(!gridBucket.get(0).getName().equals("water") && gridBucket.size()==1){
             col--;
             x = col*7;
         }
     }
     public void moveRight(){
         gridBucket = map.get(new Location(row,col+1));
-        if(!gridBucket.get(0).getName().equals("water")){
+        if(!gridBucket.get(0).getName().equals("water") && gridBucket.size()==1){
             col++;
             x = col*7;
         }
     }
     public void moveUp(){
         gridBucket = map.get(new Location(row-1,col));
-        if(!gridBucket.get(0).getName().equals("water")){
+        if(!gridBucket.get(0).getName().equals("water") && gridBucket.size()==1){
             row--;
             y = row*7;
         }
     }
     public void moveDown(){
         gridBucket = map.get(new Location(row+1,col));
-        if(!gridBucket.get(0).getName().equals("water")){
+        if(!gridBucket.get(0).getName().equals("water") && gridBucket.size()==1){
             row++;
             y = row*7;
         }

@@ -14,7 +14,7 @@ import javax.imageio.ImageIO;
 public class Screen extends JPanel implements ActionListener, KeyListener, MouseListener{
 	private MyHashTable<Location,GridObject> map;
 	private Player player;
-	private BufferedImage diamondHeadIcon, bigIslandVolcanoIcon, observatoryIcon, pearlHarborIcon, theMountainIcon;
+	private BufferedImage diamondHeadIcon, bigIslandVolcanoIcon, observatoryIcon, pearlHarborIcon, theMountainIcon, treeIcon;
 
 	public Screen(){
 		this.setLayout(null);
@@ -54,11 +54,21 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 				}
 				row++;
 			}
-			map.put(new Location(75,75), new GridObject("bigIslandVolcano"));
+			map.put(new Location(74,75), new GridObject("bigIslandVolcano"));
 			map.put(new Location(28,42), new GridObject("diamondHead"));
 			map.put(new Location(50,75), new GridObject("observatory"));
-			map.put(new Location(30,36), new GridObject("pearlHarbor"));
+			map.put(new Location(29,35), new GridObject("pearlHarbor"));
 			map.put(new Location(18,18), new GridObject("theMountain"));
+
+			for(int i=0; i<100; i++){
+				for(int j=0; j<100; j++){
+					DLList<GridObject> g = map.get(new Location(j,i));
+					//if a grid box is land and doesn't already have an obstacle, there is a 0.25 chance there will be a tree.
+					if(g.size()==1 && (g.get(0).getName().equals("land") || g.get(0).getName().equals("hills")) && (int)(Math.random()*4)==3){
+						map.put(new Location(j,i),new GridObject("tree"));
+					}
+				}
+			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -69,6 +79,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			observatoryIcon = ImageIO.read(new File("icons/observatory.png"));
 			pearlHarborIcon = ImageIO.read(new File("icons/pearl-harbor.png"));
 			theMountainIcon = ImageIO.read(new File("icons/the-mountain.png"));
+			treeIcon = ImageIO.read(new File("icons/tree.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -127,6 +138,9 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 					}
 					if(block.get(k).getName().equals("bigIslandVolcano")){
 						g.drawImage(bigIslandVolcanoIcon,key.getX(),key.getY(),7,7,null);
+					}
+					if(block.get(k).getName().equals("tree")){
+						g.drawImage(treeIcon,key.getX(),key.getY(),7,7,null);
 					}
 				}
 			}

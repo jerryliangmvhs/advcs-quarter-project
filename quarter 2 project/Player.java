@@ -1,3 +1,7 @@
+import java.net.URL;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+
 public class Player {
     private int row;
     private int col;
@@ -40,12 +44,18 @@ public class Player {
             col--;
             x = col*7;
         }
+        else{
+            errorSound();
+        }
     }
     public void moveRight(){
         gridBucket = map.get(new Location(row,col+1));
         if(!gridBucket.get(0).getName().equals("water") && gridBucket.size()==1){
             col++;
             x = col*7;
+        }
+        else{
+            errorSound();
         }
     }
     public void moveUp(){
@@ -54,6 +64,9 @@ public class Player {
             row--;
             y = row*7;
         }
+        else{
+            errorSound();
+        }
     }
     public void moveDown(){
         gridBucket = map.get(new Location(row+1,col));
@@ -61,6 +74,21 @@ public class Player {
             row++;
             y = row*7;
         }
+        else{
+            errorSound();
+        }
     }
+    public void errorSound(){
+        System.out.println("Player tried to move into obstacle");
+        try {
+            URL url = this.getClass().getClassLoader().getResource("error.wav");
+            Clip clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(url));
+            clip.start();
+        } catch (Exception exc) {
+            exc.printStackTrace(System.out);
+        }
+    }
+
 
 }

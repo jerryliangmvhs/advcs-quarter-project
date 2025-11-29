@@ -143,19 +143,18 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 						g.drawImage(treeIcon,key.getX(),key.getY(),7,7,null);
 					}
 				}
+				g.setColor(Color.BLACK);
+				//g.drawRect(key.getX(),key.getY(),7,7);
 			}
 		}
-		g.setColor(Color.RED);
+		g.setColor(new Color(220,30,240));
 		g.fillRect(player.getX(),player.getY(),player.getWidth(),player.getHeight());
 	}
 
-	public void actionPerformed(ActionEvent e){
-
-	}
-	
+	public void actionPerformed(ActionEvent e){}
 	public void keyPressed(KeyEvent e){
 		//up is 38, right is 39, down is 40, left is 37
-		System.out.println(e.getKeyCode());
+		//System.out.println(e.getKeyCode());
 
 		if(e.getKeyCode()==37){
 			player.moveLeft();

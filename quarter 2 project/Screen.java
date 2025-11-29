@@ -54,6 +54,11 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 				}
 				row++;
 			}
+			map.put(new Location(75,75), new GridObject("bigIslandVolcano"));
+			map.put(new Location(28,42), new GridObject("diamondHead"));
+			map.put(new Location(50,75), new GridObject("observatory"));
+			map.put(new Location(30,36), new GridObject("pearlHarbor"));
+			map.put(new Location(18,18), new GridObject("theMountain"));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -107,6 +112,21 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 					if(block.get(k).getName().equals("sand")){
 						g.setColor(new Color(255,210,75));
 						g.fillRect(key.getX(),key.getY(),7,7);
+					}
+					if(block.get(k).getName().equals("diamondHead")){
+						g.drawImage(diamondHeadIcon,key.getX(),key.getY(),7,7,null);
+					}
+					if(block.get(k).getName().equals("observatory")){
+						g.drawImage(observatoryIcon,key.getX(),key.getY(),7,7,null);
+					}
+					if(block.get(k).getName().equals("theMountain")){
+						g.drawImage(theMountainIcon,key.getX(),key.getY(),7,7,null);
+					}
+					if(block.get(k).getName().equals("pearlHarbor")){
+						g.drawImage(pearlHarborIcon,key.getX(),key.getY(),7,7,null);
+					}
+					if(block.get(k).getName().equals("bigIslandVolcano")){
+						g.drawImage(bigIslandVolcanoIcon,key.getX(),key.getY(),7,7,null);
 					}
 				}
 			}

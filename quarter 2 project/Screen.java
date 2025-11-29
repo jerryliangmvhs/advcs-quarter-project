@@ -13,7 +13,7 @@ import javax.imageio.ImageIO;
 
 public class Screen extends JPanel implements ActionListener, KeyListener, MouseListener{
 	private MyHashTable<Location,GridObject> map;
-	private Player player;
+	private Tourist player;
 	private BufferedImage diamondHeadIcon, bigIslandVolcanoIcon, observatoryIcon, pearlHarborIcon, theMountainIcon, treeIcon;
 
 	public Screen(){
@@ -55,7 +55,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 				row++;
 			}
 			map.put(new Location(74,75), new GridObject("bigIslandVolcano"));
-			map.put(new Location(28,42), new GridObject("diamondHead"));
+			map.put(new Location(31,40), new GridObject("diamondHead"));
 			map.put(new Location(50,75), new GridObject("observatory"));
 			map.put(new Location(29,35), new GridObject("pearlHarbor"));
 			map.put(new Location(18,18), new GridObject("theMountain"));
@@ -84,7 +84,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
             e.printStackTrace();
         }
 
-		player = new Player(75,75,map);
+		player = new Tourist(75,75,map);
 		this.setFocusable(true);
 		addMouseListener(this);
 		addKeyListener(this);
@@ -177,7 +177,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
     public void mouseExited(MouseEvent e) {}
     public void mouseClicked(MouseEvent e) {}
 	public void mousePressed(MouseEvent e){
-		System.out.println("X: " + e.getX() + "Y: " + e.getY());
+		System.out.println("X: " + e.getX() + " Y: " + e.getY());
 	}
 
 }

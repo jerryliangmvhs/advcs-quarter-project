@@ -2,7 +2,7 @@ import java.net.URL;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
-public class Player {
+public class Tourist {
     private int row;
     private int col;
     private int x;
@@ -11,7 +11,7 @@ public class Player {
     private int height;
     private MyHashTable<Location, GridObject> map;
     private DLList<GridObject> gridBucket;
-    public Player(int row, int col, MyHashTable<Location, GridObject> map){
+    public Tourist(int row, int col, MyHashTable<Location, GridObject> map){
         this.row = row;
         this.col = col;
         this.map = map;
@@ -79,7 +79,7 @@ public class Player {
         }
     }
     public void errorSound(){
-        System.out.println("Player tried to move into obstacle");
+        //System.out.println("Player tried to move into obstacle");
         try {
             URL url = this.getClass().getClassLoader().getResource("error.wav");
             Clip clip = AudioSystem.getClip();

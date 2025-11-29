@@ -31,6 +31,18 @@ public class Screen extends JPanel{
 						String value = "land";
 						map.put(key,new GridObject(value));
 					}
+					else if(numberArray[col].equals("5")){
+						String value = "hills";
+						map.put(key,new GridObject(value));
+					}
+					else if(numberArray[col].equals("6")){
+						String value = "road";
+						map.put(key,new GridObject(value));
+					}
+					else if(numberArray[col].equals("1")){
+						String value = "sand";
+						map.put(key,new GridObject(value));
+					}
 				}
 				row++;
 			}
@@ -54,11 +66,23 @@ public class Screen extends JPanel{
 				DLList<GridObject> block = map.get(key);
 				for(int k=0; k<block.size(); k++){
 					if(block.get(k).getName().equals("water")){
-						g.setColor(Color.BLUE);
+						g.setColor(new Color(20,130,195));
 						g.fillRect(key.getX(),key.getY(),7,7);
 					}
 					if(block.get(k).getName().equals("land")){
-						g.setColor(Color.GREEN);
+						g.setColor(new Color(60,150,10));
+						g.fillRect(key.getX(),key.getY(),7,7);
+					}
+					if(block.get(k).getName().equals("hills")){
+						g.setColor(new Color(50,130,5));
+						g.fillRect(key.getX(),key.getY(),7,7);
+					}
+					if(block.get(k).getName().equals("road")){
+						g.setColor(new Color(75,80,95));
+						g.fillRect(key.getX(),key.getY(),7,7);
+					}
+					if(block.get(k).getName().equals("sand")){
+						g.setColor(new Color(255,210,75));
 						g.fillRect(key.getX(),key.getY(),7,7);
 					}
 				}

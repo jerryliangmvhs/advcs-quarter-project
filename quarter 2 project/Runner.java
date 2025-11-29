@@ -10,6 +10,7 @@ public class Runner {
 		
 		frame.add(sc);
 		frame.pack();
+		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);

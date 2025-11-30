@@ -15,9 +15,11 @@ public class MyHashTable<K,V> {
         table[key.hashCode()].add(value);
         keySet.add(key);
     }
+    @SuppressWarnings("unchecked")
     public DLList get(K key){
         return table[key.hashCode()];
     }
+    @SuppressWarnings("unchecked")
     public MyHashSet<K> keySet(){
         return keySet;
     }

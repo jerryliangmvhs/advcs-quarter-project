@@ -14,7 +14,7 @@ import javax.imageio.ImageIO;
 public class Screen extends JPanel implements ActionListener, KeyListener, MouseListener{
 	private MyHashTable<Location,GridObject> map;
 	private Tourist player;
-	private BufferedImage diamondHeadIcon, bigIslandVolcanoIcon, observatoryIcon, pearlHarborIcon, theMountainIcon, treeIcon;
+	private BufferedImage diamondHeadIcon, bigIslandVolcanoIcon, observatoryIcon, pearlHarborIcon, theMountainIcon, treeIcon, flowerIcon;
 
 	public Screen(){
 		this.setLayout(null);
@@ -64,8 +64,13 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 				for(int j=0; j<100; j++){
 					DLList<GridObject> g = map.get(new Location(j,i));
 					//if a grid box is land and doesn't already have an obstacle, there is a 0.25 chance there will be a tree.
-					if(g.size()==1 && (g.get(0).getName().equals("land") || g.get(0).getName().equals("hills")) && (int)(Math.random()*4)==3){
-						map.put(new Location(j,i),new GridObject("tree"));
+					if(g.size()==1 && (g.get(0).getName().equals("land") || g.get(0).getName().equals("hills"))){
+						if((int)(Math.random()*6)==3){
+							map.put(new Location(j,i),new GridObject("tree"));
+						}
+						if((int)(Math.random()*6)==2){
+							map.put(new Location(j,i),new GridObject("flower"));
+						}
 					}
 				}
 			}
@@ -80,6 +85,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			pearlHarborIcon = ImageIO.read(new File("icons/pearl-harbor.png"));
 			theMountainIcon = ImageIO.read(new File("icons/the-mountain.png"));
 			treeIcon = ImageIO.read(new File("icons/tree.png"));
+			flowerIcon = ImageIO.read(new File("icons/yellow-flower.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -141,6 +147,9 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 					}
 					if(block.get(k).getName().equals("tree")){
 						g.drawImage(treeIcon,key.getX(),key.getY(),7,7,null);
+					}
+					if(block.get(k).getName().equals("flower")){
+						g.drawImage(flowerIcon,key.getX(),key.getY(),7,7,null);
 					}
 				}
 				g.setColor(Color.BLACK);

@@ -16,8 +16,8 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	private Tourist player;
 	private int playerRow = 17;
 	private int playerCol = 17;
-	private int renderDistance = 100;
-	private int screenSize = 800;
+	private int renderDistance = 25; //101 is largest
+	private int screenSize = 808;
 	private int blockSize = screenSize/renderDistance;
 	private int touristX = (screenSize/2)-(blockSize/2);
 	private int touristY = (screenSize/2)-(blockSize/2);
@@ -26,7 +26,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 
 
 	private int gridSize = 101; //blocks, DO NOT CHANGE
-	private BufferedImage diamondHeadIcon, bigIslandVolcanoIcon, observatoryIcon, pearlHarborIcon, theMountainIcon, treeIcon, flowerIcon;
+	private BufferedImage diamondHeadIcon, bigIslandVolcanoIcon, observatoryIcon, pearlHarborIcon, theMountainIcon, treeIcon, flowerIcon, grass, grassDark, water, sand;
 
 	public Screen(){
 		this.setLayout(null);
@@ -98,6 +98,11 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			theMountainIcon = ImageIO.read(new File("icons/the-mountain.png"));
 			treeIcon = ImageIO.read(new File("icons/tree.png"));
 			flowerIcon = ImageIO.read(new File("icons/yellow-flower.png"));
+			grass = ImageIO.read(new File("icons/grass-block.png"));
+			grassDark = ImageIO.read(new File("icons/grass-block-dark.png"));
+			water = ImageIO.read(new File("icons/water.png"));
+			sand = ImageIO.read(new File("icons/sand.png"));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -125,24 +130,28 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 					int blockX = key.getX();
 					int blockY = key.getY();
 					if(block.get(k).getName().equals("water")){
-						g.setColor(new Color(20,130,195));
-						g.fillRect(blockX,blockY,blockSize,blockSize);
+						//g.setColor(new Color(20,130,195));
+						//g.fillRect(blockX,blockY,blockSize,blockSize);
+						g.drawImage(water,blockX,blockY,blockSize,blockSize,null);
 					}
 					if(block.get(k).getName().equals("land")){
-						g.setColor(new Color(60,150,10));
-						g.fillRect(blockX,blockY,blockSize,blockSize);
+						//g.setColor(new Color(60,150,10));
+						//g.fillRect(blockX,blockY,blockSize,blockSize);
+						g.drawImage(grass,blockX,blockY,blockSize,blockSize,null);
 					}
 					if(block.get(k).getName().equals("hills")){
-						g.setColor(new Color(50,130,5));
-						g.fillRect(blockX,blockY,blockSize,blockSize);
+						//g.setColor(new Color(50,130,5));
+						//g.fillRect(blockX,blockY,blockSize,blockSize);
+						g.drawImage(grassDark,blockX,blockY,blockSize,blockSize,null);
 					}
 					if(block.get(k).getName().equals("road")){
 						g.setColor(new Color(75,80,95));
 						g.fillRect(blockX,blockY,blockSize,blockSize);
 					}
 					if(block.get(k).getName().equals("sand")){
-						g.setColor(new Color(255,210,75));
-						g.fillRect(blockX,blockY,blockSize,blockSize);
+						//g.setColor(new Color(255,210,75));
+						//g.fillRect(blockX,blockY,blockSize,blockSize);
+						g.drawImage(sand,blockX,blockY,blockSize,blockSize,null);
 					}
 					if(block.get(k).getName().equals("diamondHead")){
 						g.drawImage(diamondHeadIcon,blockX,blockY,blockSize,blockSize,null);

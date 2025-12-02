@@ -14,11 +14,18 @@ import javax.imageio.ImageIO;
 public class Screen extends JPanel implements ActionListener, KeyListener, MouseListener{
 	private MyHashTable<Location,GridObject> map;
 	private Tourist player;
-	private int playerRow = 75;
-	private int playerCol = 75;
+	private int playerRow = 17;
+	private int playerCol = 17;
 	private int renderDistance = 100;
-	private int screenSize = 700;
+	private int screenSize = 800;
 	private int blockSize = screenSize/renderDistance;
+	private int touristX = (screenSize/2)-(blockSize/2);
+	private int touristY = (screenSize/2)-(blockSize/2);
+	private int gridX = (((renderDistance-1)/2)*blockSize)-(playerCol*blockSize);
+	private int gridY = (((renderDistance-1)/2)*blockSize)-(playerRow*blockSize);
+
+
+	private int gridSize = 101; //blocks, DO NOT CHANGE
 	private BufferedImage diamondHeadIcon, bigIslandVolcanoIcon, observatoryIcon, pearlHarborIcon, theMountainIcon, treeIcon, flowerIcon;
 
 	public Screen(){
@@ -35,7 +42,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 				//if there's a space between each number in your text file
 				String[] numberArray = line.split(" ");  
 				for(int col=0; col<numberArray.length; col++){  //Each number in the line is a column
-					Location key = new Location(row,col);
+					Location key = new Location(row,col,blockSize);
 					if(numberArray[col].equals("3")){
 						String value = "water";
 						map.put(key,new GridObject(value));
@@ -59,22 +66,22 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 				}
 				row++;
 			}
-			map.put(new Location(74,75), new GridObject("bigIslandVolcano"));
-			map.put(new Location(31,40), new GridObject("diamondHead"));
-			map.put(new Location(50,75), new GridObject("observatory"));
-			map.put(new Location(29,35), new GridObject("pearlHarbor"));
-			map.put(new Location(18,18), new GridObject("theMountain"));
+			map.put(new Location(74,75,blockSize), new GridObject("bigIslandVolcano"));
+			map.put(new Location(31,40,blockSize), new GridObject("diamondHead"));
+			map.put(new Location(50,75,blockSize), new GridObject("observatory"));
+			map.put(new Location(29,35,blockSize), new GridObject("pearlHarbor"));
+			map.put(new Location(18,18,blockSize), new GridObject("theMountain"));
 
 			for(int i=0; i<100; i++){
 				for(int j=0; j<100; j++){
-					DLList<GridObject> g = map.get(new Location(j,i));
+					DLList<GridObject> g = map.get(new Location(j,i,blockSize));
 					//if a grid box is land and doesn't already have an obstacle, there is a 0.25 chance there will be a tree.
 					if(g.size()==1 && (g.get(0).getName().equals("land") || g.get(0).getName().equals("hills"))){
 						if((int)(Math.random()*6)==3){
-							map.put(new Location(j,i),new GridObject("tree"));
+							map.put(new Location(j,i,blockSize),new GridObject("tree"));
 						}
 						if((int)(Math.random()*6)==2){
-							map.put(new Location(j,i),new GridObject("flower"));
+							map.put(new Location(j,i,blockSize),new GridObject("flower"));
 						}
 					}
 				}
@@ -110,51 +117,53 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	@Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		for(int i=0; i<100; i++){
-			for(int j=0; j<100; j++){
-				Location key = new Location(i,j);
+		for(int i=0; i<gridSize; i++){
+			for(int j=0; j<gridSize; j++){
+				Location key = new Location(i,j,blockSize);
 				DLList<GridObject> block = map.get(key);
 				for(int k=0; k<block.size(); k++){
+					int blockX = key.getX();
+					int blockY = key.getY();
 					if(block.get(k).getName().equals("water")){
 						g.setColor(new Color(20,130,195));
-						g.fillRect(key.getX(),key.getY(),blockSize,blockSize);
+						g.fillRect(blockX,blockY,blockSize,blockSize);
 					}
 					if(block.get(k).getName().equals("land")){
 						g.setColor(new Color(60,150,10));
-						g.fillRect(key.getX(),key.getY(),blockSize,blockSize);
+						g.fillRect(blockX,blockY,blockSize,blockSize);
 					}
 					if(block.get(k).getName().equals("hills")){
 						g.setColor(new Color(50,130,5));
-						g.fillRect(key.getX(),key.getY(),blockSize,blockSize);
+						g.fillRect(blockX,blockY,blockSize,blockSize);
 					}
 					if(block.get(k).getName().equals("road")){
 						g.setColor(new Color(75,80,95));
-						g.fillRect(key.getX(),key.getY(),blockSize,blockSize);
+						g.fillRect(blockX,blockY,blockSize,blockSize);
 					}
 					if(block.get(k).getName().equals("sand")){
 						g.setColor(new Color(255,210,75));
-						g.fillRect(key.getX(),key.getY(),blockSize,blockSize);
+						g.fillRect(blockX,blockY,blockSize,blockSize);
 					}
 					if(block.get(k).getName().equals("diamondHead")){
-						g.drawImage(diamondHeadIcon,key.getX(),key.getY(),blockSize,blockSize,null);
+						g.drawImage(diamondHeadIcon,blockX,blockY,blockSize,blockSize,null);
 					}
 					if(block.get(k).getName().equals("observatory")){
-						g.drawImage(observatoryIcon,key.getX(),key.getY(),blockSize,blockSize,null);
+						g.drawImage(observatoryIcon,blockX,blockY,blockSize,blockSize,null);
 					}
 					if(block.get(k).getName().equals("theMountain")){
-						g.drawImage(theMountainIcon,key.getX(),key.getY(),blockSize,blockSize,null);
+						g.drawImage(theMountainIcon,blockX,blockY,blockSize,blockSize,null);
 					}
 					if(block.get(k).getName().equals("pearlHarbor")){
-						g.drawImage(pearlHarborIcon,key.getX(),key.getY(),blockSize,blockSize,null);
+						g.drawImage(pearlHarborIcon,blockX,blockY,blockSize,blockSize,null);
 					}
 					if(block.get(k).getName().equals("bigIslandVolcano")){
-						g.drawImage(bigIslandVolcanoIcon,key.getX(),key.getY(),blockSize,blockSize,null);
+						g.drawImage(bigIslandVolcanoIcon,blockX,blockY,blockSize,blockSize,null);
 					}
 					if(block.get(k).getName().equals("tree")){
-						g.drawImage(treeIcon,key.getX(),key.getY(),blockSize,blockSize,null);
+						g.drawImage(treeIcon,blockX,blockY,blockSize,blockSize,null);
 					}
 					if(block.get(k).getName().equals("flower")){
-						g.drawImage(flowerIcon,key.getX(),key.getY(),blockSize,blockSize,null);
+						g.drawImage(flowerIcon,blockX,blockY,blockSize,blockSize,null);
 					}
 				}
 			}
@@ -191,5 +200,4 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	public void mousePressed(MouseEvent e){
 		System.out.println("X: " + e.getX() + " Y: " + e.getY());
 	}
-
 }

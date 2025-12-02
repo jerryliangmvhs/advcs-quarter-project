@@ -17,8 +17,8 @@ public class Tourist {
         this.col = col;
         this.map = map;
         this.size = size;
-        x = col*7;
-        y = row*7;
+        x = col*size;
+        y = row*size;
     }
     public int getRow(){
         return row;
@@ -45,40 +45,40 @@ public class Tourist {
         return y;
     }
     public void moveLeft(){
-        gridBucket = map.get(new Location(row,col-1));
+        gridBucket = map.get(new Location(row,col-1,size));
         if(!gridBucket.get(0).getName().equals("water") && gridBucket.size()==1){
             col--;
-            x = col*7;
+            x = col*size;
         }
         else{
             errorSound();
         }
     }
     public void moveRight(){
-        gridBucket = map.get(new Location(row,col+1));
+        gridBucket = map.get(new Location(row,col+1,size));
         if(!gridBucket.get(0).getName().equals("water") && gridBucket.size()==1){
             col++;
-            x = col*7;
+            x = col*size;
         }
         else{
             errorSound();
         }
     }
     public void moveUp(){
-        gridBucket = map.get(new Location(row-1,col));
+        gridBucket = map.get(new Location(row-1,col,size));
         if(!gridBucket.get(0).getName().equals("water") && gridBucket.size()==1){
             row--;
-            y = row*7;
+            y = row*size;
         }
         else{
             errorSound();
         }
     }
     public void moveDown(){
-        gridBucket = map.get(new Location(row+1,col));
+        gridBucket = map.get(new Location(row+1,col,size));
         if(!gridBucket.get(0).getName().equals("water") && gridBucket.size()==1){
             row++;
-            y = row*7;
+            y = row*size;
         }
         else{
             errorSound();

@@ -3,11 +3,13 @@ public class Location {
     private int col;
     private int x;
     private int y;
-    public Location(int row, int col){
+    private int size;
+    public Location(int row, int col, int size){
         this.row = row;
         this.col = col;
-        x = col*7;
-        y = row*7;
+        this.size = size;
+        x = col*size;
+        y = row*size;
     }
     @Override
     public int hashCode(){

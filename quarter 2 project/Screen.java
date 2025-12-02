@@ -14,6 +14,11 @@ import javax.imageio.ImageIO;
 public class Screen extends JPanel implements ActionListener, KeyListener, MouseListener{
 	private MyHashTable<Location,GridObject> map;
 	private Tourist player;
+	private int playerRow = 75;
+	private int playerCol = 75;
+	private int renderDistance = 100;
+	private int screenSize = 700;
+	private int blockSize = screenSize/renderDistance;
 	private BufferedImage diamondHeadIcon, bigIslandVolcanoIcon, observatoryIcon, pearlHarborIcon, theMountainIcon, treeIcon, flowerIcon;
 
 	public Screen(){
@@ -90,7 +95,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
             e.printStackTrace();
         }
 
-		player = new Tourist(75,75,map);
+		player = new Tourist(playerRow,playerCol,blockSize,map);
 		this.setFocusable(true);
 		addMouseListener(this);
 		addKeyListener(this);
@@ -99,7 +104,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	}
 	@Override
 	public Dimension getPreferredSize(){
-		return new Dimension(700,700);
+		return new Dimension(screenSize,screenSize);
 	}
 	
 	@Override
@@ -112,52 +117,50 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 				for(int k=0; k<block.size(); k++){
 					if(block.get(k).getName().equals("water")){
 						g.setColor(new Color(20,130,195));
-						g.fillRect(key.getX(),key.getY(),7,7);
+						g.fillRect(key.getX(),key.getY(),blockSize,blockSize);
 					}
 					if(block.get(k).getName().equals("land")){
 						g.setColor(new Color(60,150,10));
-						g.fillRect(key.getX(),key.getY(),7,7);
+						g.fillRect(key.getX(),key.getY(),blockSize,blockSize);
 					}
 					if(block.get(k).getName().equals("hills")){
 						g.setColor(new Color(50,130,5));
-						g.fillRect(key.getX(),key.getY(),7,7);
+						g.fillRect(key.getX(),key.getY(),blockSize,blockSize);
 					}
 					if(block.get(k).getName().equals("road")){
 						g.setColor(new Color(75,80,95));
-						g.fillRect(key.getX(),key.getY(),7,7);
+						g.fillRect(key.getX(),key.getY(),blockSize,blockSize);
 					}
 					if(block.get(k).getName().equals("sand")){
 						g.setColor(new Color(255,210,75));
-						g.fillRect(key.getX(),key.getY(),7,7);
+						g.fillRect(key.getX(),key.getY(),blockSize,blockSize);
 					}
 					if(block.get(k).getName().equals("diamondHead")){
-						g.drawImage(diamondHeadIcon,key.getX(),key.getY(),7,7,null);
+						g.drawImage(diamondHeadIcon,key.getX(),key.getY(),blockSize,blockSize,null);
 					}
 					if(block.get(k).getName().equals("observatory")){
-						g.drawImage(observatoryIcon,key.getX(),key.getY(),7,7,null);
+						g.drawImage(observatoryIcon,key.getX(),key.getY(),blockSize,blockSize,null);
 					}
 					if(block.get(k).getName().equals("theMountain")){
-						g.drawImage(theMountainIcon,key.getX(),key.getY(),7,7,null);
+						g.drawImage(theMountainIcon,key.getX(),key.getY(),blockSize,blockSize,null);
 					}
 					if(block.get(k).getName().equals("pearlHarbor")){
-						g.drawImage(pearlHarborIcon,key.getX(),key.getY(),7,7,null);
+						g.drawImage(pearlHarborIcon,key.getX(),key.getY(),blockSize,blockSize,null);
 					}
 					if(block.get(k).getName().equals("bigIslandVolcano")){
-						g.drawImage(bigIslandVolcanoIcon,key.getX(),key.getY(),7,7,null);
+						g.drawImage(bigIslandVolcanoIcon,key.getX(),key.getY(),blockSize,blockSize,null);
 					}
 					if(block.get(k).getName().equals("tree")){
-						g.drawImage(treeIcon,key.getX(),key.getY(),7,7,null);
+						g.drawImage(treeIcon,key.getX(),key.getY(),blockSize,blockSize,null);
 					}
 					if(block.get(k).getName().equals("flower")){
-						g.drawImage(flowerIcon,key.getX(),key.getY(),7,7,null);
+						g.drawImage(flowerIcon,key.getX(),key.getY(),blockSize,blockSize,null);
 					}
 				}
-				g.setColor(Color.BLACK);
-				//g.drawRect(key.getX(),key.getY(),7,7);
 			}
 		}
 		g.setColor(new Color(220,30,240));
-		g.fillRect(player.getX(),player.getY(),player.getWidth(),player.getHeight());
+		g.fillRect(player.getX(),player.getY(),player.getSize(),player.getSize());
 	}
 
 	public void actionPerformed(ActionEvent e){}

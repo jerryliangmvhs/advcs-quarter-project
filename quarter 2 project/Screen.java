@@ -23,7 +23,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	private int touristY = ((renderDistance-1)/2)*blockSize;
 	private int gridX = (((renderDistance-1)/2)*blockSize)-(playerCol*blockSize);
 	private int gridY = (((renderDistance-1)/2)*blockSize)-(playerRow*blockSize);
-	private boolean sunset = true;
+	private boolean sunset = false;
 
 	private int gridSize = 101; //blocks, DO NOT CHANGE
 	private BufferedImage diamondHeadIcon, bigIslandVolcanoIcon, observatoryIcon, pearlHarborIcon, theMountainIcon, treeIcon, flowerIcon, grass, grassDark, water, sand, road, road2;
@@ -57,8 +57,15 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 						map.put(key,new GridObject(value));
 					}
 					else if(numberArray[col].equals("6")){
-						String value = "road";
-						map.put(key,new GridObject(value));
+						if((int)(Math.random()*2)==1){
+							String value = "road";
+							map.put(key,new GridObject(value));
+						}
+						else{
+							String value = "road2";
+							map.put(key,new GridObject(value));
+						}
+
 					}
 					else if(numberArray[col].equals("1")){
 						String value = "sand";
@@ -203,6 +210,17 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 						}
 						else{
 							g.drawImage(road,blockX,blockY,blockSize,blockSize,null);
+						}
+						
+					}
+					if(block.get(k).getName().equals("road2")){
+						//g.setColor(new Color(75,80,95));
+						//g.fillRect(blockX,blockY,blockSize,blockSize);
+						if(sunset){
+							g.drawImage(road2Sunset,blockX,blockY,blockSize,blockSize,null);
+						}
+						else{
+							g.drawImage(road2,blockX,blockY,blockSize,blockSize,null);
 						}
 						
 					}

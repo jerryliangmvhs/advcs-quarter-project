@@ -26,7 +26,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 
 
 	private int gridSize = 101; //blocks, DO NOT CHANGE
-	private BufferedImage diamondHeadIcon, bigIslandVolcanoIcon, observatoryIcon, pearlHarborIcon, theMountainIcon, treeIcon, flowerIcon, grass, grassDark, water, sand, road;
+	private BufferedImage diamondHeadIcon, bigIslandVolcanoIcon, observatoryIcon, pearlHarborIcon, theMountainIcon, treeIcon, flowerIcon, grass, grassDark, water, sand, road, road2;
 
 	public Screen(){
 		this.setLayout(null);
@@ -102,7 +102,8 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			grassDark = ImageIO.read(new File("icons/grass-block-dark.png"));
 			water = ImageIO.read(new File("icons/water.png"));
 			sand = ImageIO.read(new File("icons/sand.png"));
-			road = ImageIO.read(new File("icons/road.png"));
+			road = ImageIO.read(new File("icons/road1.png"));
+			road2 = ImageIO.read(new File("icons/road2.png"));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -125,6 +126,17 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		super.paintComponent(g);
 		g.setColor(new Color(20,130,195));
 		g.fillRect(0,0,screenSize,screenSize);
+		int x = 0;
+		int y = 0;
+		for(int i=0; i<renderDistance+50; i++){
+			for(int j=0; j<renderDistance+50; j++){
+				g.drawImage(water,x,y,blockSize,blockSize,null);
+				x+=blockSize;
+			}
+			x=0;
+			y+=blockSize;
+		}
+
 		for(int i=0; i<gridSize; i++){
 			for(int j=0; j<gridSize; j++){
 				Location key = new Location(i,j,blockSize);
@@ -133,13 +145,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 					int blockX = key.getX()+gridX;
 					int blockY = key.getY()+gridY;
 					if(block.get(k).getName().equals("water")){
-						if(renderDistance<=11){
-							g.drawImage(water,blockX,blockY,blockSize,blockSize,null);
-						}
-						else{
-							g.setColor(new Color(20,130,195));
-							g.fillRect(blockX,blockY,blockSize,blockSize);
-						}
+						g.drawImage(water,blockX,blockY,blockSize,blockSize,null);
 					}
 					if(block.get(k).getName().equals("land")){
 						//g.setColor(new Color(60,150,10));
@@ -155,6 +161,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 						//g.setColor(new Color(75,80,95));
 						//g.fillRect(blockX,blockY,blockSize,blockSize);
 						g.drawImage(road,blockX,blockY,blockSize,blockSize,null);
+						
 					}
 					if(block.get(k).getName().equals("sand")){
 						//g.setColor(new Color(255,210,75));

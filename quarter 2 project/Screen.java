@@ -14,19 +14,19 @@ import javax.imageio.ImageIO;
 public class Screen extends JPanel implements ActionListener, KeyListener, MouseListener{
 	private MyHashTable<Location,GridObject> map;
 	private Tourist player;
-	private int playerRow = 17;
-	private int playerCol = 17;
-	private int renderDistance = 25; //101 is largest
+	private int playerRow = 38;
+	private int playerCol = 38;
+	private int renderDistance = 31; //101 is largest, must be ODD
 	private int screenSize = 808;
 	private int blockSize = screenSize/renderDistance;
-	private int touristX = (screenSize/2)-(blockSize/2);
-	private int touristY = (screenSize/2)-(blockSize/2);
+	private int touristX = ((renderDistance-1)/2)*blockSize;
+	private int touristY = ((renderDistance-1)/2)*blockSize;
 	private int gridX = (((renderDistance-1)/2)*blockSize)-(playerCol*blockSize);
 	private int gridY = (((renderDistance-1)/2)*blockSize)-(playerRow*blockSize);
 
 
 	private int gridSize = 101; //blocks, DO NOT CHANGE
-	private BufferedImage diamondHeadIcon, bigIslandVolcanoIcon, observatoryIcon, pearlHarborIcon, theMountainIcon, treeIcon, flowerIcon, grass, grassDark, water, sand;
+	private BufferedImage diamondHeadIcon, bigIslandVolcanoIcon, observatoryIcon, pearlHarborIcon, theMountainIcon, treeIcon, flowerIcon, grass, grassDark, water, sand, road;
 
 	public Screen(){
 		this.setLayout(null);
@@ -102,12 +102,13 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			grassDark = ImageIO.read(new File("icons/grass-block-dark.png"));
 			water = ImageIO.read(new File("icons/water.png"));
 			sand = ImageIO.read(new File("icons/sand.png"));
+			road = ImageIO.read(new File("icons/road.png"));
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-		player = new Tourist(playerRow,playerCol,blockSize,map);
+		player = new Tourist(playerRow,playerCol,touristX,touristY,blockSize,map);
 		this.setFocusable(true);
 		addMouseListener(this);
 		addKeyListener(this);
@@ -122,17 +123,23 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	@Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
+		g.setColor(new Color(20,130,195));
+		g.fillRect(0,0,screenSize,screenSize);
 		for(int i=0; i<gridSize; i++){
 			for(int j=0; j<gridSize; j++){
 				Location key = new Location(i,j,blockSize);
 				DLList<GridObject> block = map.get(key);
 				for(int k=0; k<block.size(); k++){
-					int blockX = key.getX();
-					int blockY = key.getY();
+					int blockX = key.getX()+gridX;
+					int blockY = key.getY()+gridY;
 					if(block.get(k).getName().equals("water")){
-						//g.setColor(new Color(20,130,195));
-						//g.fillRect(blockX,blockY,blockSize,blockSize);
-						g.drawImage(water,blockX,blockY,blockSize,blockSize,null);
+						if(renderDistance<=11){
+							g.drawImage(water,blockX,blockY,blockSize,blockSize,null);
+						}
+						else{
+							g.setColor(new Color(20,130,195));
+							g.fillRect(blockX,blockY,blockSize,blockSize);
+						}
 					}
 					if(block.get(k).getName().equals("land")){
 						//g.setColor(new Color(60,150,10));
@@ -145,8 +152,9 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 						g.drawImage(grassDark,blockX,blockY,blockSize,blockSize,null);
 					}
 					if(block.get(k).getName().equals("road")){
-						g.setColor(new Color(75,80,95));
-						g.fillRect(blockX,blockY,blockSize,blockSize);
+						//g.setColor(new Color(75,80,95));
+						//g.fillRect(blockX,blockY,blockSize,blockSize);
+						g.drawImage(road,blockX,blockY,blockSize,blockSize,null);
 					}
 					if(block.get(k).getName().equals("sand")){
 						//g.setColor(new Color(255,210,75));
@@ -183,21 +191,45 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 
 	public void actionPerformed(ActionEvent e){}
 	public void keyPressed(KeyEvent e){
-		//up is 38, right is 39, down is 40, left is 37
+		//left is 37, up is 38, right is 39, down is 40.
+		//91 is zoom out, 93 is zoom in
 		//System.out.println(e.getKeyCode());
 
 		if(e.getKeyCode()==37){
-			player.moveLeft();
+			gridX+=blockSize;
+			playerCol--;
 		}
 		if(e.getKeyCode()==38){
-			player.moveUp();
+			gridY+=blockSize;
+			playerRow--;
 		}
 		if(e.getKeyCode()==39){
-			player.moveRight();
+			gridX-=blockSize;
+			playerCol++;
 		}
 		if(e.getKeyCode()==40){
-			player.moveDown();
+			gridY-=blockSize;
+			playerRow++;
 		}
+		if(e.getKeyCode()==91 && renderDistance <95){
+			renderDistance+=6;
+		
+			System.out.println("Zooming Out");
+			System.out.println("Render Distance: " + renderDistance + " chunks.");
+		}
+		if(e.getKeyCode()==93 && renderDistance >=11){
+			renderDistance-=6;
+			
+			System.out.println("Zooming In");
+			System.out.println("Render Distance: " + renderDistance + " chunks.");
+		}
+		blockSize = screenSize/renderDistance;
+		player.setSize(screenSize/renderDistance);
+		player.setX(((renderDistance-1)/2)*blockSize);
+		player.setY(((renderDistance-1)/2)*blockSize);
+		gridX = (((renderDistance-1)/2)*blockSize)-(playerCol*blockSize);
+		gridY = (((renderDistance-1)/2)*blockSize)-(playerRow*blockSize);
+		System.out.println("Player Row: " + playerRow + " Player Column: " + playerCol);
 		repaint();
 	}
 	public void keyTyped(KeyEvent e){}

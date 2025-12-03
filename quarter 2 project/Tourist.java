@@ -12,13 +12,13 @@ public class Tourist {
     private int size;
     private MyHashTable<Location, GridObject> map;
     private DLList<GridObject> gridBucket;
-    public Tourist(int row, int col, int size, MyHashTable<Location, GridObject> map){
+    public Tourist(int row, int col, int x, int y, int size, MyHashTable<Location, GridObject> map){
         this.row = row;
         this.col = col;
         this.map = map;
         this.size = size;
-        x = col*size;
-        y = row*size;
+        this.x = x;
+        this.y = y;
     }
     public int getRow(){
         return row;
@@ -54,36 +54,7 @@ public class Tourist {
             errorSound();
         }
     }
-    public void moveRight(){
-        gridBucket = map.get(new Location(row,col+1,size));
-        if(!gridBucket.get(0).getName().equals("water") && gridBucket.size()==1){
-            col++;
-            x = col*size;
-        }
-        else{
-            errorSound();
-        }
-    }
-    public void moveUp(){
-        gridBucket = map.get(new Location(row-1,col,size));
-        if(!gridBucket.get(0).getName().equals("water") && gridBucket.size()==1){
-            row--;
-            y = row*size;
-        }
-        else{
-            errorSound();
-        }
-    }
-    public void moveDown(){
-        gridBucket = map.get(new Location(row+1,col,size));
-        if(!gridBucket.get(0).getName().equals("water") && gridBucket.size()==1){
-            row++;
-            y = row*size;
-        }
-        else{
-            errorSound();
-        }
-    }
+    
     public void errorSound(){
         //System.out.println("Player tried to move into obstacle");
         try {
@@ -95,6 +66,7 @@ public class Tourist {
             exc.printStackTrace(System.out);
         }
     }
+         
 
 
 }

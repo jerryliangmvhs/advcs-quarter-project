@@ -263,12 +263,18 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			player.setCol(56);
 		}
 		if(e.getKeyCode()==54){
+			playerRow = 48;
+			playerCol = 71;
+			player.setRow(48);
+			player.setCol(71);
+		}
+		if(e.getKeyCode()==55){
 			playerRow = 58;
 			playerCol = 62;
 			player.setRow(58);
 			player.setCol(62);
 		}
-		if(e.getKeyCode()==55){
+		if(e.getKeyCode()==56){
 			playerRow = 74;
 			playerCol = 77;
 			player.setRow(74);

@@ -23,10 +23,11 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	private int touristY = ((renderDistance-1)/2)*blockSize;
 	private int gridX = (((renderDistance-1)/2)*blockSize)-(playerCol*blockSize);
 	private int gridY = (((renderDistance-1)/2)*blockSize)-(playerRow*blockSize);
-
+	private boolean sunset = true;
 
 	private int gridSize = 101; //blocks, DO NOT CHANGE
 	private BufferedImage diamondHeadIcon, bigIslandVolcanoIcon, observatoryIcon, pearlHarborIcon, theMountainIcon, treeIcon, flowerIcon, grass, grassDark, water, sand, road, road2;
+	private BufferedImage diamondHeadIconSunset, bigIslandVolcanoIconSunset, observatoryIconSunset, pearlHarborIconSunset, theMountainIconSunset, treeIconSunset, flowerIconSunset, grassSunset, grassDarkSunset, waterSunset, sandSunset, roadSunset, road2Sunset;
 
 	public Screen(){
 		this.setLayout(null);
@@ -72,15 +73,15 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			map.put(new Location(29,35,blockSize), new GridObject("pearlHarbor"));
 			map.put(new Location(18,18,blockSize), new GridObject("theMountain"));
 
-			for(int i=0; i<100; i++){
-				for(int j=0; j<100; j++){
+			for(int i=0; i<gridSize; i++){
+				for(int j=0; j<gridSize; j++){
 					DLList<GridObject> g = map.get(new Location(j,i,blockSize));
 					//if a grid box is land and doesn't already have an obstacle, there is a 0.25 chance there will be a tree.
 					if(g.size()==1 && (g.get(0).getName().equals("land") || g.get(0).getName().equals("hills"))){
 						if((int)(Math.random()*6)==3){
 							map.put(new Location(j,i,blockSize),new GridObject("tree"));
 						}
-						if((int)(Math.random()*6)==2){
+						else if((int)(Math.random()*6)==2){
 							map.put(new Location(j,i,blockSize),new GridObject("flower"));
 						}
 					}
@@ -104,6 +105,21 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			sand = ImageIO.read(new File("icons/sand.png"));
 			road = ImageIO.read(new File("icons/road1.png"));
 			road2 = ImageIO.read(new File("icons/road2.png"));
+
+			//sunset icons
+			diamondHeadIconSunset = ImageIO.read(new File("sunsetIcons/diamond-head.png"));
+			bigIslandVolcanoIconSunset = ImageIO.read(new File("sunsetIcons/big-island-volcano.png"));
+			observatoryIconSunset = ImageIO.read(new File("sunsetIcons/observatory.png"));
+			pearlHarborIconSunset = ImageIO.read(new File("sunsetIcons/pearl-harbor.png"));
+			theMountainIconSunset = ImageIO.read(new File("sunsetIcons/the-mountain.png"));
+			treeIconSunset = ImageIO.read(new File("sunsetIcons/tree.png"));
+			flowerIconSunset = ImageIO.read(new File("sunsetIcons/yellow-flower.png"));
+			grassSunset = ImageIO.read(new File("sunsetIcons/grass-block.png"));
+			grassDarkSunset = ImageIO.read(new File("sunsetIcons/grass-block-dark.png"));
+			waterSunset = ImageIO.read(new File("sunsetIcons/water.png"));
+			sandSunset = ImageIO.read(new File("sunsetIcons/sand.png"));
+			roadSunset = ImageIO.read(new File("sunsetIcons/road1.png"));
+			road2Sunset = ImageIO.read(new File("sunsetIcons/road2.png"));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -130,7 +146,12 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		int y = 0;
 		for(int i=0; i<renderDistance+50; i++){
 			for(int j=0; j<renderDistance+50; j++){
-				g.drawImage(water,x,y,blockSize,blockSize,null);
+				if(sunset){
+					g.drawImage(waterSunset,x,y,blockSize,blockSize,null);
+				}
+				else{
+					g.drawImage(water,x,y,blockSize,blockSize,null);
+				}
 				x+=blockSize;
 			}
 			x=0;
@@ -145,49 +166,111 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 					int blockX = key.getX()+gridX;
 					int blockY = key.getY()+gridY;
 					if(block.get(k).getName().equals("water")){
-						g.drawImage(water,blockX,blockY,blockSize,blockSize,null);
+						if(sunset){
+							g.drawImage(waterSunset,blockX,blockY,blockSize,blockSize,null);
+						}
+						else{
+							g.drawImage(water,blockX,blockY,blockSize,blockSize,null);
+						}
+						
 					}
 					if(block.get(k).getName().equals("land")){
 						//g.setColor(new Color(60,150,10));
 						//g.fillRect(blockX,blockY,blockSize,blockSize);
-						g.drawImage(grass,blockX,blockY,blockSize,blockSize,null);
+						if(sunset){
+							g.drawImage(grassSunset,blockX,blockY,blockSize,blockSize,null);
+						}
+						else{
+							g.drawImage(grass,blockX,blockY,blockSize,blockSize,null);
+						}
 					}
 					if(block.get(k).getName().equals("hills")){
 						//g.setColor(new Color(50,130,5));
 						//g.fillRect(blockX,blockY,blockSize,blockSize);
-						g.drawImage(grassDark,blockX,blockY,blockSize,blockSize,null);
+						if(sunset){
+							g.drawImage(grassDarkSunset,blockX,blockY,blockSize,blockSize,null);
+						}
+						else{
+							g.drawImage(grassDark,blockX,blockY,blockSize,blockSize,null);
+						}
+						
 					}
 					if(block.get(k).getName().equals("road")){
 						//g.setColor(new Color(75,80,95));
 						//g.fillRect(blockX,blockY,blockSize,blockSize);
-						g.drawImage(road,blockX,blockY,blockSize,blockSize,null);
+						if(sunset){
+							g.drawImage(roadSunset,blockX,blockY,blockSize,blockSize,null);
+						}
+						else{
+							g.drawImage(road,blockX,blockY,blockSize,blockSize,null);
+						}
 						
 					}
 					if(block.get(k).getName().equals("sand")){
 						//g.setColor(new Color(255,210,75));
 						//g.fillRect(blockX,blockY,blockSize,blockSize);
-						g.drawImage(sand,blockX,blockY,blockSize,blockSize,null);
+						if(sunset){
+							g.drawImage(sandSunset,blockX,blockY,blockSize,blockSize,null);
+						}
+						else{
+							g.drawImage(sand,blockX,blockY,blockSize,blockSize,null);
+						}
 					}
 					if(block.get(k).getName().equals("diamondHead")){
-						g.drawImage(diamondHeadIcon,blockX,blockY,blockSize,blockSize,null);
+						if(sunset){
+							g.drawImage(diamondHeadIconSunset,blockX,blockY,blockSize,blockSize,null);
+						}
+						else{
+							g.drawImage(diamondHeadIcon,blockX,blockY,blockSize,blockSize,null);
+						}
 					}
 					if(block.get(k).getName().equals("observatory")){
-						g.drawImage(observatoryIcon,blockX,blockY,blockSize,blockSize,null);
+						if(sunset){
+							g.drawImage(observatoryIconSunset,blockX,blockY,blockSize,blockSize,null);
+						}
+						else{
+							g.drawImage(observatoryIcon,blockX,blockY,blockSize,blockSize,null);
+						}
 					}
 					if(block.get(k).getName().equals("theMountain")){
-						g.drawImage(theMountainIcon,blockX,blockY,blockSize,blockSize,null);
+						if(sunset){
+							g.drawImage(theMountainIconSunset,blockX,blockY,blockSize,blockSize,null);
+						}
+						else{
+							g.drawImage(theMountainIcon,blockX,blockY,blockSize,blockSize,null);
+						}
 					}
 					if(block.get(k).getName().equals("pearlHarbor")){
-						g.drawImage(pearlHarborIcon,blockX,blockY,blockSize,blockSize,null);
+						if(sunset){
+							g.drawImage(pearlHarborIconSunset,blockX,blockY,blockSize,blockSize,null);
+						}	
+						else{
+							g.drawImage(pearlHarborIcon,blockX,blockY,blockSize,blockSize,null);
+						}
 					}
 					if(block.get(k).getName().equals("bigIslandVolcano")){
-						g.drawImage(bigIslandVolcanoIcon,blockX,blockY,blockSize,blockSize,null);
+						if(sunset){
+							g.drawImage(bigIslandVolcanoIconSunset,blockX,blockY,blockSize,blockSize,null);
+						}
+						else{
+							g.drawImage(bigIslandVolcanoIcon,blockX,blockY,blockSize,blockSize,null);
+						}
 					}
 					if(block.get(k).getName().equals("tree")){
-						g.drawImage(treeIcon,blockX,blockY,blockSize,blockSize,null);
+						if(sunset){
+							g.drawImage(treeIconSunset,blockX,blockY,blockSize,blockSize,null);
+						}
+						else{
+							g.drawImage(treeIcon,blockX,blockY,blockSize,blockSize,null);
+						}
 					}
 					if(block.get(k).getName().equals("flower")){
-						g.drawImage(flowerIcon,blockX,blockY,blockSize,blockSize,null);
+						if(sunset){
+							g.drawImage(flowerIconSunset,blockX,blockY,blockSize,blockSize,null);
+						}
+						else{
+							g.drawImage(flowerIcon,blockX,blockY,blockSize,blockSize,null);
+						}
 					}
 				}
 			}
@@ -229,6 +312,14 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			
 			System.out.println("Zooming In");
 			System.out.println("Render Distance: " + renderDistance + " chunks.");
+		}
+		if(e.getKeyCode()==59){
+			if(sunset){
+				sunset = false;
+			}
+			else if(!sunset){
+				sunset = true;
+			}
 		}
 		//1-8 is 49-56
 		//Island 1 (22,7)

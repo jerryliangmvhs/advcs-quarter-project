@@ -7,8 +7,6 @@ public class Tourist {
     private int col;
     private int x;
     private int y;
-    private int width;
-    private int height;
     private int size;
     private MyHashTable<Location, GridObject> map;
     private DLList<GridObject> gridBucket;
@@ -19,9 +17,6 @@ public class Tourist {
         this.size = size;
         this.x = x;
         this.y = y;
-    }
-    public int getRow(){
-        return row;
     }
     public void setSize(int size){
         this.size = size;
@@ -35,8 +30,17 @@ public class Tourist {
     public void setY(int y){
         this.y = y;
     }
+    public int getRow(){
+        return row;
+    }
     public int getCol(){
         return col;
+    }
+    public void setRow(int row){
+        this.row = row;
+    }
+    public void setCol(int col){
+        this.col = col;
     }
     public int getX(){
         return x;
@@ -44,17 +48,38 @@ public class Tourist {
     public int getY(){
         return y;
     }
-    public void moveLeft(){
+    public boolean canMoveLeft(){
         gridBucket = map.get(new Location(row,col-1,size));
-        if(!gridBucket.get(0).getName().equals("water") && gridBucket.size()==1){
-            col--;
-            x = col*size;
+        if(gridBucket.size()==1 && !gridBucket.get(0).getName().equals("water")){
+            return true;
         }
-        else{
-            errorSound();
-        }
+        errorSound();
+        return false;
     }
-    
+    public boolean canMoveRight(){
+        gridBucket = map.get(new Location(row,col+1,size));
+        if(gridBucket.size()==1 && !gridBucket.get(0).getName().equals("water")){
+            return true;
+        }
+        errorSound();
+        return false;
+    }
+    public boolean canMoveUp(){
+        gridBucket = map.get(new Location(row-1,col,size));
+        if(gridBucket.size()==1 && !gridBucket.get(0).getName().equals("water")){
+            return true;
+        }
+        errorSound();
+        return false;
+    }
+    public boolean canMoveDown(){
+        gridBucket = map.get(new Location(row+1,col,size));
+        if(gridBucket.size()==1 && !gridBucket.get(0).getName().equals("water")){
+            return true;
+        }
+        errorSound();
+        return false;
+    }
     public void errorSound(){
         //System.out.println("Player tried to move into obstacle");
         try {

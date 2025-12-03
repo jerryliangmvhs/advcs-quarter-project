@@ -14,8 +14,8 @@ import javax.imageio.ImageIO;
 public class Screen extends JPanel implements ActionListener, KeyListener, MouseListener{
 	private MyHashTable<Location,GridObject> map;
 	private Tourist player;
-	private int playerRow = 38;
-	private int playerCol = 38;
+	private int playerRow = 17;
+	private int playerCol = 17;
 	private int renderDistance = 31; //101 is largest, must be ODD
 	private int screenSize = 808;
 	private int blockSize = screenSize/renderDistance;
@@ -193,21 +193,21 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	public void keyPressed(KeyEvent e){
 		//left is 37, up is 38, right is 39, down is 40.
 		//91 is zoom out, 93 is zoom in
-		//System.out.println(e.getKeyCode());
+		System.out.println(e.getKeyCode());
 
-		if(e.getKeyCode()==37){
+		if(e.getKeyCode()==37 && player.canMoveLeft()){
 			gridX+=blockSize;
 			playerCol--;
 		}
-		if(e.getKeyCode()==38){
+		if(e.getKeyCode()==38 && player.canMoveUp()){
 			gridY+=blockSize;
 			playerRow--;
 		}
-		if(e.getKeyCode()==39){
+		if(e.getKeyCode()==39 && player.canMoveRight()){
 			gridX-=blockSize;
 			playerCol++;
 		}
-		if(e.getKeyCode()==40){
+		if(e.getKeyCode()==40 && player.canMoveDown()){
 			gridY-=blockSize;
 			playerRow++;
 		}
@@ -223,10 +223,63 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			System.out.println("Zooming In");
 			System.out.println("Render Distance: " + renderDistance + " chunks.");
 		}
+		//1-8 is 49-56
+		//Island 1 (22,7)
+		//Island 2 (16,19)
+		//Island 3 (26,36)
+		//Island 4 (36,52)
+		//Island 5 (49,56)
+		//Island 6 (48,71)
+		//Island 7 (58,62)
+		//Island 8 (74,77)
+		if(e.getKeyCode()==49){
+			playerRow = 22;
+			playerCol = 7;
+			player.setRow(22);
+			player.setCol(7);
+		}
+		if(e.getKeyCode()==50){
+			playerRow = 16;
+			playerCol = 19;
+			player.setRow(16);
+			player.setCol(19);
+		}
+		if(e.getKeyCode()==51){
+			playerRow = 26;
+			playerCol = 36;
+			player.setRow(26);
+			player.setCol(36);
+		}
+		if(e.getKeyCode()==52){
+			playerRow = 36;
+			playerCol = 52;
+			player.setRow(36);
+			player.setCol(52);
+		}
+		if(e.getKeyCode()==53){
+			playerRow = 49;
+			playerCol = 56;
+			player.setRow(49);
+			player.setCol(56);
+		}
+		if(e.getKeyCode()==54){
+			playerRow = 58;
+			playerCol = 62;
+			player.setRow(58);
+			player.setCol(62);
+		}
+		if(e.getKeyCode()==55){
+			playerRow = 74;
+			playerCol = 77;
+			player.setRow(74);
+			player.setCol(77);
+		}
 		blockSize = screenSize/renderDistance;
 		player.setSize(screenSize/renderDistance);
 		player.setX(((renderDistance-1)/2)*blockSize);
 		player.setY(((renderDistance-1)/2)*blockSize);
+		player.setRow(playerRow);
+		player.setCol(playerCol);
 		gridX = (((renderDistance-1)/2)*blockSize)-(playerCol*blockSize);
 		gridY = (((renderDistance-1)/2)*blockSize)-(playerRow*blockSize);
 		System.out.println("Player Row: " + playerRow + " Player Column: " + playerCol);

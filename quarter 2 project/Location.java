@@ -13,7 +13,7 @@ public class Location {
     }
     @Override
     public int hashCode(){
-        return (row*100)+col;
+        return (row*101)+col;
     }
     public int getRow(){
         return row;

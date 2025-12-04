@@ -2,8 +2,6 @@ import javax.swing.JPanel;
 import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.util.Scanner;
 import java.awt.image.BufferedImage;
 import java.awt.event.*;
@@ -14,8 +12,9 @@ import javax.imageio.ImageIO;
 public class Screen extends JPanel implements ActionListener, KeyListener, MouseListener{
 	private MyHashTable<Location,GridObject> map;
 	private Tourist player;
-	private int playerRow = 17;
-	private int playerCol = 17;
+	private Font minecraftFive;
+	private int playerRow = 27;
+	private int playerCol = 36;
 	private int renderDistance = 31; //101 is largest, must be ODD
 	private int screenSize = 808;
 	private int blockSize = screenSize/renderDistance;
@@ -24,6 +23,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	private int gridX = (((renderDistance-1)/2)*blockSize)-(playerCol*blockSize);
 	private int gridY = (((renderDistance-1)/2)*blockSize)-(playerRow*blockSize);
 	private boolean sunset = false;
+	private String currentIsland = "O'ahu";
 
 	private int gridSize = 101; //blocks, DO NOT CHANGE
 	private BufferedImage diamondHeadIcon, bigIslandVolcanoIcon, observatoryIcon, pearlHarborIcon, theMountainIcon, treeIcon, flowerIcon, grass, grassDark, water, sand, road, road2;
@@ -31,6 +31,15 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 
 	public Screen(){
 		this.setLayout(null);
+
+		try{
+			minecraftFive = Font.createFont(Font.TRUETYPE_FONT,new File("fonts/minecraft-five.ttf")).deriveFont(7.5f);
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			ge.registerFont(minecraftFive);
+		} catch (IOException | FontFormatException e){
+			e.printStackTrace();
+  		}
+
 		map = new MyHashTable<Location,GridObject>();
 		try {
 			Scanner scan = new Scanner(new FileReader("Map.txt"));
@@ -293,8 +302,15 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 				}
 			}
 		}
+
 		g.setColor(new Color(220,30,240));
 		g.fillRect(player.getX(),player.getY(),player.getSize(),player.getSize());
+		g.setColor(Color.WHITE);
+		g.setFont(minecraftFive);
+		checkIsland();
+		g.drawString("Render Distance: " + renderDistance + " chunks",10,15);
+		g.drawString("Current Island: "+currentIsland,10,30);
+		
 	}
 
 	public void actionPerformed(ActionEvent e){}
@@ -415,5 +431,33 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
     public void mouseClicked(MouseEvent e) {}
 	public void mousePressed(MouseEvent e){
 		System.out.println("X: " + e.getX() + " Y: " + e.getY());
+	}
+
+	public void checkIsland(){
+		if(playerCol>=5 && playerCol <=10 && playerRow >=19 && playerRow <=26){
+			currentIsland = "Ni'ihau";
+		}
+		else if(playerCol>=13 && playerCol <=24 && playerRow >=12 && playerRow <=20){
+			currentIsland = "Kauai";
+		}
+		else if(playerCol>=28 && playerCol <=43 && playerRow >=19 && playerRow <=31){
+			currentIsland = "O'ahu";
+		}
+		else if(playerCol>=45 && playerCol <=59 && playerRow >=35 && playerRow <=39){
+			currentIsland = "Moloka'i";
+		}
+		else if(playerCol>=52 && playerCol <=59 && playerRow >=45 && playerRow <=52){
+			currentIsland = "Lanai";
+		}
+		else if(playerCol>=62 && playerCol <=79 && playerRow >=43 && playerRow <=53){
+			currentIsland = "Maui";
+		}
+		else if(playerCol>=59 && playerCol <=65 && playerRow >=55 && playerRow <=60){
+			currentIsland = "Kaho'olawe";
+		}
+		else if(playerCol>=65 && playerCol <=93 && playerRow >=60 && playerRow <=91){
+			currentIsland = "Hawai'i";
+		}
+		
 	}
 }

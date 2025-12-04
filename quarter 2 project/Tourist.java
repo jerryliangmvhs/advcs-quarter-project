@@ -2,19 +2,21 @@ import java.net.URL;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
-public class Tourist {
+public class Tourist implements Runnable {
     private int row;
     private int col;
     private int x;
     private int y;
     private int size;
+    private Screen sc;
     private MyHashTable<Location, GridObject> map;
     private DLList<GridObject> gridBucket;
-    public Tourist(int row, int col, int x, int y, int size, MyHashTable<Location, GridObject> map){
+    public Tourist(int row, int col, int x, int y, int size, MyHashTable<Location, GridObject> map, Screen sc){
         this.row = row;
         this.col = col;
         this.map = map;
         this.size = size;
+        this.sc = sc;
         this.x = x;
         this.y = y;
     }
@@ -89,6 +91,25 @@ public class Tourist {
             clip.start();
         } catch (Exception exc) {
             exc.printStackTrace(System.out);
+        }
+    }
+    @Override
+    public void run(){
+        int counter = 0;
+        while(true){
+            counter++;
+            if(counter%2==0){
+                y+=(size/20);
+            }
+            else if(counter%2==1){
+                y-=(size/20);
+            }
+            try {
+                Thread.sleep(500);
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+            sc.repaint();
         }
     }
          

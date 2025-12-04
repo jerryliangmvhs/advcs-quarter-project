@@ -29,6 +29,9 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	private BufferedImage diamondHeadIcon, bigIslandVolcanoIcon, observatoryIcon, pearlHarborIcon, theMountainIcon, treeIcon, flowerIcon, grass, grassDark, water, sand, road, road2;
 	private BufferedImage diamondHeadIconSunset, bigIslandVolcanoIconSunset, observatoryIconSunset, pearlHarborIconSunset, theMountainIconSunset, treeIconSunset, flowerIconSunset, grassSunset, grassDarkSunset, waterSunset, sandSunset, roadSunset, road2Sunset;
 
+	private BufferedImage playerSprite;
+	private BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
+
 	public Screen(){
 		this.setLayout(null);
 
@@ -137,11 +140,26 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			roadSunset = ImageIO.read(new File("sunsetIcons/road1.png"));
 			road2Sunset = ImageIO.read(new File("sunsetIcons/road2.png"));
 
+			//player sprites
+			up1 = ImageIO.read(new File("sprites/up1.png"));
+			up2 = ImageIO.read(new File("sprites/up2.png"));
+			down1 = ImageIO.read(new File("sprites/down1.png"));
+			down2 = ImageIO.read(new File("sprites/down2.png"));
+			left1 = ImageIO.read(new File("sprites/left1.png"));
+			left2 = ImageIO.read(new File("sprites/left2.png"));
+			right1 = ImageIO.read(new File("sprites/right1.png"));
+			right2 = ImageIO.read(new File("sprites/right2.png"));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-		player = new Tourist(playerRow,playerCol,touristX,touristY,blockSize,map);
+		player = new Tourist(playerRow,playerCol,touristX,touristY,blockSize,map,this);
+		playerSprite = down1;
+
+		Thread playerThread = new Thread(player);
+		playerThread.start();
+		
 		this.setFocusable(true);
 		addMouseListener(this);
 		addKeyListener(this);
@@ -303,8 +321,9 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			}
 		}
 
-		g.setColor(new Color(220,30,240));
-		g.fillRect(player.getX(),player.getY(),player.getSize(),player.getSize());
+		//g.setColor(new Color(220,30,240));
+		//g.fillRect(player.getX(),player.getY(),player.getSize(),player.getSize());
+		g.drawImage(playerSprite,player.getX(),player.getY(),player.getSize(),player.getSize(),null);
 		g.setColor(Color.WHITE);
 		g.setFont(minecraftFive);
 		checkIsland();
@@ -322,18 +341,43 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		if(e.getKeyCode()==37 && player.canMoveLeft()){
 			gridX+=blockSize;
 			playerCol--;
+			if(playerCol%2==0){
+				playerSprite = left1;
+			}
+			else{
+				playerSprite = left2;
+			}
+			
 		}
 		if(e.getKeyCode()==38 && player.canMoveUp()){
 			gridY+=blockSize;
 			playerRow--;
+			if(playerRow%2==0){
+				playerSprite = up2;
+			}
+			else{
+				playerSprite = up1;
+			}
 		}
 		if(e.getKeyCode()==39 && player.canMoveRight()){
 			gridX-=blockSize;
 			playerCol++;
+			if(playerCol%2==0){
+				playerSprite = right1;
+			}
+			else{
+				playerSprite = right2;
+			}
 		}
 		if(e.getKeyCode()==40 && player.canMoveDown()){
 			gridY-=blockSize;
 			playerRow++;
+			if(playerRow%2==0){
+				playerSprite = down1;
+			}
+			else{
+				playerSprite = down2;
+			}
 		}
 		if(e.getKeyCode()==91 && renderDistance <95){
 			renderDistance+=6;
@@ -424,7 +468,13 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		repaint();
 	}
 	public void keyTyped(KeyEvent e){}
-	public void keyReleased(KeyEvent e){}
+	public void keyReleased(KeyEvent e){
+		if(e.getKeyCode()>=37 && e.getKeyCode()<=40){
+			System.out.println("key released");
+			playerSprite = down1;
+		}
+		repaint();
+	}
 	public void mouseReleased(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}

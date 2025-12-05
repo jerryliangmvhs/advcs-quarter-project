@@ -66,8 +66,8 @@ public class Screen extends JPanel implements ActionListener, MouseListener {
 		addChicken.addActionListener(this);
 		addChicken.setBackground(buttonColor);
 		addChicken.setOpaque(true);
-		addChicken.setFont(customFontBold);
 		addChicken.setBorderPainted(false);
+		addChicken.setFont(customFontBold);
 		this.add(addChicken);
 
 		removeChicken = new JButton("Remove Chicken");

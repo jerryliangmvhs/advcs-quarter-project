@@ -8,15 +8,22 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.JButton;
 
 public class Screen extends JPanel implements ActionListener, KeyListener, MouseListener{
 	private MyHashTable<Location,GridObject> map;
+	private JButton zoomOut;
+	private JButton zoomIn;
 	private Tourist player;
 	private Chicken chicken1;
+
 	private Font minecraftFive;
+	private Font minecraftTen;
+
 	private int playerRow = 27;
 	private int playerCol = 36;
-	private int renderDistance = 31; //101 is largest, must be ODD
+	private Color buttonColor = new Color(40, 180, 25);
+	private int renderDistance = 35; //101 is largest, must be ODD
 	private int screenSize = 800;
 	private int blockSize = screenSize/renderDistance;
 	private int touristX = ((renderDistance-1)/2)*blockSize;
@@ -39,8 +46,10 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 
 		try{
 			minecraftFive = Font.createFont(Font.TRUETYPE_FONT,new File("fonts/minecraft-five.ttf")).deriveFont(7.5f);
+			minecraftTen = Font.createFont(Font.TRUETYPE_FONT,new File("fonts/minecraft-ten.ttf")).deriveFont(30f);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(minecraftFive);
+			ge.registerFont(minecraftTen);
 		} catch (IOException | FontFormatException e){
 			e.printStackTrace();
   		}
@@ -166,6 +175,31 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		playerThread.start();
 		Thread chickenThread1 = new Thread(chicken1);
 		chickenThread1.start();
+
+		zoomIn = new JButton("+");
+		zoomIn.setBounds(715,20,75,75);
+		zoomIn.addActionListener(this);
+		zoomIn.setMargin(new Insets(0,0,0,0));
+		zoomIn.setFont(minecraftTen);
+		zoomIn.setFocusable(false);
+		zoomIn.setBackground(buttonColor);
+		zoomIn.setBorderPainted(false);
+		zoomIn.setOpaque(true);
+		this.add(zoomIn);
+
+		zoomOut = new JButton("-");
+		zoomOut.setBounds(715,105,75,75);
+		zoomOut.setFocusable(false);
+		zoomOut.addActionListener(this);
+		zoomOut.setFont(minecraftTen);
+		zoomOut.setBackground(buttonColor);
+		zoomOut.setBorderPainted(false);
+		zoomOut.setOpaque(true);
+		this.add(zoomOut);
+
+		/*addChicken.setBackground(buttonColor);
+		addChicken.setOpaque(true);
+		addChicken.setBorderPainted(false); */
 		
 		this.setFocusable(true);
 		addMouseListener(this);
@@ -342,7 +376,24 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		
 	}
 
-	public void actionPerformed(ActionEvent e){}
+	public void actionPerformed(ActionEvent e){
+		if(e.getSource()==zoomIn && renderDistance >=11){
+			renderDistance -=6;
+		}
+		else if(e.getSource()==zoomOut && renderDistance <=95){
+			renderDistance +=6;
+		}
+		blockSize = screenSize/renderDistance;
+		player.setSize(screenSize/renderDistance);
+		chicken1.setSize(screenSize/renderDistance);
+		player.setX(((renderDistance-1)/2)*blockSize);
+		player.setY(((renderDistance-1)/2)*blockSize);
+		player.setRow(playerRow);
+		player.setCol(playerCol);
+		gridX = (((renderDistance-1)/2)*blockSize)-(playerCol*blockSize);
+		gridY = (((renderDistance-1)/2)*blockSize)-(playerRow*blockSize);
+		repaint();
+	}
 	public void keyPressed(KeyEvent e){
 		//left is 37, up is 38, right is 39, down is 40.
 		//91 is zoom out, 93 is zoom in

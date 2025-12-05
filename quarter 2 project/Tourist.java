@@ -53,6 +53,7 @@ public class Tourist implements Runnable {
     public boolean canMoveLeft(){
         gridBucket = map.get(new Location(row,col-1,size));
         if(gridBucket.size()==1 && !gridBucket.get(0).getName().equals("water")){
+            walkSound();
             return true;
         }
         errorSound();
@@ -61,6 +62,7 @@ public class Tourist implements Runnable {
     public boolean canMoveRight(){
         gridBucket = map.get(new Location(row,col+1,size));
         if(gridBucket.size()==1 && !gridBucket.get(0).getName().equals("water")){
+            walkSound();
             return true;
         }
         errorSound();
@@ -69,6 +71,7 @@ public class Tourist implements Runnable {
     public boolean canMoveUp(){
         gridBucket = map.get(new Location(row-1,col,size));
         if(gridBucket.size()==1 && !gridBucket.get(0).getName().equals("water")){
+            walkSound();
             return true;
         }
         errorSound();
@@ -77,6 +80,7 @@ public class Tourist implements Runnable {
     public boolean canMoveDown(){
         gridBucket = map.get(new Location(row+1,col,size));
         if(gridBucket.size()==1 && !gridBucket.get(0).getName().equals("water")){
+            walkSound();
             return true;
         }
         errorSound();
@@ -85,12 +89,35 @@ public class Tourist implements Runnable {
     public void errorSound(){
         //System.out.println("Player tried to move into obstacle");
         try {
-            URL url = this.getClass().getClassLoader().getResource("error.wav");
+            URL url = this.getClass().getClassLoader().getResource("sounds/error.wav");
             Clip clip = AudioSystem.getClip();
             clip.open(AudioSystem.getAudioInputStream(url));
             clip.start();
         } catch (Exception exc) {
             exc.printStackTrace(System.out);
+        }
+    }
+    public void walkSound(){
+        int randInt = (int)(Math.random()*2);
+        if(randInt==0){
+            try {
+                URL url = this.getClass().getClassLoader().getResource("sounds/walk1.wav");
+                Clip clip = AudioSystem.getClip();
+                clip.open(AudioSystem.getAudioInputStream(url));
+                clip.start();
+            } catch (Exception exc) {
+                exc.printStackTrace(System.out);
+            }
+        }
+        else{
+            try {
+                URL url = this.getClass().getClassLoader().getResource("sounds/walk2.wav");
+                Clip clip = AudioSystem.getClip();
+                clip.open(AudioSystem.getAudioInputStream(url));
+                clip.start();
+            } catch (Exception exc) {
+                exc.printStackTrace(System.out);
+            }
         }
     }
     @Override

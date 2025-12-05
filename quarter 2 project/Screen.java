@@ -12,11 +12,12 @@ import javax.imageio.ImageIO;
 public class Screen extends JPanel implements ActionListener, KeyListener, MouseListener{
 	private MyHashTable<Location,GridObject> map;
 	private Tourist player;
+	private Chicken chicken1;
 	private Font minecraftFive;
 	private int playerRow = 27;
 	private int playerCol = 36;
 	private int renderDistance = 31; //101 is largest, must be ODD
-	private int screenSize = 808;
+	private int screenSize = 800;
 	private int blockSize = screenSize/renderDistance;
 	private int touristX = ((renderDistance-1)/2)*blockSize;
 	private int touristY = ((renderDistance-1)/2)*blockSize;
@@ -31,6 +32,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 
 	private BufferedImage playerSprite;
 	private BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
+	private BufferedImage chicken;
 
 	public Screen(){
 		this.setLayout(null);
@@ -150,15 +152,20 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			right1 = ImageIO.read(new File("sprites/right1.png"));
 			right2 = ImageIO.read(new File("sprites/right2.png"));
 
+			chicken = ImageIO.read(new File("sprites/chicken.png"));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
 		player = new Tourist(playerRow,playerCol,touristX,touristY,blockSize,map,this);
+		chicken1 = new Chicken(16,19,blockSize,map,this);
 		playerSprite = down1;
 
 		Thread playerThread = new Thread(player);
 		playerThread.start();
+		Thread chickenThread1 = new Thread(chicken1);
+		chickenThread1.start();
 		
 		this.setFocusable(true);
 		addMouseListener(this);
@@ -324,6 +331,9 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		//g.setColor(new Color(220,30,240));
 		//g.fillRect(player.getX(),player.getY(),player.getSize(),player.getSize());
 		g.drawImage(playerSprite,player.getX(),player.getY(),player.getSize(),player.getSize(),null);
+		
+		g.drawImage(chicken,chicken1.getX()+gridX,chicken1.getY()+gridY,chicken1.getSize(),chicken1.getSize(),null);
+		
 		g.setColor(Color.WHITE);
 		g.setFont(minecraftFive);
 		checkIsland();
@@ -415,20 +425,20 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			player.setCol(7);
 		}
 		if(e.getKeyCode()==50){
-			playerRow = 16;
-			playerCol = 19;
+			playerRow = 17;
+			playerCol = 21;
 			player.setRow(16);
 			player.setCol(19);
 		}
 		if(e.getKeyCode()==51){
-			playerRow = 26;
+			playerRow = 27;
 			playerCol = 36;
 			player.setRow(26);
 			player.setCol(36);
 		}
 		if(e.getKeyCode()==52){
-			playerRow = 36;
-			playerCol = 52;
+			playerRow = 37;
+			playerCol = 53;
 			player.setRow(36);
 			player.setCol(52);
 		}
@@ -439,25 +449,26 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			player.setCol(56);
 		}
 		if(e.getKeyCode()==54){
-			playerRow = 48;
-			playerCol = 71;
+			playerRow = 49;
+			playerCol = 70;
 			player.setRow(48);
 			player.setCol(71);
 		}
 		if(e.getKeyCode()==55){
-			playerRow = 58;
-			playerCol = 62;
+			playerRow = 57;
+			playerCol = 61;
 			player.setRow(58);
 			player.setCol(62);
 		}
 		if(e.getKeyCode()==56){
-			playerRow = 74;
-			playerCol = 77;
+			playerRow = 71;
+			playerCol = 78;
 			player.setRow(74);
 			player.setCol(77);
 		}
 		blockSize = screenSize/renderDistance;
 		player.setSize(screenSize/renderDistance);
+		chicken1.setSize(screenSize/renderDistance);
 		player.setX(((renderDistance-1)/2)*blockSize);
 		player.setY(((renderDistance-1)/2)*blockSize);
 		player.setRow(playerRow);

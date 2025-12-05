@@ -39,7 +39,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	private BufferedImage diamondHeadIconSunset, bigIslandVolcanoIconSunset, observatoryIconSunset, pearlHarborIconSunset, theMountainIconSunset, treeIconSunset, flowerIconSunset, grassSunset, grassDarkSunset, waterSunset, sandSunset, roadSunset, road2Sunset;
 
 	private BufferedImage playerSprite;
-	private BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
+	private BufferedImage up1, up2, up3, down1, down2, down3, left1, left2, right1, right2;
 	private BufferedImage chicken;
 
 	public Screen(){
@@ -155,8 +155,10 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			//player sprites
 			up1 = ImageIO.read(new File("sprites/up1.png"));
 			up2 = ImageIO.read(new File("sprites/up2.png"));
+			up3 = ImageIO.read(new File("sprites/up3.png"));
 			down1 = ImageIO.read(new File("sprites/down1.png"));
 			down2 = ImageIO.read(new File("sprites/down2.png"));
+			down3 = ImageIO.read(new File("sprites/down3.png"));
 			left1 = ImageIO.read(new File("sprites/left1.png"));
 			left2 = ImageIO.read(new File("sprites/left2.png"));
 			right1 = ImageIO.read(new File("sprites/right1.png"));
@@ -415,11 +417,14 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		if(e.getKeyCode()==38 && player.canMoveUp()){
 			gridY+=blockSize;
 			playerRow--;
-			if(playerRow%2==0){
+			if(playerRow%4==0 || playerRow%4==2){
+				playerSprite = up1;
+			}
+			else if(playerRow%4==1){
 				playerSprite = up2;
 			}
-			else{
-				playerSprite = up1;
+			else if(playerRow%4==3){
+				playerSprite = up3;
 			}
 		}
 		if(e.getKeyCode()==39 && player.canMoveRight()){
@@ -435,10 +440,13 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		if(e.getKeyCode()==40 && player.canMoveDown()){
 			gridY-=blockSize;
 			playerRow++;
-			if(playerRow%2==0){
+			if(playerRow%4==0 || playerRow%4==2){
 				playerSprite = down1;
 			}
-			else{
+			else if(playerRow%4==1){
+				playerSprite = down3;
+			}
+			else if(playerRow%4==3){
 				playerSprite = down2;
 			}
 		}

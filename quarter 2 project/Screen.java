@@ -23,6 +23,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	private int playerRow = 27;
 	private int playerCol = 36;
 	private Color buttonColor = new Color(40, 180, 25);
+	private Color buttonColorSunset = new Color(130, 120, 250);
 	private int renderDistance = 35; //101 is largest, must be ODD
 	private int screenSize = 800;
 	private int blockSize = screenSize/renderDistance;
@@ -455,9 +456,14 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		if(e.getKeyCode()==59){
 			if(sunset){
 				sunset = false;
+				zoomIn.setBackground(buttonColor);
+				zoomOut.setBackground(buttonColor);
+				
 			}
 			else if(!sunset){
 				sunset = true;
+				zoomIn.setBackground(buttonColorSunset);
+				zoomOut.setBackground(buttonColorSunset);
 			}
 		}
 		//1-8 is 49-56

@@ -10,7 +10,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 
-public class Screen extends JPanel implements ActionListener, KeyListener, MouseListener{
+public class Screen extends JPanel implements ActionListener, KeyListener, MouseListener, MouseWheelListener{
 	private MyHashTable<Location,GridObject> map;
 	private JButton zoomOut;
 	private JButton zoomIn;
@@ -205,6 +205,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		this.setFocusable(true);
 		addMouseListener(this);
 		addKeyListener(this);
+		addMouseWheelListener(this);
 
 		
 	}
@@ -441,7 +442,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 				playerSprite = down2;
 			}
 		}
-		if(e.getKeyCode()==91 && renderDistance <95){
+		if(e.getKeyCode()==91 && renderDistance <=95){
 			renderDistance+=6;
 		
 			System.out.println("Zooming Out");
@@ -578,4 +579,25 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		}
 		
 	}
+	public void mouseWheelMoved(MouseWheelEvent e) {
+        if (e.getWheelRotation() > 0 && renderDistance <=95){
+			//zoom out
+			renderDistance+=6;
+            System.out.println("Scrolled DOWN");
+        } else if (e.getWheelRotation() < 0 && renderDistance >=11){
+			//zoom in
+			renderDistance-=6;
+            System.out.println("Scrolled UP");
+        }
+		blockSize = screenSize/renderDistance;
+		player.setSize(screenSize/renderDistance);
+		chicken1.setSize(screenSize/renderDistance);
+		player.setX(((renderDistance-1)/2)*blockSize);
+		player.setY(((renderDistance-1)/2)*blockSize);
+		player.setRow(playerRow);
+		player.setCol(playerCol);
+		gridX = (((renderDistance-1)/2)*blockSize)-(playerCol*blockSize);
+		gridY = (((renderDistance-1)/2)*blockSize)-(playerRow*blockSize);
+		repaint();
+    }
 }

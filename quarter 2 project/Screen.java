@@ -42,6 +42,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	private BufferedImage up1, up2, up3, down1, down2, down3, left1, left2, right1, right2;
 	private BufferedImage chicken;
 
+	 @SuppressWarnings("unchecked")
 	public Screen(){
 		this.setLayout(null);
 
@@ -217,6 +218,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	}
 	
 	@Override
+	 @SuppressWarnings("unchecked")
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		g.setColor(new Color(20,130,195));
@@ -236,7 +238,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			x=0;
 			y+=blockSize;
 		}
-
+		
 		for(int i=0; i<gridSize; i++){
 			for(int j=0; j<gridSize; j++){
 				Location key = new Location(i,j,blockSize);

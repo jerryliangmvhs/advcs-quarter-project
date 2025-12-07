@@ -50,6 +50,7 @@ public class Tourist implements Runnable {
     public int getY(){
         return y;
     }
+     @SuppressWarnings("unchecked")
     public boolean canMoveLeft(){
         gridBucket = map.get(new Location(row,col-1,size));
         if(gridBucket.size()==1 && !gridBucket.get(0).getName().equals("water")){
@@ -59,6 +60,7 @@ public class Tourist implements Runnable {
         errorSound();
         return false;
     }
+     @SuppressWarnings("unchecked")
     public boolean canMoveRight(){
         gridBucket = map.get(new Location(row,col+1,size));
         if(gridBucket.size()==1 && !gridBucket.get(0).getName().equals("water")){
@@ -68,6 +70,7 @@ public class Tourist implements Runnable {
         errorSound();
         return false;
     }
+     @SuppressWarnings("unchecked")
     public boolean canMoveUp(){
         gridBucket = map.get(new Location(row-1,col,size));
         if(gridBucket.size()==1 && !gridBucket.get(0).getName().equals("water")){
@@ -77,6 +80,7 @@ public class Tourist implements Runnable {
         errorSound();
         return false;
     }
+     @SuppressWarnings("unchecked")
     public boolean canMoveDown(){
         gridBucket = map.get(new Location(row+1,col,size));
         if(gridBucket.size()==1 && !gridBucket.get(0).getName().equals("water")){

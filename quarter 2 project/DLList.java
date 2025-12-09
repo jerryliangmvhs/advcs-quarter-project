@@ -4,7 +4,7 @@ public class DLList<E> implements Iterable<E>, Iterator<E>{
     private Node<E> head;
     private Node<E> tail;
     private int size;
-    private Node currentIteration;
+    private Node<E> currentIteration;
 
     public DLList(){
         
@@ -15,7 +15,6 @@ public class DLList<E> implements Iterable<E>, Iterator<E>{
         size = 0;
         currentIteration = head;
     }   
-    @SuppressWarnings("unchecked")
     public Node<E> getNode(int index){
         if(index >=size/2){
             //traverse backwards
@@ -33,7 +32,6 @@ public class DLList<E> implements Iterable<E>, Iterator<E>{
             return current;
         }
     }
-    @SuppressWarnings("unchecked")
     public boolean add(E data){
         Node<E> newNode = new Node<E>(data);
         Node<E> prevNode = tail.prev();
@@ -44,7 +42,6 @@ public class DLList<E> implements Iterable<E>, Iterator<E>{
         size++;
         return true;
     }
-    @SuppressWarnings("unchecked")
     public void add(int index, E data){
         Node<E> newNode = new Node<E>(data);
         if(index == size || size ==0){
@@ -74,7 +71,6 @@ public class DLList<E> implements Iterable<E>, Iterator<E>{
             size++;
         }
     }
-    @SuppressWarnings("unchecked")
     public E get(int index){
         return getNode(index).get();
     }
@@ -90,7 +86,6 @@ public class DLList<E> implements Iterable<E>, Iterator<E>{
         size--;
         return (E)removedNode.get();
     }
-    @SuppressWarnings("unchecked")
     public E set(int index, E data){
         Node<E> node = getNode(index);
         E replacedNode = node.get();
@@ -137,7 +132,6 @@ public class DLList<E> implements Iterable<E>, Iterator<E>{
         return false;
 	}
 	@Override
-    @SuppressWarnings("unchecked")
 	public E next(){
 		E data = (E)currentIteration.get();
         currentIteration = currentIteration.next();

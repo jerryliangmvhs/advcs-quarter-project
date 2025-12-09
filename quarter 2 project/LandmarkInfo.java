@@ -10,10 +10,10 @@ public class LandmarkInfo {
     private String caption;
     private int screenWidth = 400;
     private int screenHeight = 300;
-    private int imageWidth = screenWidth*(3/4);
-    private int imageHeight = imageWidth*(2/3);
-    private int imageX = (screenWidth/2) - (imageWidth/2);
-    private int imageY = (screenHeight/2) - (imageHeight/2);
+    private double imageWidth = (int)(screenWidth*(0.5));
+    private double imageHeight = (int)(imageWidth*(0.67));
+    private int imageX = (int)((screenWidth/2) - (imageWidth/2));
+    private int imageY = (int)((screenHeight/2) - (imageHeight/2));
 
     public LandmarkInfo(BufferedImage photo, String name, String caption){
         this.photo = photo;
@@ -23,7 +23,8 @@ public class LandmarkInfo {
     public void drawMe(Graphics g, int x, int y){
         g.setColor(Color.BLACK);
         g.fillRect(x,y,screenWidth,screenHeight);
-        g.drawImage(photo,x+imageX,y+imageY,imageWidth,imageHeight,null);
-        System.out.println("landmark screen drawn");
+        g.drawImage(photo,x+imageX,y+imageY,(int)imageWidth,(int)imageHeight,null);
+        System.out.println("Image Width: " + imageWidth);
+        System.out.println("Image Height: " + imageHeight);
     }
 }

@@ -476,12 +476,12 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 				diamondHeadInfo.drawMe(g,0,0);
 			}
 		}
-
 		g.setColor(Color.WHITE);
 		g.setFont(minecraftFive);
 		checkIsland();
 		g.drawString("Render Distance: " + renderDistance + " chunks",10,15);
 		g.drawString("Current Island: "+currentIsland,10,30);
+		
 		
 	}
 

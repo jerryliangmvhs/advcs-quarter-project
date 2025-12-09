@@ -20,6 +20,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	private Chicken chicken1;
 	private Pig pig1;
 	private Car car1,car2,car3,car4,car5,car6;
+	private Villager villager1, villager2, villager3, villager4, villager5, villager6, villager7, villager8;
 	
 	private Font minecraftFive;
 	private Font minecraftTen;
@@ -44,11 +45,10 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 
 	private BufferedImage playerSprite;
 	private BufferedImage up1, up2, up3, down1, down2, down3, left1, left2, right1, right2;
-	private BufferedImage chicken, pig, car;
+	private BufferedImage chicken, pig, car, villager;
 
-	private String landmarkAdjacentTo = null;
 
-	 @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	public Screen(){
 		this.setLayout(null);
 
@@ -174,6 +174,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			chicken = ImageIO.read(new File("sprites/chicken.png"));
 			pig = ImageIO.read(new File("sprites/pig.png"));
 			car = ImageIO.read(new File("sprites/car.png"));
+			villager = ImageIO.read(new File("sprites/villager.png"));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -188,6 +189,16 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		car4 = new Car(51,54,blockSize,map,this);
 		car5 = new Car(47,73,blockSize,map,this);
 		car6 = new Car(67,74,blockSize,map,this);
+
+		villager1 = new Villager(23,7,blockSize,map,this);
+		villager2 = new Villager(16,19,blockSize,map,this);
+		villager3 = new Villager(24,36,blockSize,map,this);
+		villager4 = new Villager(36,57,blockSize,map,this);
+		villager5 = new Villager(50,58,blockSize,map,this);
+		villager6 = new Villager(49,73,blockSize,map,this);
+		villager7 = new Villager(58,62,blockSize,map,this);
+		villager8 = new Villager(73,77,blockSize,map,this);
+
 		playerSprite = down1;
 
 		Thread playerThread = new Thread(player);
@@ -208,6 +219,23 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		carThread5.start();
 		Thread carThread6 = new Thread(car6);
 		carThread6.start();
+
+		Thread villagerThread1 = new Thread(villager1);
+		villagerThread1.start();
+		Thread villagerThread2 = new Thread(villager2);
+		villagerThread2.start();
+		Thread villagerThread3 = new Thread(villager3);
+		villagerThread3.start();
+		Thread villagerThread4 = new Thread(villager4);
+		villagerThread4.start();
+		Thread villagerThread5 = new Thread(villager5);
+		villagerThread5.start();
+		Thread villagerThread6 = new Thread(villager6);
+		villagerThread6.start();
+		Thread villagerThread7 = new Thread(villager7);
+		villagerThread7.start();
+		Thread villagerThread8 = new Thread(villager8);
+		villagerThread8.start();
 
 		zoomIn = new JButton("+");
 		zoomIn.setBounds(715,20,75,75);
@@ -409,6 +437,15 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		g.drawImage(car,car4.getX()+gridX,car4.getY()+gridY,car4.getSize(),car4.getSize(),null);
 		g.drawImage(car,car5.getX()+gridX,car5.getY()+gridY,car5.getSize(),car5.getSize(),null);
 		g.drawImage(car,car6.getX()+gridX,car6.getY()+gridY,car6.getSize(),car6.getSize(),null);
+
+		g.drawImage(villager,villager1.getX()+gridX,villager1.getY()+gridY,villager1.getSize(),villager1.getSize(),null);
+		g.drawImage(villager,villager2.getX()+gridX,villager2.getY()+gridY,villager2.getSize(),villager2.getSize(),null);
+		g.drawImage(villager,villager3.getX()+gridX,villager3.getY()+gridY,villager3.getSize(),villager3.getSize(),null);
+		g.drawImage(villager,villager4.getX()+gridX,villager4.getY()+gridY,villager4.getSize(),villager4.getSize(),null);
+		g.drawImage(villager,villager5.getX()+gridX,villager5.getY()+gridY,villager5.getSize(),villager5.getSize(),null);
+		g.drawImage(villager,villager6.getX()+gridX,villager6.getY()+gridY,villager6.getSize(),villager6.getSize(),null);
+		g.drawImage(villager,villager7.getX()+gridX,villager7.getY()+gridY,villager7.getSize(),villager7.getSize(),null);
+		g.drawImage(villager,villager8.getX()+gridX,villager8.getY()+gridY,villager8.getSize(),villager8.getSize(),null);
 
 		g.setColor(Color.WHITE);
 		g.setFont(minecraftFive);
@@ -650,6 +687,16 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		car4.setSize(blockSize);
 		car5.setSize(blockSize);
 		car6.setSize(blockSize);
+
+		villager1.setSize(blockSize);
+		villager2.setSize(blockSize);
+		villager3.setSize(blockSize);
+		villager4.setSize(blockSize);
+		villager5.setSize(blockSize);
+		villager6.setSize(blockSize);
+		villager7.setSize(blockSize);
+		villager8.setSize(blockSize);
+
 		player.setX(((renderDistance-1)/2)*blockSize);
 		player.setY(((renderDistance-1)/2)*blockSize);
 		player.setRow(playerRow);
@@ -670,6 +717,16 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		car4.setSize(blockSize);
 		car5.setSize(blockSize);
 		car6.setSize(blockSize);
+
+		villager1.setSize(blockSize);
+		villager2.setSize(blockSize);
+		villager3.setSize(blockSize);
+		villager4.setSize(blockSize);
+		villager5.setSize(blockSize);
+		villager6.setSize(blockSize);
+		villager7.setSize(blockSize);
+		villager8.setSize(blockSize);
+		
 		player.setX(((renderDistance-1)/2)*blockSize);
 		player.setY(((renderDistance-1)/2)*blockSize);
 		player.setRow(playerRow);

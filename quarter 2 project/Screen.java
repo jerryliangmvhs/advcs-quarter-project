@@ -44,6 +44,8 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	private BufferedImage up1, up2, up3, down1, down2, down3, left1, left2, right1, right2;
 	private BufferedImage chicken, pig, car;
 
+	private String landmarkAdjacentTo = null;
+
 	 @SuppressWarnings("unchecked")
 	public Screen(){
 		this.setLayout(null);
@@ -557,6 +559,10 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			player.setRow(74);
 			player.setCol(77);
 		}
+		if(adjacentToLandmark()){
+			System.out.println("Player is adjacent to a landmark");
+			System.out.println("Landmark Name: "+ landmarkAdjacentTo);
+		}
 		blockSize = screenSize/renderDistance;
 		player.setSize(blockSize);
 		chicken1.setSize(blockSize);
@@ -670,5 +676,44 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		player.setCol(playerCol);
 		gridX = (((renderDistance-1)/2)*blockSize)-(playerCol*blockSize);
 		gridY = (((renderDistance-1)/2)*blockSize)-(playerRow*blockSize);
+	}
+	@SuppressWarnings("unchecked")
+	public boolean adjacentToLandmark(){
+		Location playerLeft = new Location(playerRow,playerCol-1,blockSize);
+		Location playerRight = new Location(playerRow,playerCol+1,blockSize);
+		Location playerTop = new Location(playerRow-1,playerCol,blockSize);
+		Location playerBottom = new Location(playerRow+1,playerCol,blockSize);
+		Location[] playerSurroundings = new Location[4];
+		playerSurroundings[0] = playerLeft;
+		playerSurroundings[1] = playerRight;
+		playerSurroundings[2] = playerTop;
+		playerSurroundings[3] = playerBottom;
+		//checks all directions
+		for(int i=0; i<playerSurroundings.length; i++){
+			//checks the end of each bucket for each direction of the player for a landmark
+			int topIndex = map.get(playerSurroundings[i]).size();
+			DLList<GridObject> gridObject = map.get(playerSurroundings[i]);
+			if(gridObject.get(topIndex).getName().equals("bigIslandVolcano")){
+				landmarkAdjacentTo = gridObject.get(topIndex).getName();
+				return true;
+			}
+			else if(gridObject.get(topIndex).getName().equals("diamondHead")){
+				landmarkAdjacentTo = gridObject.get(topIndex).getName();
+				return true;
+			}
+			else if(gridObject.get(topIndex).getName().equals("observatory")){
+				landmarkAdjacentTo = gridObject.get(topIndex).getName();
+				return true;
+			}
+			else if(gridObject.get(topIndex).getName().equals("pearlHarbor")){
+				landmarkAdjacentTo = gridObject.get(topIndex).getName();
+				return true;
+			}
+			else if(gridObject.get(topIndex).getName().equals("theMountain")){
+				landmarkAdjacentTo = gridObject.get(topIndex).getName();
+				return true;
+			}
+		}
+		return false;
 	}
 }

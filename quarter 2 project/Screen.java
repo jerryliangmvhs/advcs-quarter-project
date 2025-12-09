@@ -42,11 +42,14 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	private int gridSize = 101; //blocks, DO NOT CHANGE
 	private BufferedImage diamondHeadIcon, bigIslandVolcanoIcon, observatoryIcon, pearlHarborIcon, theMountainIcon, treeIcon, flowerIcon, grass, grassDark, water, sand, road, road2;
 	private BufferedImage diamondHeadIconSunset, bigIslandVolcanoIconSunset, observatoryIconSunset, pearlHarborIconSunset, theMountainIconSunset, treeIconSunset, flowerIconSunset, grassSunset, grassDarkSunset, waterSunset, sandSunset, roadSunset, road2Sunset;
+	private BufferedImage diamondHeadPhoto, bigIslandVolcanoPhoto, observatoryPhoto, pearlHarborPhoto, theMountainPhoto;
 
 	private BufferedImage playerSprite;
 	private BufferedImage up1, up2, up3, down1, down2, down3, left1, left2, right1, right2;
 	private BufferedImage chicken, pig, car, villager;
 
+	private LandmarkInfo diamondHeadInfo, haleakalaObservatoryInfo, hawaiiVolcanoesInfo, napaliCoastInfo, pearlHarborInfo;
+	
 
 	@SuppressWarnings("unchecked")
 	public Screen(){
@@ -176,9 +179,21 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			car = ImageIO.read(new File("sprites/car.png"));
 			villager = ImageIO.read(new File("sprites/villager.png"));
 
+			//landmark photos
+			bigIslandVolcanoPhoto = ImageIO.read(new File("photos/hawaii-volcanoes.jpg"));
+			diamondHeadPhoto = ImageIO.read(new File("photos/diamond-head.jpg"));
+			pearlHarborPhoto = ImageIO.read(new File("photos/pearl-harbor.jpg"));
+			theMountainPhoto = ImageIO.read(new File("photos/na-pali-coast.jpg"));
+			observatoryPhoto = ImageIO.read(new File("photos/haleakala-observatory.jpg"));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+		diamondHeadInfo = new LandmarkInfo(diamondHeadPhoto, "Diamond Head", "this is my caption");
+		haleakalaObservatoryInfo = new LandmarkInfo(observatoryPhoto,"Halekala Observatory", "this is my caption");
+		napaliCoastInfo = new LandmarkInfo(theMountainPhoto, "Na-Pali Coast", "this is my caption.");
+		hawaiiVolcanoesInfo = new LandmarkInfo(bigIslandVolcanoPhoto, "Hawai'i Volcanoes National Park", "this is my caption");
+		pearlHarborInfo = new LandmarkInfo(pearlHarborPhoto, "Pearl Harbor", "this is my caption");
 
 		player = new Tourist(playerRow,playerCol,touristX,touristY,blockSize,map,this);
 		chicken1 = new Chicken(16,19,blockSize,map,this);
@@ -258,9 +273,6 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		zoomOut.setOpaque(true);
 		this.add(zoomOut);
 
-		/*addChicken.setBackground(buttonColor);
-		addChicken.setOpaque(true);
-		addChicken.setBorderPainted(false); */
 		
 		this.setFocusable(true);
 		addMouseListener(this);
@@ -446,6 +458,24 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		g.drawImage(villager,villager6.getX()+gridX,villager6.getY()+gridY,villager6.getSize(),villager6.getSize(),null);
 		g.drawImage(villager,villager7.getX()+gridX,villager7.getY()+gridY,villager7.getSize(),villager7.getSize(),null);
 		g.drawImage(villager,villager8.getX()+gridX,villager8.getY()+gridY,villager8.getSize(),villager8.getSize(),null);
+
+		if(player.adjacentToLandmark()){
+			if(player.getAdjacentLandmark().equals("bigIslandVolcano")){
+				hawaiiVolcanoesInfo.drawMe(g,0,0);
+			}
+			if(player.getAdjacentLandmark().equals("observatory")){
+				haleakalaObservatoryInfo.drawMe(g,0,0);
+			}
+			if(player.getAdjacentLandmark().equals("theMountain")){
+				napaliCoastInfo.drawMe(g,0,0);
+			}
+			if(player.getAdjacentLandmark().equals("pearlHarbor")){
+				pearlHarborInfo.drawMe(g,0,0);
+			}
+			if(player.getAdjacentLandmark().equals("diamondHead")){
+				diamondHeadInfo.drawMe(g,0,0);
+			}
+		}
 
 		g.setColor(Color.WHITE);
 		g.setFont(minecraftFive);

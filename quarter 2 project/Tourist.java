@@ -11,6 +11,7 @@ public class Tourist implements Runnable {
     private Screen sc;
     private MyHashTable<Location, GridObject> map;
     private DLList<GridObject> gridBucket;
+    private String landmarkAdjacentTo;
     public Tourist(int row, int col, int x, int y, int size, MyHashTable<Location, GridObject> map, Screen sc){
         this.row = row;
         this.col = col;
@@ -19,6 +20,7 @@ public class Tourist implements Runnable {
         this.sc = sc;
         this.x = x;
         this.y = y;
+        landmarkAdjacentTo = null;
     }
     public void setSize(int size){
         this.size = size;
@@ -122,6 +124,57 @@ public class Tourist implements Runnable {
             } catch (Exception exc) {
                 exc.printStackTrace(System.out);
             }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+	public boolean adjacentToLandmark(){
+		Location playerLeft = new Location(row,col-1,size);
+		Location playerRight = new Location(row,col+1,size);
+		Location playerTop = new Location(row-1,col,size);
+		Location playerBottom = new Location(row+1,col,size);
+		Location[] playerSurroundings = new Location[4];
+		playerSurroundings[0] = playerLeft;
+		playerSurroundings[1] = playerRight;
+		playerSurroundings[2] = playerTop;
+		playerSurroundings[3] = playerBottom;
+		//checks all directions
+		for(int i=0; i<playerSurroundings.length; i++){
+			//checks the end of each bucket for each direction of the player for a landmark
+			int topIndex = map.get(playerSurroundings[i]).size();
+			DLList<GridObject> gridObject = map.get(playerSurroundings[i]);
+			if(gridObject.get(topIndex).getName().equals("bigIslandVolcano")){
+				landmarkAdjacentTo = gridObject.get(topIndex).getName();
+				return true;
+			}
+			else if(gridObject.get(topIndex).getName().equals("diamondHead")){
+				landmarkAdjacentTo = gridObject.get(topIndex).getName();
+				return true;
+			}
+			else if(gridObject.get(topIndex).getName().equals("observatory")){
+				landmarkAdjacentTo = gridObject.get(topIndex).getName();
+				return true;
+			}
+			else if(gridObject.get(topIndex).getName().equals("pearlHarbor")){
+				landmarkAdjacentTo = gridObject.get(topIndex).getName();
+				return true;
+			}
+			else if(gridObject.get(topIndex).getName().equals("theMountain")){
+				landmarkAdjacentTo = gridObject.get(topIndex).getName();
+				return true;
+			}
+		}
+		landmarkAdjacentTo = null;
+		return false;
+	}
+    public void destinationSound(){
+        try {
+            URL url = this.getClass().getClassLoader().getResource("sounds/destination.wav");
+            Clip clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(url));
+            clip.start();
+        } catch (Exception exc) {
+            exc.printStackTrace(System.out);
         }
     }
     @Override

@@ -8,6 +8,8 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.JButton;
 
 public class Screen extends JPanel implements ActionListener, KeyListener, MouseListener, MouseWheelListener{
@@ -433,6 +435,10 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		if(e.getKeyCode()==37 && player.canMoveLeft()){
 			gridX+=blockSize;
 			playerCol--;
+			player.setCol(playerCol);
+			if(player.adjacentToLandmark()){
+				player.destinationSound();
+			}
 			if(playerCol%2==0){
 				playerSprite = left1;
 			}
@@ -444,6 +450,10 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		if(e.getKeyCode()==38 && player.canMoveUp()){
 			gridY+=blockSize;
 			playerRow--;
+			player.setRow(playerRow);
+			if(player.adjacentToLandmark()){
+				player.destinationSound();
+			}
 			if(playerRow%4==0 || playerRow%4==2){
 				playerSprite = up1;
 			}
@@ -457,6 +467,10 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		if(e.getKeyCode()==39 && player.canMoveRight()){
 			gridX-=blockSize;
 			playerCol++;
+			player.setCol(playerCol);
+			if(player.adjacentToLandmark()){
+				player.destinationSound();
+			}
 			if(playerCol%2==0){
 				playerSprite = right1;
 			}
@@ -467,6 +481,10 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		if(e.getKeyCode()==40 && player.canMoveDown()){
 			gridY-=blockSize;
 			playerRow++;
+			player.setRow(playerRow);
+			if(player.adjacentToLandmark()){
+				player.destinationSound();
+			}
 			if(playerRow%4==0 || playerRow%4==2){
 				playerSprite = down1;
 			}
@@ -559,27 +577,11 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			player.setRow(74);
 			player.setCol(77);
 		}
-		if(adjacentToLandmark()){
-			System.out.println("Player is adjacent to a landmark");
-			System.out.println("Landmark Name: "+ landmarkAdjacentTo);
-		}
-		blockSize = screenSize/renderDistance;
-		player.setSize(blockSize);
-		chicken1.setSize(blockSize);
-		pig1.setSize(blockSize);
-		car1.setSize(blockSize);
-		car2.setSize(blockSize);
-		car3.setSize(blockSize);
-		car4.setSize(blockSize);
-		car5.setSize(blockSize);
-		car6.setSize(blockSize);
-		player.setX(((renderDistance-1)/2)*blockSize);
-		player.setY(((renderDistance-1)/2)*blockSize);
-		player.setRow(playerRow);
-		player.setCol(playerCol);
 		gridX = (((renderDistance-1)/2)*blockSize)-(playerCol*blockSize);
 		gridY = (((renderDistance-1)/2)*blockSize)-(playerRow*blockSize);
 		System.out.println("Player Row: " + playerRow + " Player Column: " + playerCol);
+
+	
 		repaint();
 	}
 	public void keyTyped(KeyEvent e){}
@@ -626,14 +628,12 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		
 	}
 	public void mouseWheelMoved(MouseWheelEvent e) {
-        if (e.getWheelRotation() > 1 && renderDistance <=95){
+        if (e.getWheelRotation() > 0 && renderDistance <=95){
 			//zoom out
 			increaseRenderDistance();
-            System.out.println("Scrolled DOWN");
-        } else if (e.getWheelRotation() < -1 && renderDistance >=11){
+        } else if (e.getWheelRotation() < 0 && renderDistance >=11){
 			//zoom in
 			decreaseRenderDistance();
-            System.out.println("Scrolled UP");
         }
 		repaint();
     }
@@ -677,43 +677,5 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		gridX = (((renderDistance-1)/2)*blockSize)-(playerCol*blockSize);
 		gridY = (((renderDistance-1)/2)*blockSize)-(playerRow*blockSize);
 	}
-	@SuppressWarnings("unchecked")
-	public boolean adjacentToLandmark(){
-		Location playerLeft = new Location(playerRow,playerCol-1,blockSize);
-		Location playerRight = new Location(playerRow,playerCol+1,blockSize);
-		Location playerTop = new Location(playerRow-1,playerCol,blockSize);
-		Location playerBottom = new Location(playerRow+1,playerCol,blockSize);
-		Location[] playerSurroundings = new Location[4];
-		playerSurroundings[0] = playerLeft;
-		playerSurroundings[1] = playerRight;
-		playerSurroundings[2] = playerTop;
-		playerSurroundings[3] = playerBottom;
-		//checks all directions
-		for(int i=0; i<playerSurroundings.length; i++){
-			//checks the end of each bucket for each direction of the player for a landmark
-			int topIndex = map.get(playerSurroundings[i]).size();
-			DLList<GridObject> gridObject = map.get(playerSurroundings[i]);
-			if(gridObject.get(topIndex).getName().equals("bigIslandVolcano")){
-				landmarkAdjacentTo = gridObject.get(topIndex).getName();
-				return true;
-			}
-			else if(gridObject.get(topIndex).getName().equals("diamondHead")){
-				landmarkAdjacentTo = gridObject.get(topIndex).getName();
-				return true;
-			}
-			else if(gridObject.get(topIndex).getName().equals("observatory")){
-				landmarkAdjacentTo = gridObject.get(topIndex).getName();
-				return true;
-			}
-			else if(gridObject.get(topIndex).getName().equals("pearlHarbor")){
-				landmarkAdjacentTo = gridObject.get(topIndex).getName();
-				return true;
-			}
-			else if(gridObject.get(topIndex).getName().equals("theMountain")){
-				landmarkAdjacentTo = gridObject.get(topIndex).getName();
-				return true;
-			}
-		}
-		return false;
-	}
+	
 }

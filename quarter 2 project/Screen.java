@@ -461,19 +461,19 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 
 		if(player.adjacentToLandmark()){
 			if(player.getAdjacentLandmark().equals("bigIslandVolcano")){
-				hawaiiVolcanoesInfo.drawMe(g,0,0);
+				hawaiiVolcanoesInfo.drawMe(g,200,450);
 			}
 			if(player.getAdjacentLandmark().equals("observatory")){
-				haleakalaObservatoryInfo.drawMe(g,0,0);
+				haleakalaObservatoryInfo.drawMe(g,200,450);
 			}
 			if(player.getAdjacentLandmark().equals("theMountain")){
-				napaliCoastInfo.drawMe(g,0,0);
+				napaliCoastInfo.drawMe(g,200,450);
 			}
 			if(player.getAdjacentLandmark().equals("pearlHarbor")){
-				pearlHarborInfo.drawMe(g,0,0);
+				pearlHarborInfo.drawMe(g,200,450);
 			}
 			if(player.getAdjacentLandmark().equals("diamondHead")){
-				diamondHeadInfo.drawMe(g,0,0);
+				diamondHeadInfo.drawMe(g,200,450);
 			}
 		}
 		g.setColor(Color.WHITE);
@@ -605,20 +605,20 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		if(e.getKeyCode()==50){
 			playerRow = 17;
 			playerCol = 21;
-			player.setRow(16);
-			player.setCol(19);
+			player.setRow(17);
+			player.setCol(21);
 		}
 		if(e.getKeyCode()==51){
 			playerRow = 27;
 			playerCol = 36;
-			player.setRow(26);
+			player.setRow(27);
 			player.setCol(36);
 		}
 		if(e.getKeyCode()==52){
 			playerRow = 37;
 			playerCol = 53;
-			player.setRow(36);
-			player.setCol(52);
+			player.setRow(37);
+			player.setCol(53);
 		}
 		if(e.getKeyCode()==53){
 			playerRow = 49;
@@ -629,21 +629,23 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		if(e.getKeyCode()==54){
 			playerRow = 49;
 			playerCol = 70;
-			player.setRow(48);
-			player.setCol(71);
+			player.setRow(49);
+			player.setCol(70);
 		}
 		if(e.getKeyCode()==55){
 			playerRow = 57;
 			playerCol = 61;
-			player.setRow(58);
-			player.setCol(62);
+			player.setRow(57);
+			player.setCol(61);
 		}
 		if(e.getKeyCode()==56){
 			playerRow = 71;
 			playerCol = 78;
-			player.setRow(74);
-			player.setCol(77);
+			player.setRow(71);
+			player.setCol(78);
 		}
+		player.setRow(playerRow);
+		player.setCol(playerCol);
 		gridX = (((renderDistance-1)/2)*blockSize)-(playerCol*blockSize);
 		gridY = (((renderDistance-1)/2)*blockSize)-(playerRow*blockSize);
 		System.out.println("Player Row: " + playerRow + " Player Column: " + playerCol);

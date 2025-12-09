@@ -99,7 +99,7 @@ public class LandAnimal implements Runnable{
             try {
                 Thread.sleep(300);
             } catch (Exception e) {
-                // TODO: handle exception
+                System.out.println(e);
             }
             sc.repaint();
         }

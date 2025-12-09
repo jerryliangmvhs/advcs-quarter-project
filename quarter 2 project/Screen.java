@@ -16,7 +16,9 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	private JButton zoomIn;
 	private Tourist player;
 	private Chicken chicken1;
-
+	private Pig pig1;
+	private Car car1,car2,car3,car4,car5,car6;
+	
 	private Font minecraftFive;
 	private Font minecraftTen;
 
@@ -40,7 +42,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 
 	private BufferedImage playerSprite;
 	private BufferedImage up1, up2, up3, down1, down2, down3, left1, left2, right1, right2;
-	private BufferedImage chicken;
+	private BufferedImage chicken, pig, car;
 
 	 @SuppressWarnings("unchecked")
 	public Screen(){
@@ -166,6 +168,8 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			right2 = ImageIO.read(new File("sprites/right2.png"));
 
 			chicken = ImageIO.read(new File("sprites/chicken.png"));
+			pig = ImageIO.read(new File("sprites/pig.png"));
+			car = ImageIO.read(new File("sprites/car.png"));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -173,12 +177,33 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 
 		player = new Tourist(playerRow,playerCol,touristX,touristY,blockSize,map,this);
 		chicken1 = new Chicken(16,19,blockSize,map,this);
+		pig1 = new Pig(70,70,blockSize,map,this);
+		car1 = new Car(27,34,blockSize,map,this);
+		car2 = new Car(17,21,blockSize,map,this);
+		car3 = new Car(37,53,blockSize,map,this);
+		car4 = new Car(51,54,blockSize,map,this);
+		car5 = new Car(47,73,blockSize,map,this);
+		car6 = new Car(67,74,blockSize,map,this);
 		playerSprite = down1;
 
 		Thread playerThread = new Thread(player);
 		playerThread.start();
 		Thread chickenThread1 = new Thread(chicken1);
 		chickenThread1.start();
+		Thread pigThread1 = new Thread(pig1);
+		pigThread1.start();
+		Thread carThread1 = new Thread(car1);
+		carThread1.start();
+		Thread carThread2 = new Thread(car2);
+		carThread2.start();
+		Thread carThread3 = new Thread(car3);
+		carThread3.start();
+		Thread carThread4 = new Thread(car4);
+		carThread4.start();
+		Thread carThread5 = new Thread(car5);
+		carThread5.start();
+		Thread carThread6 = new Thread(car6);
+		carThread6.start();
 
 		zoomIn = new JButton("+");
 		zoomIn.setBounds(715,20,75,75);
@@ -371,9 +396,16 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		//g.setColor(new Color(220,30,240));
 		//g.fillRect(player.getX(),player.getY(),player.getSize(),player.getSize());
 		g.drawImage(playerSprite,player.getX(),player.getY(),player.getSize(),player.getSize(),null);
-		
 		g.drawImage(chicken,chicken1.getX()+gridX,chicken1.getY()+gridY,chicken1.getSize(),chicken1.getSize(),null);
-		
+		g.drawImage(pig,pig1.getX()+gridX,pig1.getY()+gridY,pig1.getSize(),pig1.getSize(),null);
+
+		g.drawImage(car,car1.getX()+gridX,car1.getY()+gridY,car1.getSize(),car1.getSize(),null);
+		g.drawImage(car,car2.getX()+gridX,car2.getY()+gridY,car2.getSize(),car2.getSize(),null);
+		g.drawImage(car,car3.getX()+gridX,car3.getY()+gridY,car3.getSize(),car3.getSize(),null);
+		g.drawImage(car,car4.getX()+gridX,car4.getY()+gridY,car4.getSize(),car4.getSize(),null);
+		g.drawImage(car,car5.getX()+gridX,car5.getY()+gridY,car5.getSize(),car5.getSize(),null);
+		g.drawImage(car,car6.getX()+gridX,car6.getY()+gridY,car6.getSize(),car6.getSize(),null);
+
 		g.setColor(Color.WHITE);
 		g.setFont(minecraftFive);
 		checkIsland();
@@ -384,20 +416,11 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 
 	public void actionPerformed(ActionEvent e){
 		if(e.getSource()==zoomIn && renderDistance >=11){
-			renderDistance -=6;
+			decreaseRenderDistance();
 		}
 		else if(e.getSource()==zoomOut && renderDistance <=95){
-			renderDistance +=6;
+			increaseRenderDistance();
 		}
-		blockSize = screenSize/renderDistance;
-		player.setSize(screenSize/renderDistance);
-		chicken1.setSize(screenSize/renderDistance);
-		player.setX(((renderDistance-1)/2)*blockSize);
-		player.setY(((renderDistance-1)/2)*blockSize);
-		player.setRow(playerRow);
-		player.setCol(playerCol);
-		gridX = (((renderDistance-1)/2)*blockSize)-(playerCol*blockSize);
-		gridY = (((renderDistance-1)/2)*blockSize)-(playerRow*blockSize);
 		repaint();
 	}
 	public void keyPressed(KeyEvent e){
@@ -453,13 +476,13 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			}
 		}
 		if(e.getKeyCode()==91 && renderDistance <=95){
-			renderDistance+=6;
+			increaseRenderDistance();
 		
 			System.out.println("Zooming Out");
 			System.out.println("Render Distance: " + renderDistance + " chunks.");
 		}
 		if(e.getKeyCode()==93 && renderDistance >=11){
-			renderDistance-=6;
+			decreaseRenderDistance();
 			
 			System.out.println("Zooming In");
 			System.out.println("Render Distance: " + renderDistance + " chunks.");
@@ -535,8 +558,15 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			player.setCol(77);
 		}
 		blockSize = screenSize/renderDistance;
-		player.setSize(screenSize/renderDistance);
-		chicken1.setSize(screenSize/renderDistance);
+		player.setSize(blockSize);
+		chicken1.setSize(blockSize);
+		pig1.setSize(blockSize);
+		car1.setSize(blockSize);
+		car2.setSize(blockSize);
+		car3.setSize(blockSize);
+		car4.setSize(blockSize);
+		car5.setSize(blockSize);
+		car6.setSize(blockSize);
 		player.setX(((renderDistance-1)/2)*blockSize);
 		player.setY(((renderDistance-1)/2)*blockSize);
 		player.setRow(playerRow);
@@ -590,24 +620,55 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		
 	}
 	public void mouseWheelMoved(MouseWheelEvent e) {
-        if (e.getWheelRotation() > 0 && renderDistance <=95){
+        if (e.getWheelRotation() > 1 && renderDistance <=95){
 			//zoom out
-			renderDistance+=6;
+			increaseRenderDistance();
             System.out.println("Scrolled DOWN");
-        } else if (e.getWheelRotation() < 0 && renderDistance >=11){
+        } else if (e.getWheelRotation() < -1 && renderDistance >=11){
 			//zoom in
-			renderDistance-=6;
+			decreaseRenderDistance();
             System.out.println("Scrolled UP");
         }
+		repaint();
+    }
+
+	public void decreaseRenderDistance(){
+		renderDistance -=6;
 		blockSize = screenSize/renderDistance;
-		player.setSize(screenSize/renderDistance);
-		chicken1.setSize(screenSize/renderDistance);
+		player.setSize(blockSize);
+		chicken1.setSize(blockSize);
+		pig1.setSize(blockSize);
+		car1.setSize(blockSize);
+		car2.setSize(blockSize);
+		car3.setSize(blockSize);
+		car4.setSize(blockSize);
+		car5.setSize(blockSize);
+		car6.setSize(blockSize);
 		player.setX(((renderDistance-1)/2)*blockSize);
 		player.setY(((renderDistance-1)/2)*blockSize);
 		player.setRow(playerRow);
 		player.setCol(playerCol);
 		gridX = (((renderDistance-1)/2)*blockSize)-(playerCol*blockSize);
 		gridY = (((renderDistance-1)/2)*blockSize)-(playerRow*blockSize);
-		repaint();
-    }
+		
+	}
+	public void increaseRenderDistance(){
+		renderDistance +=6;
+		blockSize = screenSize/renderDistance;
+		player.setSize(blockSize);
+		chicken1.setSize(blockSize);
+		pig1.setSize(blockSize);
+		car1.setSize(blockSize);
+		car2.setSize(blockSize);
+		car3.setSize(blockSize);
+		car4.setSize(blockSize);
+		car5.setSize(blockSize);
+		car6.setSize(blockSize);
+		player.setX(((renderDistance-1)/2)*blockSize);
+		player.setY(((renderDistance-1)/2)*blockSize);
+		player.setRow(playerRow);
+		player.setCol(playerCol);
+		gridX = (((renderDistance-1)/2)*blockSize)-(playerCol*blockSize);
+		gridY = (((renderDistance-1)/2)*blockSize)-(playerRow*blockSize);
+	}
 }

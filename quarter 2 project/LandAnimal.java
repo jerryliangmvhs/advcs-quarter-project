@@ -1,4 +1,4 @@
-public class Entity implements Runnable{
+public class LandAnimal implements Runnable{
     private int x;
     private int y;
     private int row;
@@ -7,7 +7,7 @@ public class Entity implements Runnable{
     private Screen sc;
     private MyHashTable<Location,GridObject> map;
     private DLList<GridObject> gridBucket;
-    public Entity(int row, int col, int size, MyHashTable<Location,GridObject> map, Screen sc){
+    public LandAnimal(int row, int col, int size, MyHashTable<Location,GridObject> map, Screen sc){
         this.row = row;
         this.col = col;
         this.size = size;
@@ -76,7 +76,6 @@ public class Entity implements Runnable{
         }
         return false;
     }
-
     @Override
     public void run(){
         while(true){

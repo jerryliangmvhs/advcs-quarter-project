@@ -189,11 +189,11 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
         } catch (IOException e) {
             e.printStackTrace();
         }
-		diamondHeadInfo = new LandmarkInfo(diamondHeadPhoto, "Diamond Head", "this is my caption");
-		haleakalaObservatoryInfo = new LandmarkInfo(observatoryPhoto,"Halekala Observatory", "this is my caption");
-		napaliCoastInfo = new LandmarkInfo(theMountainPhoto, "Na-Pali Coast", "this is my caption.");
-		hawaiiVolcanoesInfo = new LandmarkInfo(bigIslandVolcanoPhoto, "Hawai'i Volcanoes National Park", "this is my caption");
-		pearlHarborInfo = new LandmarkInfo(pearlHarborPhoto, "Pearl Harbor", "this is my caption");
+		diamondHeadInfo = new LandmarkInfo(diamondHeadPhoto);
+		haleakalaObservatoryInfo = new LandmarkInfo(observatoryPhoto);
+		napaliCoastInfo = new LandmarkInfo(theMountainPhoto);
+		hawaiiVolcanoesInfo = new LandmarkInfo(bigIslandVolcanoPhoto);
+		pearlHarborInfo = new LandmarkInfo(pearlHarborPhoto);
 
 		player = new Tourist(playerRow,playerCol,touristX,touristY,blockSize,map,this);
 		chicken1 = new Chicken(16,19,blockSize,map,this);

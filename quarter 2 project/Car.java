@@ -97,7 +97,7 @@ public class Car implements Runnable{
                 x = col*size;
             }
             try {
-                Thread.sleep(300);
+                Thread.sleep(150);
             } catch (Exception e) {
                 System.out.println(e);
             }

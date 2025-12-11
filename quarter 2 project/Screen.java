@@ -13,7 +13,7 @@ import javax.sound.sampled.Clip;
 import javax.swing.JButton;
 
 public class Screen extends JPanel implements ActionListener, KeyListener, MouseListener, MouseWheelListener{
-	private MyHashTable<Location,GridObject> map;
+	private MyHashTable<Location,MapObject> map;
 	private JButton zoomOut;
 	private JButton zoomIn;
 	private Tourist player;
@@ -65,7 +65,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			e.printStackTrace();
   		}
 
-		map = new MyHashTable<Location,GridObject>();
+		map = new MyHashTable<Location,MapObject>();
 		try {
 			Scanner scan = new Scanner(new FileReader("Map.txt"));
 
@@ -80,50 +80,50 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 					Location key = new Location(row,col,blockSize);
 					if(numberArray[col].equals("3")){
 						String value = "water";
-						map.put(key,new GridObject(value));
+						map.put(key,new MapObject(value));
 					}
 					else if(numberArray[col].equals("0")){
 						String value = "land";
-						map.put(key,new GridObject(value));
+						map.put(key,new MapObject(value));
 					}
 					else if(numberArray[col].equals("5")){
 						String value = "hills";
-						map.put(key,new GridObject(value));
+						map.put(key,new MapObject(value));
 					}
 					else if(numberArray[col].equals("6")){
 						if((int)(Math.random()*2)==1){
 							String value = "road";
-							map.put(key,new GridObject(value));
+							map.put(key,new MapObject(value));
 						}
 						else{
 							String value = "road2";
-							map.put(key,new GridObject(value));
+							map.put(key,new MapObject(value));
 						}
 
 					}
 					else if(numberArray[col].equals("1")){
 						String value = "sand";
-						map.put(key,new GridObject(value));
+						map.put(key,new MapObject(value));
 					}
 				}
 				row++;
 			}
-			map.put(new Location(74,75,blockSize), new GridObject("bigIslandVolcano"));
-			map.put(new Location(31,40,blockSize), new GridObject("diamondHead"));
-			map.put(new Location(50,75,blockSize), new GridObject("observatory"));
-			map.put(new Location(29,35,blockSize), new GridObject("pearlHarbor"));
-			map.put(new Location(18,18,blockSize), new GridObject("theMountain"));
+			map.put(new Location(74,75,blockSize), new MapObject("bigIslandVolcano"));
+			map.put(new Location(31,40,blockSize), new MapObject("diamondHead"));
+			map.put(new Location(50,75,blockSize), new MapObject("observatory"));
+			map.put(new Location(29,35,blockSize), new MapObject("pearlHarbor"));
+			map.put(new Location(18,18,blockSize), new MapObject("theMountain"));
 
 			for(int i=0; i<gridSize; i++){
 				for(int j=0; j<gridSize; j++){
-					DLList<GridObject> g = map.get(new Location(j,i,blockSize));
+					DLList<MapObject> g = map.get(new Location(j,i,blockSize));
 					//if a grid box is land and doesn't already have an obstacle, there is a 0.25 chance there will be a tree.
 					if(g.size()==1 && (g.get(0).getName().equals("land") || g.get(0).getName().equals("hills"))){
 						if((int)(Math.random()*6)==3){
-							map.put(new Location(j,i,blockSize),new GridObject("tree"));
+							map.put(new Location(j,i,blockSize),new MapObject("tree"));
 						}
 						else if((int)(Math.random()*6)==2){
-							map.put(new Location(j,i,blockSize),new GridObject("flower"));
+							map.put(new Location(j,i,blockSize),new MapObject("flower"));
 						}
 					}
 				}
@@ -311,7 +311,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		for(int i=0; i<gridSize; i++){
 			for(int j=0; j<gridSize; j++){
 				Location key = new Location(i,j,blockSize);
-				DLList<GridObject> block = map.get(key);
+				DLList<MapObject> block = map.get(key);
 				for(int k=0; k<block.size(); k++){
 					int blockX = key.getX()+gridX;
 					int blockY = key.getY()+gridY;

@@ -5,9 +5,9 @@ public class LandAnimal implements Runnable{
     private int col;
     private int size;
     private Screen sc;
-    private MyHashTable<Location,GridObject> map;
-    private DLList<GridObject> gridBucket;
-    public LandAnimal(int row, int col, int size, MyHashTable<Location,GridObject> map, Screen sc){
+    private MyHashTable<Location,MapObject> map;
+    private DLList<MapObject> gridBucket;
+    public LandAnimal(int row, int col, int size, MyHashTable<Location,MapObject> map, Screen sc){
         this.row = row;
         this.col = col;
         this.size = size;

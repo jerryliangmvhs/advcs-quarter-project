@@ -9,10 +9,10 @@ public class Tourist implements Runnable {
     private int y;
     private int size;
     private Screen sc;
-    private MyHashTable<Location, GridObject> map;
-    private DLList<GridObject> gridBucket;
+    private MyHashTable<Location, MapObject> map;
+    private DLList<MapObject> gridBucket;
     private String landmarkAdjacentTo;
-    public Tourist(int row, int col, int x, int y, int size, MyHashTable<Location, GridObject> map, Screen sc){
+    public Tourist(int row, int col, int x, int y, int size, MyHashTable<Location, MapObject> map, Screen sc){
         this.row = row;
         this.col = col;
         this.map = map;
@@ -142,7 +142,7 @@ public class Tourist implements Runnable {
 		for(int i=0; i<playerSurroundings.length; i++){
 			//checks the end of each bucket for each direction of the player for a landmark
 			int topIndex = map.get(playerSurroundings[i]).size();
-			DLList<GridObject> gridObject = map.get(playerSurroundings[i]);
+			DLList<MapObject> gridObject = map.get(playerSurroundings[i]);
 			if(gridObject.get(topIndex).getName().equals("bigIslandVolcano")){
 				landmarkAdjacentTo = gridObject.get(topIndex).getName();
 				return true;

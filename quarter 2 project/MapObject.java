@@ -1,6 +1,6 @@
-public class GridObject {
+public class MapObject {
     private String name;
-    public GridObject(String name){
+    public MapObject(String name){
         this.name = name;
     }
     public String getName(){

@@ -1,18 +1,18 @@
-public class Car implements Runnable{
+import java.io.Serializable;
+
+public class Car implements Runnable, Serializable{
     private int x;
     private int y;
     private int row;
     private int col;
     private int size;
-    private Screen sc;
     private MyHashTable<Location,MapObject> map;
     private DLList<MapObject> gridBucket;
-    public Car(int row, int col, int size, MyHashTable<Location,MapObject> map, Screen sc){
+    public Car(int row, int col, int size, MyHashTable<Location,MapObject> map){
         this.row = row;
         this.col = col;
         this.size = size;
         this.map = map;
-        this.sc = sc;
         x = col*size;
         y = row*size;
     }
@@ -101,7 +101,6 @@ public class Car implements Runnable{
             } catch (Exception e) {
                 System.out.println(e);
             }
-            sc.repaint();
         }
     }
 }

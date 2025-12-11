@@ -1,4 +1,6 @@
-public class MyHashSet<E>{
+import java.io.Serializable;
+
+public class MyHashSet<E> implements Serializable{
     private Object[] hashArray;
     private int size;
     private DLList<E> DLList;

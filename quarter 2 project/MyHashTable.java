@@ -1,4 +1,6 @@
-public class MyHashTable<K,V> {
+import java.io.Serializable;
+
+public class MyHashTable<K,V> implements Serializable{
     private DLList<V>[] table;
     private MyHashSet<K> keySet;
 

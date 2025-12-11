@@ -1,23 +1,19 @@
-import java.net.URL;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
+import java.io.Serializable;
 
-public class Tourist implements Runnable {
+public class Tourist implements Runnable, Serializable {
     private int row;
     private int col;
     private int x;
     private int y;
     private int size;
-    private Screen sc;
     private MyHashTable<Location, MapObject> map;
     private DLList<MapObject> gridBucket;
     private String landmarkAdjacentTo;
-    public Tourist(int row, int col, int x, int y, int size, MyHashTable<Location, MapObject> map, Screen sc){
+    public Tourist(int row, int col, int x, int y, int size, MyHashTable<Location, MapObject> map){
         this.row = row;
         this.col = col;
         this.map = map;
         this.size = size;
-        this.sc = sc;
         this.x = x;
         this.y = y;
         landmarkAdjacentTo = null;
@@ -93,7 +89,7 @@ public class Tourist implements Runnable {
         return false;
     }
     public void errorSound(){
-        //System.out.println("Player tried to move into obstacle");
+        /* 
         try {
             URL url = this.getClass().getClassLoader().getResource("sounds/error.wav");
             Clip clip = AudioSystem.getClip();
@@ -102,8 +98,10 @@ public class Tourist implements Runnable {
         } catch (Exception exc) {
             exc.printStackTrace(System.out);
         }
+            */
     }
     public void walkSound(){
+        /* 
         int randInt = (int)(Math.random()*2);
         if(randInt==0){
             try {
@@ -125,6 +123,7 @@ public class Tourist implements Runnable {
                 exc.printStackTrace(System.out);
             }
         }
+            */
     }
 
     @SuppressWarnings("unchecked")
@@ -168,6 +167,7 @@ public class Tourist implements Runnable {
 		return false;
 	}
     public void destinationSound(){
+        /* 
         try {
             URL url = this.getClass().getClassLoader().getResource("sounds/destination.wav");
             Clip clip = AudioSystem.getClip();
@@ -176,9 +176,11 @@ public class Tourist implements Runnable {
         } catch (Exception exc) {
             exc.printStackTrace(System.out);
         }
+            */
     }
     @Override
     public void run(){
+        //for bobbing animation
         int counter = 0;
         while(true){
             counter++;
@@ -192,7 +194,6 @@ public class Tourist implements Runnable {
                 Thread.sleep(500);
             } catch (Exception e) {
             }
-            sc.repaint();
         }
     }
 

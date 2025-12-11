@@ -2,6 +2,7 @@ import javax.swing.JPanel;
 import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.awt.image.BufferedImage;
 import java.awt.event.*;
@@ -11,6 +12,11 @@ import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.JButton;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+
 
 public class Screen extends JPanel implements ActionListener, KeyListener, MouseListener, MouseWheelListener{
 	private MyHashTable<Location,MapObject> map;
@@ -21,6 +27,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	private Pig pig1;
 	private Car car1,car2,car3,car4,car5,car6;
 	private Villager villager1, villager2, villager3, villager4, villager5, villager6, villager7, villager8;
+	private Animate animate;
 	
 	private Font minecraftFive;
 	private Font minecraftTen;
@@ -37,7 +44,9 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	private int gridX = (((renderDistance-1)/2)*blockSize)-(playerCol*blockSize);
 	private int gridY = (((renderDistance-1)/2)*blockSize)-(playerRow*blockSize);
 	private boolean sunset = false;
-	private String currentIsland = "O'ahu";
+	private String currentIsland;
+	private String saveFileName = "level.dat";
+	private DLList<Object> saves;
 
 	private int gridSize = 101; //blocks, DO NOT CHANGE
 	private BufferedImage diamondHeadIcon, bigIslandVolcanoIcon, observatoryIcon, pearlHarborIcon, theMountainIcon, treeIcon, flowerIcon, grass, grassDark, water, sand, road, road2;
@@ -195,27 +204,98 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		hawaiiVolcanoesInfo = new LandmarkInfo(bigIslandVolcanoPhoto);
 		pearlHarborInfo = new LandmarkInfo(pearlHarborPhoto);
 
-		player = new Tourist(playerRow,playerCol,touristX,touristY,blockSize,map,this);
-		chicken1 = new Chicken(16,19,blockSize,map,this);
-		pig1 = new Pig(70,70,blockSize,map,this);
-		car1 = new Car(27,34,blockSize,map,this);
-		car2 = new Car(17,21,blockSize,map,this);
-		car3 = new Car(37,53,blockSize,map,this);
-		car4 = new Car(51,54,blockSize,map,this);
-		car5 = new Car(47,73,blockSize,map,this);
-		car6 = new Car(67,74,blockSize,map,this);
+		player = new Tourist(27,36,touristX,touristY,blockSize,map);
+		chicken1 = new Chicken(16,19,blockSize,map);
+		pig1 = new Pig(70,70,blockSize,map);
+		car1 = new Car(27,34,blockSize,map);
+		car2 = new Car(17,21,blockSize,map);
+		car3 = new Car(37,53,blockSize,map);
+		car4 = new Car(51,54,blockSize,map);
+		car5 = new Car(47,73,blockSize,map);
+		car6 = new Car(67,74,blockSize,map);
+		villager1 = new Villager(23,7,blockSize,map);
+		villager2 = new Villager(16,19,blockSize,map);
+		villager3 = new Villager(24,36,blockSize,map);
+		villager4 = new Villager(36,57,blockSize,map);
+		villager5 = new Villager(50,58,blockSize,map);
+		villager6 = new Villager(49,73,blockSize,map);
+		villager7 = new Villager(58,62,blockSize,map);
+		villager8 = new Villager(73,77,blockSize,map);
 
-		villager1 = new Villager(23,7,blockSize,map,this);
-		villager2 = new Villager(16,19,blockSize,map,this);
-		villager3 = new Villager(24,36,blockSize,map,this);
-		villager4 = new Villager(36,57,blockSize,map,this);
-		villager5 = new Villager(50,58,blockSize,map,this);
-		villager6 = new Villager(49,73,blockSize,map,this);
-		villager7 = new Villager(58,62,blockSize,map,this);
-		villager8 = new Villager(73,77,blockSize,map,this);
+		//load in the objects here through Input Stream
+		saves = new DLList<Object>();
+		try {
+            //Load the data file to read in
+            FileInputStream fis = new FileInputStream(saveFileName);
+            ObjectInputStream in = new ObjectInputStream(fis);
+            saves = (DLList<Object> ) in .readObject();
+            fis.close(); 
+            in.close();
 
+			map = (MyHashTable<Location,MapObject>)saves.get(0);
+			player = (Tourist)saves.get(1);
+			chicken1 = (Chicken)saves.get(2);
+			pig1 = (Pig)saves.get(3);
+			car1 = (Car)saves.get(4);
+			car2 = (Car)saves.get(5);
+			car3 = (Car)saves.get(6);
+			car4 = (Car)saves.get(7);
+			car5 = (Car)saves.get(8);
+			car6 = (Car)saves.get(9);
+			villager1 = (Villager)saves.get(10);
+			villager2 = (Villager)saves.get(11);
+			villager3 = (Villager)saves.get(12);
+			villager4 = (Villager)saves.get(13);
+			villager5 = (Villager)saves.get(14);
+			villager6 = (Villager)saves.get(15);
+			villager7 = (Villager)saves.get(16);
+			villager8 = (Villager)saves.get(17);
+
+
+        } catch (FileNotFoundException ex) {
+            System.out.println("Using default list");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+		
+		checkIsland();
 		playerSprite = down1;
+		playerRow = player.getRow();
+		playerCol = player.getCol();
+		
+		blockSize = screenSize/renderDistance;
+		player.setSize(blockSize);
+		chicken1.setSize(blockSize);
+		pig1.setSize(blockSize);
+		car1.setSize(blockSize);
+		car2.setSize(blockSize);
+		car3.setSize(blockSize);
+		car4.setSize(blockSize);
+		car5.setSize(blockSize);
+		car6.setSize(blockSize);
 
+		villager1.setSize(blockSize);
+		villager2.setSize(blockSize);
+		villager3.setSize(blockSize);
+		villager4.setSize(blockSize);
+		villager5.setSize(blockSize);
+		villager6.setSize(blockSize);
+		villager7.setSize(blockSize);
+		villager8.setSize(blockSize);
+		
+		player.setX(((renderDistance-1)/2)*blockSize);
+		player.setY(((renderDistance-1)/2)*blockSize);
+		player.setRow(playerRow);
+		player.setCol(playerCol);
+		gridX = (((renderDistance-1)/2)*blockSize)-(playerCol*blockSize);
+		gridY = (((renderDistance-1)/2)*blockSize)-(playerRow*blockSize);
+		
+		repaint();
+		System.out.println("Player Row: " + playerRow + " Player Column: " + playerCol);
+
+		animate = new Animate(this);
+		Thread animationThread = new Thread(animate);
+		animationThread.start();
 		Thread playerThread = new Thread(player);
 		playerThread.start();
 		Thread chickenThread1 = new Thread(chicken1);
@@ -481,6 +561,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		checkIsland();
 		g.drawString("Render Distance: " + renderDistance + " chunks",10,15);
 		g.drawString("Current Island: "+currentIsland,10,30);
+		g.drawString("Row: "+playerRow+" Column: " + playerCol,10,45);
 		
 		
 	}
@@ -498,7 +579,6 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		//left is 37, up is 38, right is 39, down is 40.
 		//91 is zoom out, 93 is zoom in
 		System.out.println(e.getKeyCode());
-
 		if(e.getKeyCode()==37 && player.canMoveLeft()){
 			gridX+=blockSize;
 			playerCol--;
@@ -599,51 +679,55 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		if(e.getKeyCode()==49){
 			playerRow = 22;
 			playerCol = 7;
-			player.setRow(22);
-			player.setCol(7);
+			player.setRow(playerRow);
+			player.setCol(playerCol);
 		}
 		if(e.getKeyCode()==50){
 			playerRow = 17;
 			playerCol = 21;
-			player.setRow(17);
-			player.setCol(21);
+			player.setRow(playerRow);
+			player.setCol(playerCol);
 		}
 		if(e.getKeyCode()==51){
 			playerRow = 27;
 			playerCol = 36;
-			player.setRow(27);
-			player.setCol(36);
+			player.setRow(playerRow);
+			player.setCol(playerCol);
 		}
 		if(e.getKeyCode()==52){
 			playerRow = 37;
 			playerCol = 53;
-			player.setRow(37);
-			player.setCol(53);
+			player.setRow(playerRow);
+			player.setCol(playerCol);
 		}
 		if(e.getKeyCode()==53){
 			playerRow = 49;
 			playerCol = 56;
-			player.setRow(49);
-			player.setCol(56);
+			player.setRow(playerRow);
+			player.setCol(playerCol);
 		}
 		if(e.getKeyCode()==54){
 			playerRow = 49;
 			playerCol = 70;
-			player.setRow(49);
-			player.setCol(70);
+			player.setRow(playerRow);
+			player.setCol(playerCol);
 		}
 		if(e.getKeyCode()==55){
 			playerRow = 57;
 			playerCol = 61;
-			player.setRow(57);
-			player.setCol(61);
+			player.setRow(playerRow);
+			player.setCol(playerCol);
 		}
 		if(e.getKeyCode()==56){
 			playerRow = 71;
 			playerCol = 78;
-			player.setRow(71);
-			player.setCol(78);
+			player.setRow(playerRow);
+			player.setCol(playerCol);
 		}
+		if(e.getKeyCode()==83){
+			save();
+		}
+		
 		player.setRow(playerRow);
 		player.setCol(playerCol);
 		gridX = (((renderDistance-1)/2)*blockSize)-(playerCol*blockSize);
@@ -766,5 +850,37 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		gridX = (((renderDistance-1)/2)*blockSize)-(playerCol*blockSize);
 		gridY = (((renderDistance-1)/2)*blockSize)-(playerRow*blockSize);
 	}
-	
+	public void save(){
+		saves = new DLList<Object>();
+		saves.add(map);
+		
+		saves.add(player);
+		saves.add(chicken1);
+		saves.add(pig1);
+		saves.add(car1);
+		saves.add(car2);
+		saves.add(car3);
+		saves.add(car4);
+		saves.add(car5);
+		saves.add(car6);
+		saves.add(villager1);
+		saves.add(villager2);
+		saves.add(villager3);
+		saves.add(villager4);
+		saves.add(villager5);
+		saves.add(villager6);
+		saves.add(villager7);
+		saves.add(villager8);
+		
+
+		 try {
+            FileOutputStream fos = new FileOutputStream(saveFileName);
+            ObjectOutputStream out = new ObjectOutputStream(fos);
+            out.writeObject(saves);
+            fos.close();
+            out.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+	}
 }

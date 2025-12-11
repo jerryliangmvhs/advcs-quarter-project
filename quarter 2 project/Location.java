@@ -1,4 +1,6 @@
-public class Location {
+import java.io.Serializable;
+
+public class Location implements Serializable {
     private int row;
     private int col;
     private int x;

@@ -1,10 +1,8 @@
-import java.util.Iterator;
-import java.lang.Iterable;
-public class DLList<E> implements Iterable<E>, Iterator<E>{
+import java.io.Serializable;
+public class DLList<E> implements Serializable{
     private Node<E> head;
     private Node<E> tail;
     private int size;
-    private Node<E> currentIteration;
 
     public DLList(){
         
@@ -13,7 +11,6 @@ public class DLList<E> implements Iterable<E>, Iterator<E>{
         head.setNext(tail);
         tail.setPrev(head);
         size = 0;
-        currentIteration = head;
     }   
     public Node<E> getNode(int index){
         if(index >=size/2){
@@ -119,23 +116,4 @@ public class DLList<E> implements Iterable<E>, Iterator<E>{
         tail.setPrev(head);
         size = 0;
     }
-    @Override
-	public Iterator<E> iterator(){
-		return (this);
-	}
-
-	@Override
-	public boolean hasNext(){
-		if(currentIteration!=null){
-            return true;
-        }
-        return false;
-	}
-	@Override
-	public E next(){
-		E data = (E)currentIteration.get();
-        currentIteration = currentIteration.next();
-        return data;
-	}
-
 }

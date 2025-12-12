@@ -27,6 +27,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	private JButton zoomOut;
 	private JButton zoomIn;
 	private JButton save;
+	private ClockButton clockButton;
 	private Tourist player;
 	private Chicken chicken1;
 	private Pig pig1;
@@ -358,6 +359,8 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		zoomOut.setOpaque(true);
 		this.add(zoomOut);
 
+		clockButton = new ClockButton(715,190,75,buttonColor);
+
 		save = new JButton("Save");
 		save.setBounds(575,725,200,50);
 		save.setFocusable(false);
@@ -577,7 +580,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		g.drawString("Render Distance: " + renderDistance + " chunks",10,15);
 		g.drawString("Current Island: "+currentIsland,10,30);
 		g.drawString("Row: "+playerRow+" Column: " + playerCol,10,45);
-		
+		clockButton.drawMe(g);
 		
 	}
 
@@ -699,6 +702,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 				zoomIn.setBackground(buttonColor);
 				zoomOut.setBackground(buttonColor);
 				save.setBackground(buttonColor);
+				clockButton.setColor(buttonColor);
 				
 			}
 			else if(!sunset){
@@ -706,6 +710,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 				zoomIn.setBackground(buttonColorSunset);
 				zoomOut.setBackground(buttonColorSunset);
 				save.setBackground(buttonColorSunset);
+				clockButton.setColor(buttonColorSunset);
 			}
 		}
 		//1-8 is 49-56
@@ -800,6 +805,22 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
     public void mouseClicked(MouseEvent e) {}
 	public void mousePressed(MouseEvent e){
 		System.out.println("X: " + e.getX() + " Y: " + e.getY());
+		if(clockButton.mouseClicked(e.getX(),e.getY()) && !sunset){
+			sunset = true;
+			
+			clockButton.setColor(buttonColorSunset);
+			zoomIn.setBackground(buttonColorSunset);
+			zoomOut.setBackground(buttonColorSunset);
+			save.setBackground(buttonColorSunset);
+		}
+		else if(clockButton.mouseClicked(e.getX(),e.getY()) && sunset){
+			sunset = false;
+			zoomIn.setBackground(buttonColor);
+			zoomOut.setBackground(buttonColor);
+			save.setBackground(buttonColor);
+			clockButton.setColor(buttonColor);
+		}
+		repaint();
 	}
 
 	public void checkIsland(){

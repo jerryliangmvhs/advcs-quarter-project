@@ -16,12 +16,17 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
+import java.net.URL;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+
 
 
 public class Screen extends JPanel implements ActionListener, KeyListener, MouseListener, MouseWheelListener{
 	private MyHashTable<Location,MapObject> map;
 	private JButton zoomOut;
 	private JButton zoomIn;
+	private JButton save;
 	private Tourist player;
 	private Chicken chicken1;
 	private Pig pig1;
@@ -262,7 +267,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		playerSprite = down1;
 		playerRow = player.getRow();
 		playerCol = player.getCol();
-		
+
 		blockSize = screenSize/renderDistance;
 		player.setSize(blockSize);
 		chicken1.setSize(blockSize);
@@ -352,6 +357,16 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		zoomOut.setBorderPainted(false);
 		zoomOut.setOpaque(true);
 		this.add(zoomOut);
+
+		save = new JButton("Save");
+		save.setBounds(575,725,200,50);
+		save.setFocusable(false);
+		save.addActionListener(this);
+		save.setFont(minecraftTen);
+		save.setBackground(buttonColor);
+		save.setBorderPainted(false);
+		save.setOpaque(true);
+		this.add(save);
 
 		
 		this.setFocusable(true);
@@ -573,73 +588,97 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		else if(e.getSource()==zoomOut && renderDistance <=95){
 			increaseRenderDistance();
 		}
+		else if(e.getSource()==save){
+			save();
+		}
 		repaint();
 	}
 	public void keyPressed(KeyEvent e){
 		//left is 37, up is 38, right is 39, down is 40.
 		//91 is zoom out, 93 is zoom in
 		System.out.println(e.getKeyCode());
-		if(e.getKeyCode()==37 && player.canMoveLeft()){
-			gridX+=blockSize;
-			playerCol--;
-			player.setCol(playerCol);
-			if(player.adjacentToLandmark()){
-				player.destinationSound();
-			}
-			if(playerCol%2==0){
-				playerSprite = left1;
+		if(e.getKeyCode()==37){
+			if(player.canMoveLeft()){
+				walkSound();
+				gridX+=blockSize;
+				playerCol--;
+				player.setCol(playerCol);
+				if(player.adjacentToLandmark()){
+					destinationSound();
+				}
+				if(playerCol%2==0){
+					playerSprite = left1;
+				}
+				else{
+					playerSprite = left2;
+				}
 			}
 			else{
-				playerSprite = left2;
+				errorSound();
+			}
+		}
+		if(e.getKeyCode()==38){
+			if(player.canMoveUp()){
+				walkSound();
+				gridY+=blockSize;
+				playerRow--;
+				player.setRow(playerRow);
+				if(player.adjacentToLandmark()){
+					destinationSound();
+				}
+				if(playerRow%4==0 || playerRow%4==2){
+					playerSprite = up1;
+				}
+				else if(playerRow%4==1){
+					playerSprite = up2;
+				}
+				else if(playerRow%4==3){
+					playerSprite = up3;
+				}
+			}
+			else{
+				errorSound();
 			}
 			
 		}
-		if(e.getKeyCode()==38 && player.canMoveUp()){
-			gridY+=blockSize;
-			playerRow--;
-			player.setRow(playerRow);
-			if(player.adjacentToLandmark()){
-				player.destinationSound();
-			}
-			if(playerRow%4==0 || playerRow%4==2){
-				playerSprite = up1;
-			}
-			else if(playerRow%4==1){
-				playerSprite = up2;
-			}
-			else if(playerRow%4==3){
-				playerSprite = up3;
-			}
-		}
-		if(e.getKeyCode()==39 && player.canMoveRight()){
-			gridX-=blockSize;
-			playerCol++;
-			player.setCol(playerCol);
-			if(player.adjacentToLandmark()){
-				player.destinationSound();
-			}
-			if(playerCol%2==0){
-				playerSprite = right1;
+		if(e.getKeyCode()==39){
+			if(player.canMoveRight()){
+				walkSound();
+				gridX-=blockSize;
+				playerCol++;
+				player.setCol(playerCol);
+				if(player.adjacentToLandmark()){
+					destinationSound();
+				}
+				if(playerCol%2==0){
+					playerSprite = right1;
+				}
+				else{
+					playerSprite = right2;
+				}
 			}
 			else{
-				playerSprite = right2;
+				errorSound();
 			}
 		}
-		if(e.getKeyCode()==40 && player.canMoveDown()){
-			gridY-=blockSize;
-			playerRow++;
-			player.setRow(playerRow);
-			if(player.adjacentToLandmark()){
-				player.destinationSound();
-			}
-			if(playerRow%4==0 || playerRow%4==2){
-				playerSprite = down1;
-			}
-			else if(playerRow%4==1){
-				playerSprite = down3;
-			}
-			else if(playerRow%4==3){
-				playerSprite = down2;
+		if(e.getKeyCode()==40){
+			if(player.canMoveDown()){
+				walkSound();
+				gridY-=blockSize;
+				playerRow++;
+				player.setRow(playerRow);
+				if(player.adjacentToLandmark()){
+					destinationSound();
+				}
+				if(playerRow%4==0 || playerRow%4==2){
+					playerSprite = down1;
+				}
+				else if(playerRow%4==1){
+					playerSprite = down3;
+				}
+				else if(playerRow%4==3){
+					playerSprite = down2;
+				}
 			}
 		}
 		if(e.getKeyCode()==91 && renderDistance <=95){
@@ -659,12 +698,14 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 				sunset = false;
 				zoomIn.setBackground(buttonColor);
 				zoomOut.setBackground(buttonColor);
+				save.setBackground(buttonColor);
 				
 			}
 			else if(!sunset){
 				sunset = true;
 				zoomIn.setBackground(buttonColorSunset);
 				zoomOut.setBackground(buttonColorSunset);
+				save.setBackground(buttonColorSunset);
 			}
 		}
 		//1-8 is 49-56
@@ -681,48 +722,56 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			playerCol = 7;
 			player.setRow(playerRow);
 			player.setCol(playerCol);
+			teleportSound();
 		}
 		if(e.getKeyCode()==50){
 			playerRow = 17;
 			playerCol = 21;
 			player.setRow(playerRow);
 			player.setCol(playerCol);
+			teleportSound();
 		}
 		if(e.getKeyCode()==51){
 			playerRow = 27;
 			playerCol = 36;
 			player.setRow(playerRow);
 			player.setCol(playerCol);
+			teleportSound();
 		}
 		if(e.getKeyCode()==52){
 			playerRow = 37;
 			playerCol = 53;
 			player.setRow(playerRow);
 			player.setCol(playerCol);
+			teleportSound();
 		}
 		if(e.getKeyCode()==53){
 			playerRow = 49;
 			playerCol = 56;
 			player.setRow(playerRow);
 			player.setCol(playerCol);
+			teleportSound();
 		}
 		if(e.getKeyCode()==54){
 			playerRow = 49;
 			playerCol = 70;
 			player.setRow(playerRow);
 			player.setCol(playerCol);
+			teleportSound();
 		}
 		if(e.getKeyCode()==55){
 			playerRow = 57;
 			playerCol = 61;
 			player.setRow(playerRow);
 			player.setCol(playerCol);
+			teleportSound();
 		}
 		if(e.getKeyCode()==56){
 			playerRow = 71;
 			playerCol = 78;
 			player.setRow(playerRow);
 			player.setCol(playerCol);
+			teleportSound();
 		}
 		if(e.getKeyCode()==83){
 			save();
@@ -790,6 +839,77 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
         }
 		repaint();
     }
+
+	public void destinationSound(){
+        try {
+            URL url = this.getClass().getClassLoader().getResource("sounds/destination.wav");
+            Clip clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(url));
+            clip.start();
+        } catch (Exception exc) {
+            exc.printStackTrace(System.out);
+        }
+            
+    }
+    public void errorSound(){
+        
+        try {
+            URL url = this.getClass().getClassLoader().getResource("sounds/error.wav");
+            Clip clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(url));
+            clip.start();
+        } catch (Exception exc) {
+            exc.printStackTrace(System.out);
+        }
+            
+    }
+    public void walkSound(){
+        
+        int randInt = (int)(Math.random()*2);
+        if(randInt==0){
+            try {
+                URL url = this.getClass().getClassLoader().getResource("sounds/walk1.wav");
+                Clip clip = AudioSystem.getClip();
+                clip.open(AudioSystem.getAudioInputStream(url));
+                clip.start();
+            } catch (Exception exc) {
+                exc.printStackTrace(System.out);
+            }
+        }
+        else{
+            try {
+                URL url = this.getClass().getClassLoader().getResource("sounds/walk2.wav");
+                Clip clip = AudioSystem.getClip();
+                clip.open(AudioSystem.getAudioInputStream(url));
+                clip.start();
+            } catch (Exception exc) {
+                exc.printStackTrace(System.out);
+            }
+        }
+            
+    }
+	public void teleportSound(){
+		if((int)(Math.random()*2)==1){
+			try {
+                URL url = this.getClass().getClassLoader().getResource("sounds/teleport1.wav");
+                Clip clip = AudioSystem.getClip();
+                clip.open(AudioSystem.getAudioInputStream(url));
+                clip.start();
+            } catch (Exception exc) {
+                exc.printStackTrace(System.out);
+            }
+		}
+		else{
+			try {
+                URL url = this.getClass().getClassLoader().getResource("sounds/teleport2.wav");
+                Clip clip = AudioSystem.getClip();
+                clip.open(AudioSystem.getAudioInputStream(url));
+                clip.start();
+            } catch (Exception exc) {
+                exc.printStackTrace(System.out);
+            }
+		}
+	}
 
 	public void decreaseRenderDistance(){
 		renderDistance -=6;

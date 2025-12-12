@@ -52,79 +52,35 @@ public class Tourist implements Runnable, Serializable {
     public boolean canMoveLeft(){
         gridBucket = map.get(new Location(row,col-1,size));
         if(gridBucket.size()==1 && !gridBucket.get(0).getName().equals("water")){
-            walkSound();
             return true;
         }
-        errorSound();
         return false;
     }
      @SuppressWarnings("unchecked")
     public boolean canMoveRight(){
         gridBucket = map.get(new Location(row,col+1,size));
         if(gridBucket.size()==1 && !gridBucket.get(0).getName().equals("water")){
-            walkSound();
             return true;
         }
-        errorSound();
         return false;
     }
      @SuppressWarnings("unchecked")
     public boolean canMoveUp(){
         gridBucket = map.get(new Location(row-1,col,size));
         if(gridBucket.size()==1 && !gridBucket.get(0).getName().equals("water")){
-            walkSound();
             return true;
         }
-        errorSound();
         return false;
     }
      @SuppressWarnings("unchecked")
     public boolean canMoveDown(){
         gridBucket = map.get(new Location(row+1,col,size));
         if(gridBucket.size()==1 && !gridBucket.get(0).getName().equals("water")){
-            walkSound();
             return true;
         }
-        errorSound();
         return false;
     }
-    public void errorSound(){
-        /* 
-        try {
-            URL url = this.getClass().getClassLoader().getResource("sounds/error.wav");
-            Clip clip = AudioSystem.getClip();
-            clip.open(AudioSystem.getAudioInputStream(url));
-            clip.start();
-        } catch (Exception exc) {
-            exc.printStackTrace(System.out);
-        }
-            */
-    }
-    public void walkSound(){
-        /* 
-        int randInt = (int)(Math.random()*2);
-        if(randInt==0){
-            try {
-                URL url = this.getClass().getClassLoader().getResource("sounds/walk1.wav");
-                Clip clip = AudioSystem.getClip();
-                clip.open(AudioSystem.getAudioInputStream(url));
-                clip.start();
-            } catch (Exception exc) {
-                exc.printStackTrace(System.out);
-            }
-        }
-        else{
-            try {
-                URL url = this.getClass().getClassLoader().getResource("sounds/walk2.wav");
-                Clip clip = AudioSystem.getClip();
-                clip.open(AudioSystem.getAudioInputStream(url));
-                clip.start();
-            } catch (Exception exc) {
-                exc.printStackTrace(System.out);
-            }
-        }
-            */
-    }
+    
 
     @SuppressWarnings("unchecked")
 	public boolean adjacentToLandmark(){
@@ -166,18 +122,7 @@ public class Tourist implements Runnable, Serializable {
 		landmarkAdjacentTo = null;
 		return false;
 	}
-    public void destinationSound(){
-        /* 
-        try {
-            URL url = this.getClass().getClassLoader().getResource("sounds/destination.wav");
-            Clip clip = AudioSystem.getClip();
-            clip.open(AudioSystem.getAudioInputStream(url));
-            clip.start();
-        } catch (Exception exc) {
-            exc.printStackTrace(System.out);
-        }
-            */
-    }
+    
     @Override
     public void run(){
         //for bobbing animation

@@ -123,11 +123,11 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 				}
 				row++;
 			}
-			map.put(new Location(74,75,blockSize), new MapObject("bigIslandVolcano"));
+			map.put(new Location(76,78,blockSize), new MapObject("bigIslandVolcano"));
 			map.put(new Location(31,40,blockSize), new MapObject("diamondHead"));
 			map.put(new Location(50,75,blockSize), new MapObject("observatory"));
 			map.put(new Location(29,35,blockSize), new MapObject("pearlHarbor"));
-			map.put(new Location(18,18,blockSize), new MapObject("theMountain"));
+			map.put(new Location(15,15,blockSize), new MapObject("theMountain"));
 
 			for(int i=0; i<gridSize; i++){
 				for(int j=0; j<gridSize; j++){
@@ -682,6 +682,9 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 				else if(playerRow%4==3){
 					playerSprite = down2;
 				}
+			}
+			else{
+				errorSound();
 			}
 		}
 		if(e.getKeyCode()==91 && renderDistance <=95){

@@ -4,7 +4,7 @@ public class Runner {
   
 	public static void main(String[] args) {
 
-		JFrame frame = new JFrame("Hawaii Map");
+		JFrame frame = new JFrame("Quarter 2 Project - Hawaii Map");
 		Screen sc = new Screen();
 		
 		frame.add(sc);

@@ -5,7 +5,7 @@ public class Runner {
   
 	public static void main(String[] args) {
 
-		JFrame frame = new JFrame("Quarter 1 Project - Jerry's Windmill Scenery");
+		JFrame frame = new JFrame("Quarter 3 Project - My Theme Park");
 		Screen sc = new Screen();
 		
 		frame.add(sc);

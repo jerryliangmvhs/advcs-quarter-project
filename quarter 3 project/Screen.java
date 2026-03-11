@@ -48,7 +48,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		this.setFocusable(true);
 
 		try {
-            mapBackground = ImageIO.read(new File("images/legolandMap.jpg"));
+            mapBackground = ImageIO.read(new File("images/legolandMapNoTextTranslucent.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -77,11 +77,11 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		map.add(chl);
 		Location dsa = new Location("Deep Sea Adventure", "dsa", 540, 100);
 		map.add(dsa);
-		Location psh = new Location("Pirate Shores", "psh", 430, 140);
+		Location psh = new Location("Pirate Shores", "psh", 450, 110);
 		map.add(psh);
-		Location sfc = new Location("Surfer’s Cove", "sfc", 320, 110);
+		Location sfc = new Location("Surfer’s Cove", "sfc", 380, 70);
 		map.add(sfc);
-		Location ftn = new Location("Fun Town", "ftn", 330, 180);
+		Location ftn = new Location("Fun Town", "ftn", 340, 110);
 		map.add(ftn);
 		Location wpk = new Location("Water Park", "wpk", 270, 50);
 		map.add(wpk);
@@ -91,7 +91,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		map.add(msp);
 		Location igz = new Location("Imagination Zone", "igz", 560, 320);
 		map.add(igz);
-		Location rtm = new Location("Restrooms", "rtm", 360, 280);
+		Location rtm = new Location("Restrooms", "rtm", 250, 260);
 		map.add(rtm);
 		Location btl = new Location("Bridge @ the Lake", "btl", 400, 250);
 		map.add(btl);
@@ -99,8 +99,8 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		map.addEdge(lmh, lch,5);
 		map.addEdge(lmh, ent, 4);
 		map.addEdge(lch, ent, 4);
-		map.addEdge(ent,rtm,2);
-		map.addEdge(rtm,btl,1);
+		map.addEdge(ent,rtm,3);
+		map.addEdge(rtm,btl,3);
 		map.addEdge(lmw,sla,3);
 		map.addEdge(dnv,sla,2);
 		map.addEdge(dnv,ent,3);
@@ -124,6 +124,10 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		map.addEdge(dsa,chl,2);
 		map.addEdge(psh,dsa,3);
 		map.addEdge(psh,sfc,2);
+		map.addEdge(rtm,lmw,3);
+		map.addEdge(rtm,dnv,2);
+		map.addEdge(rtm,wpk,4);
+		map.addEdge(btl,lgf,1);
 
 	}
 	@Override
@@ -134,6 +138,8 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	@Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
+		g.setColor(Color.WHITE);
+		g.fillRect(0,0,1200,900);
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Arial",Font.BOLD,15));
 		g.drawString("Starting Location (Enter Abbreviation)",110,700);
@@ -141,6 +147,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		drawLegend(g,875,100);
 		g.drawImage(mapBackground,0,0,null);
 		g.drawString("MouseX: " + mouseX + " MouseY: " + mouseY,40,640);
+		map.drawMe(g);
 
 	}
 	public void actionPerformed(ActionEvent e){

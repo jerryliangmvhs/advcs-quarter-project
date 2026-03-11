@@ -16,8 +16,11 @@ public class Location{
         this.abbreviation = abbreviation;
     }
     public void drawMe(Graphics g){
-        g.setColor(Color.RED);
-        g.drawOval(x-10,y-10,20,20);
+        g.setColor(Color.BLACK);
+        g.fillOval(x-5,y-5,10,10);
+        g.setFont(new Font("Arial",Font.BOLD,10));
+        g.drawString(name,x-15,y+15);
+        g.drawString(abbreviation,x-15,y+25);
     }
     public int getX(){
         return x;

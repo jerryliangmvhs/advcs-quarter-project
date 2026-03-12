@@ -6,7 +6,7 @@ public class MyHashMap<K, V> {
 
   public MyHashMap() {
     size = 0;
-    hashArray = new Object[20000];
+    hashArray = new Object[999999];
     keySet = new MyHashSet<K>();
   }
 

@@ -8,7 +8,7 @@ public class MyHashSet<E> implements Iterable<E>{
     private DLList<E> DLList;
 
     public MyHashSet(){
-        hashArray = new Object[20000];
+        hashArray = new Object[999999];
         size = 0;
         DLList = new DLList<E>();
     }

@@ -22,24 +22,25 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	private int mouseY = 0;
     private int mouseX = 0;
 	private Graph<Location> map;
+	private Pair<DLList<Location>, Integer> shortestPath;
 
 	public Screen(){
 		this.setLayout(null);
 		startInput = new JTextField();
 		startInput.setFont(new Font("Arial", Font.PLAIN, 20));
-		startInput.setBounds(105, 705, 300, 50);
+		startInput.setBounds(30, 705, 200, 50);
 		startInput.setText("");
 		this.add(startInput);
 
 		endInput = new JTextField();
 		endInput.setFont(new Font("Arial", Font.PLAIN, 20));
-		endInput.setBounds(455, 705, 300, 50);
+		endInput.setBounds(300, 705, 200, 50);
 		endInput.setText("");
 		this.add(endInput);
 
 		submit = new JButton();
 		submit.setFont(new Font("Arial", Font.BOLD, 20));
-		submit.setBounds(805, 705, 300, 50);
+		submit.setBounds(570, 705, 200, 50);
 		submit.setText("Get Directions");
 		this.add(submit);
 		submit.addActionListener(this);
@@ -54,6 +55,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
         }
 
 		map = new Graph<Location>();
+		shortestPath = null;
 		//String name, String abbreviation, String description, int x, int y
 		Location sla = new Location("Sea Life Aquarium","sla",120,410);
 		map.add(sla);
@@ -132,31 +134,42 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	}
 	@Override
 	public Dimension getPreferredSize(){
-		return new Dimension(1200,900);
+		return new Dimension(800,900);
 	}
 	
 	@Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		g.setColor(Color.WHITE);
-		g.fillRect(0,0,1200,900);
+		g.fillRect(0,0,800,900);
 		g.setColor(Color.BLACK);
-		g.setFont(new Font("Arial",Font.BOLD,15));
-		g.drawString("Starting Location (Enter Abbreviation)",110,700);
-		g.drawString("Destination (Enter Abbreviation)",460,700);
-		drawLegend(g,875,100);
+		g.setFont(new Font("Arial",Font.BOLD,10));
+		g.drawString("Starting Location (Enter Abbreviation)",30,700);
+		g.drawString("Destination (Enter Abbreviation)",300,700);
 		g.drawImage(mapBackground,0,0,null);
 		g.drawString("MouseX: " + mouseX + " MouseY: " + mouseY,40,640);
-		map.drawMe(g);
+
+		if(shortestPath==null){
+			map.drawMe(g);
+			System.out.println("Path does not exist.");
+		}
+		else{
+			map.drawMe(g,shortestPath);
+			System.out.println("Path Exists");
+		}
 
 	}
 	public void actionPerformed(ActionEvent e){
 		if(e.getSource()==submit){
 			String startingAbbreviation = startInput.getText();
 			String endingAbbreviation = endInput.getText();
+			Location start = new Location("",startingAbbreviation,0,0);
+			Location end = new Location("",endingAbbreviation,0,0);
 			startInput.setText("");
 			endInput.setText("");
+			shortestPath = map.shortestPath(start, end);
 		}
+		repaint();
 	}
 	public void drawLegend(Graphics g, int x, int y){
 		g.setFont(new Font("Arial",Font.PLAIN,20));

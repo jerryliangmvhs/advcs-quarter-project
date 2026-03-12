@@ -16,6 +16,9 @@ public class Location{
         this.abbreviation = abbreviation;
     }
     public void drawMe(Graphics g){
+        drawMe(g,Color.BLACK);
+    }
+    public void drawMe(Graphics g, Color color){
         g.setColor(Color.BLACK);
         g.fillOval(x-5,y-5,10,10);
         g.setFont(new Font("Arial",Font.BOLD,10));
@@ -36,14 +39,15 @@ public class Location{
     }
     @Override
     public int hashCode(){
-        int value = 0;
+        double value = 0;
         for(int i=0; i<abbreviation.length(); i++){
-            value += (((int)abbreviation.charAt(i))*(26^abbreviation.length()-i-1));
+            value += (((int)abbreviation.charAt(i))*Math.pow(26,abbreviation.length()-i-1));
         }
-        return value;
+        return (int)value;
     }
-    public boolean equals(Location other){
-        if(abbreviation.equals(other.getAbbreviation())){
+    @Override
+    public boolean equals(Object other){
+        if(abbreviation.equals(((Location)other).getAbbreviation())){
             return true;
         }
         return false;

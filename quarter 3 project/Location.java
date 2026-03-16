@@ -19,14 +19,19 @@ public class Location{
         drawMe(g,Color.BLACK);
     }
     public void drawMe(Graphics g, Color color){
-        g.setColor(Color.BLACK);
+        g.setColor(color);
         g.fillOval(x-5,y-5,10,10);
+        g.setColor(Color.BLACK);
         g.setFont(new Font("Arial",Font.BOLD,10));
         g.drawString(name,x-15,y+15);
         g.drawString(abbreviation,x-15,y+25);
     }
     public int getX(){
         return x;
+    }
+    @Override
+    public String toString(){
+        return "Landmark Name: " + name + " Abbreviation: " + abbreviation;
     }
     public int getY(){
         return y;
@@ -47,6 +52,9 @@ public class Location{
     }
     @Override
     public boolean equals(Object other){
+        if(other == null){
+            return false;
+        }
         if(abbreviation.equals(((Location)other).getAbbreviation())){
             return true;
         }

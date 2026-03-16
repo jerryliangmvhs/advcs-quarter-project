@@ -21,6 +21,8 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	private BufferedImage mapBackground;
 	private int mouseY = 0;
     private int mouseX = 0;
+	private String startLocationName;
+	private String endLocationName;
 	private Graph<Location> map;
 	private Pair<DLList<Location>, Integer> shortestPath;
 
@@ -148,51 +150,38 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		g.drawString("Destination (Enter Abbreviation)",300,700);
 		g.drawImage(mapBackground,0,0,null);
 		g.drawString("MouseX: " + mouseX + " MouseY: " + mouseY,40,640);
-
-		if(shortestPath==null){
-			map.drawMe(g);
-			System.out.println("Path does not exist.");
+		map.drawMe(g);
+		if(shortestPath!=null){
+			map.drawPath(g, shortestPath, new Color(0, 0, 255));
 		}
-		else{
-			map.drawMe(g,shortestPath);
-			System.out.println("Path Exists");
-		}
+		if(startLocationName!=null && endLocationName!=null && shortestPath!=null){
+			g.drawString("From " +startLocationName+ " to " + endLocationName,240,620);
+			Double distance = shortestPath.getSecond()*0.1;
+			g.drawString("Distance: " + distance + " miles",240,635);	
 
+			g.drawString("Directions",510,610);
+			int y = 630;
+			for(int i=0; i<shortestPath.getFirst().size()-1; i++){
+				Location locationObj1 = (Location)shortestPath.getFirst().get(i);
+				Location locationObj2 = (Location)shortestPath.getFirst().get(i+1);
+				g.drawString(locationObj1.getName()+ " -> "+locationObj2.getName(),510,y);
+				y+=15;
+			}
+		}
 	}
 	public void actionPerformed(ActionEvent e){
 		if(e.getSource()==submit){
 			String startingAbbreviation = startInput.getText();
 			String endingAbbreviation = endInput.getText();
-			Location start = new Location("",startingAbbreviation,0,0);
-			Location end = new Location("",endingAbbreviation,0,0);
+			startLocationName = map.getNodeByAbbreviation(startingAbbreviation).getName();
+			endLocationName = map.getNodeByAbbreviation(endingAbbreviation).getName();
+			Location start = map.getNodeByAbbreviation(startingAbbreviation);
+			Location end = map.getNodeByAbbreviation(endingAbbreviation);
 			startInput.setText("");
 			endInput.setText("");
 			shortestPath = map.shortestPath(start, end);
 		}
 		repaint();
-	}
-	public void drawLegend(Graphics g, int x, int y){
-		g.setFont(new Font("Arial",Font.PLAIN,20));
-		g.drawString("Sea Life Aquarium = sla",x,y);
-		g.drawString("Entrance = ent",x,y+20);
-		g.drawString("Dino Valley = dnv",x,y+40);
-		g.drawString("Legoland Main Hotel = lmh",x,y+60);
-		g.drawString("Legoland Castle Hotel = lch",x,y+80);
-		g.drawString("Ninjago World = nwd",x,y+100);
-		g.drawString("Lego Ferrari = lgf",x,y+120);
-		g.drawString("Miniland USA = usa",x,y+140);
-		g.drawString("Land of Adventure = loa",x,y+160);
-		g.drawString("Castle Hill = chl",x,y+180);
-		g.drawString("Deep Sea Adventure = dsa",x,y+200);
-		g.drawString("Pirate Shores = psh",x,y+220);
-		g.drawString("Surfer's Cove = sfc",x,y+240);
-		g.drawString("Fun Town = ftn",x,y+260);
-		g.drawString("Water Park = wpk",x,y+280);
-		g.drawString("Lego Movie World = lmw",x,y+300);
-		g.drawString("Model Shop = msp",x,y+320);
-		g.drawString("Imagination Zone = img",x,y+340);
-		g.drawString("Restrooms = rtm",x,y+360);
-		g.drawString("Bridge @ The Lake = btl",x,y+380);
 	}
 	public void mousePressed(MouseEvent e){
 		System.out.println("X: " + e.getX() + " Y: " + e.getY());

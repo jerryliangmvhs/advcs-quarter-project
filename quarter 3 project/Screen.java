@@ -26,6 +26,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	private String endLocationName;
 	private Graph<Location> map;
 	private Pair<DLList<Location>, Integer> shortestPath;
+	//private Avatar avatar;
 
 	public Screen(){
 		this.setLayout(null);
@@ -58,6 +59,10 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
         }
 
 		map = new Graph<Location>();
+		//avatar = new Avatar(370,400,this);
+		//Thread avatarThread = new Thread(avatar);
+		//avatarThread.start();
+
 		shortestPath = null;
 		//String name, String abbreviation, String description, int x, int y
 		Location sla = new Location("Sea Life Aquarium","sla",120,410);
@@ -172,7 +177,9 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 				g.drawString(locationObj1.getName()+ " -> "+locationObj2.getName() + " " + roundedStepDistance + " km",510,y);
 				y+=15;
 			}
+		
 		}
+		//avatar.drawMe(g);
 	}
 	public void actionPerformed(ActionEvent e){
 		if(e.getSource()==submit){
@@ -185,6 +192,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			startInput.setText("");
 			endInput.setText("");
 			shortestPath = map.shortestPath(start, end);
+			avatar.setPath(shortestPath.getFirst());
 		}
 		repaint();
 	}

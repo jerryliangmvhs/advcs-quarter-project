@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.*;
 import java.awt.Font;
+import java.text.DecimalFormat;
 
 
 public class Screen extends JPanel implements ActionListener, KeyListener, MouseListener{
@@ -155,16 +156,20 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			map.drawPath(g, shortestPath, new Color(0, 0, 255));
 		}
 		if(startLocationName!=null && endLocationName!=null && shortestPath!=null){
+			DecimalFormat df = new DecimalFormat("0.0"); 
 			g.drawString("From " +startLocationName+ " to " + endLocationName,240,620);
-			Double distance = shortestPath.getSecond()*0.1;
-			g.drawString("Distance: " + distance + " miles",240,635);	
+			double distance = shortestPath.getSecond()*0.1;
+			String roundedDistance = df.format(distance);
+			g.drawString("Distance: " + roundedDistance + " km",240,635);	
 
 			g.drawString("Directions",510,610);
 			int y = 630;
 			for(int i=0; i<shortestPath.getFirst().size()-1; i++){
 				Location locationObj1 = (Location)shortestPath.getFirst().get(i);
 				Location locationObj2 = (Location)shortestPath.getFirst().get(i+1);
-				g.drawString(locationObj1.getName()+ " -> "+locationObj2.getName(),510,y);
+				double stepDistance = map.getWeight(locationObj1, locationObj2)*0.1;
+				String roundedStepDistance = df.format(stepDistance);
+				g.drawString(locationObj1.getName()+ " -> "+locationObj2.getName() + " " + roundedStepDistance + " km",510,y);
 				y+=15;
 			}
 		}

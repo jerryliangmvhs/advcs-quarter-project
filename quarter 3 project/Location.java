@@ -9,14 +9,27 @@ public class Location{
     private int y;
     private String name;
     private String abbreviation;
+    private BufferedImage image;
     public Location(String name, String abbreviation, int x, int y){
         this.x = x;
         this.y = y;
         this.name = name;
         this.abbreviation = abbreviation;
     }
+    public Location(String name, String abbreviation, int x, int y, BufferedImage image){
+        this.x = x;
+        this.y = y;
+        this.name = name;
+        this.abbreviation = abbreviation;
+        this.image = image;
+    }
     public void drawMe(Graphics g){
         drawMe(g,Color.BLACK);
+    }
+    public void drawImage(Graphics g){
+        if(image!=null){
+            g.drawImage(image,850,120,null);
+        }
     }
     public void drawMe(Graphics g, Color color){
         g.setColor(color);

@@ -24,6 +24,16 @@ public class Graph<E>{
     public int getWeight(E node1, E node2){
         return graph.get(node1).get(node2);
     }
+    public Location clickedLocation(int mouseX, int mouseY){
+        for(E node : graph.keySet()){
+            Location locationObj = (Location)node;
+            if((int)(Math.abs(mouseX-locationObj.getX()))<40 && (int)(Math.abs(mouseY-locationObj.getY()))<40){
+                System.out.println("Location click detected at " + locationObj.getName());
+                return locationObj;
+            }
+        }
+        return null;
+    }
     public void remove(E node){
         abbreviationMap.remove(((Location)node).getAbbreviation());
         for(E each: graph.get(node).keySet()){

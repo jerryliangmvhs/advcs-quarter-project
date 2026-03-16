@@ -25,7 +25,10 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	private String startLocationName;
 	private String endLocationName;
 	private Graph<Location> map;
+	private Location clickedLocation;
 	private Pair<DLList<Location>, Integer> shortestPath;
+
+	private BufferedImage bridge, castleHill, castleHotel, deepSeaAdventure, dinoValley, entrance, funtown, imaginationZone, legoFerrari, legolandHotel, legoMovieWorld, lostKingdomAdventure, minilandusa, modelShop, ninjagoWorld, pirateShores, restrooms, seaLifeAquarium, surfersCove, waterpark;
 	//private Avatar avatar;
 
 	public Screen(){
@@ -54,6 +57,27 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 
 		try {
             mapBackground = ImageIO.read(new File("images/legolandMapNoTextTranslucent.png"));
+			bridge = ImageIO.read(new File("images/bridge.jpg"));
+			castleHill = ImageIO.read(new File("images/castleHill.jpg"));
+			castleHotel = ImageIO.read(new File("images/castleHotel.jpg"));
+			deepSeaAdventure = ImageIO.read(new File("images/deepSeaAdventure.jpg"));
+			dinoValley = ImageIO.read(new File("images/dinoValley.jpg"));
+			entrance = ImageIO.read(new File("images/entrance.jpg"));
+			funtown = ImageIO.read(new File("images/funtown.jpg"));
+			imaginationZone = ImageIO.read(new File("images/imaginationZone.jpg"));
+			legoFerrari = ImageIO.read(new File("images/legoFerrari.jpg"));
+			legolandHotel = ImageIO.read(new File("images/legolandHotel.jpg"));
+			legoMovieWorld = ImageIO.read(new File("images/legoMovieWorld.jpg"));
+			lostKingdomAdventure = ImageIO.read(new File("images/lostKingdomAdventure.jpg"));
+			minilandusa = ImageIO.read(new File("images/minilandusa.jpg"));
+			modelShop = ImageIO.read(new File("images/modelShop.jpg"));
+			ninjagoWorld = ImageIO.read(new File("images/ninjagoWorld.jpg"));
+			pirateShores = ImageIO.read(new File("images/pirateShores.jpg"));
+			restrooms = ImageIO.read(new File("images/restrooms.png"));
+			seaLifeAquarium = ImageIO.read(new File("images/seaLifeAquarium.jpg"));
+			surfersCove = ImageIO.read(new File("images/surfersCove.jpg"));
+			waterpark = ImageIO.read(new File("images/waterpark.jpg"));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,45 +89,45 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 
 		shortestPath = null;
 		//String name, String abbreviation, String description, int x, int y
-		Location sla = new Location("Sea Life Aquarium","sla",120,410);
+		Location sla = new Location("Sea Life Aquarium","sla",120,410, seaLifeAquarium);
 		map.add(sla);
-		Location ent = new Location("Entrance","ent",370,400);
+		Location ent = new Location("Entrance","ent",370,400, entrance);
 		map.add(ent);
-		Location dnv = new Location("Dino Valley","dnv",190,350);
+		Location dnv = new Location("Dino Valley","dnv",190,350, dinoValley);
 		map.add(dnv);
-		Location lmh = new Location("Legoland Main Hotel","lmh",580,460);
+		Location lmh = new Location("Legoland Main Hotel","lmh",580,460, legolandHotel);
 		map.add(lmh);
-		Location lch = new Location("Legoland Castle Hotel","lch",190,500);
+		Location lch = new Location("Legoland Castle Hotel","lch",190,500, castleHotel);
 		map.add(lch);
-		Location nwd = new Location("Ninjago World", "nwd", 500, 370);
+		Location nwd = new Location("Ninjago World", "nwd", 500, 370, ninjagoWorld);
 		map.add(nwd);
-		Location lgf = new Location("Lego Ferrari", "lgf", 460, 290);
+		Location lgf = new Location("Lego Ferrari", "lgf", 460, 290, legoFerrari);
 		map.add(lgf);
-		Location usa = new Location("Miniland USA", "usa", 510, 210);
+		Location usa = new Location("Miniland USA", "usa", 510, 210, minilandusa);
 		map.add(usa);
-		Location loa = new Location("Land of Adventure", "loa", 660, 260);
+		Location loa = new Location("Land of Adventure", "loa", 660, 260, lostKingdomAdventure);
 		map.add(loa);
-		Location chl = new Location("Castle Hill", "chl", 645, 120);
+		Location chl = new Location("Castle Hill", "chl", 645, 120, castleHill);
 		map.add(chl);
-		Location dsa = new Location("Deep Sea Adventure", "dsa", 540, 100);
+		Location dsa = new Location("Deep Sea Adventure", "dsa", 540, 100, deepSeaAdventure);
 		map.add(dsa);
-		Location psh = new Location("Pirate Shores", "psh", 450, 110);
+		Location psh = new Location("Pirate Shores", "psh", 450, 110, pirateShores);
 		map.add(psh);
-		Location sfc = new Location("Surfer’s Cove", "sfc", 380, 70);
+		Location sfc = new Location("Surfer’s Cove", "sfc", 380, 70, surfersCove);
 		map.add(sfc);
-		Location ftn = new Location("Fun Town", "ftn", 340, 110);
+		Location ftn = new Location("Fun Town", "ftn", 340, 110, funtown);
 		map.add(ftn);
-		Location wpk = new Location("Water Park", "wpk", 270, 50);
+		Location wpk = new Location("Water Park", "wpk", 270, 50, waterpark);
 		map.add(wpk);
-		Location lmw = new Location("The Lego Movie World", "lmw", 60, 230);
+		Location lmw = new Location("The Lego Movie World", "lmw", 60, 230, legoMovieWorld);
 		map.add(lmw);
-		Location msp = new Location("Model Shop", "msp", 570, 220);
+		Location msp = new Location("Model Shop", "msp", 570, 220, modelShop);
 		map.add(msp);
-		Location igz = new Location("Imagination Zone", "igz", 560, 320);
+		Location igz = new Location("Imagination Zone", "igz", 560, 320, imaginationZone);
 		map.add(igz);
-		Location rtm = new Location("Restrooms", "rtm", 250, 260);
+		Location rtm = new Location("Restrooms", "rtm", 250, 260, restrooms);
 		map.add(rtm);
-		Location btl = new Location("Bridge @ the Lake", "btl", 400, 250);
+		Location btl = new Location("Bridge @ the Lake", "btl", 400, 250, bridge);
 		map.add(btl);
 
 		map.addEdge(lmh, lch,5);
@@ -142,14 +166,14 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	}
 	@Override
 	public Dimension getPreferredSize(){
-		return new Dimension(800,900);
+		return new Dimension(1400,900);
 	}
 	
 	@Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		g.setColor(Color.WHITE);
-		g.fillRect(0,0,800,900);
+		g.fillRect(0,0,1400,900);
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Arial",Font.BOLD,10));
 		g.drawString("Starting Location (Enter Abbreviation)",30,700);
@@ -179,7 +203,10 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			}
 		
 		}
-		//avatar.drawMe(g);
+		if(clickedLocation!=null){
+			clickedLocation.drawImage(g);
+		}
+		g.drawString("Click on a location on the map to see a photo above.", 950, 550);
 	}
 	public void actionPerformed(ActionEvent e){
 		if(e.getSource()==submit){
@@ -192,7 +219,6 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			startInput.setText("");
 			endInput.setText("");
 			shortestPath = map.shortestPath(start, end);
-			avatar.setPath(shortestPath.getFirst());
 		}
 		repaint();
 	}
@@ -200,6 +226,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		System.out.println("X: " + e.getX() + " Y: " + e.getY());
 		mouseX = e.getX();
 		mouseY = e.getY();
+		clickedLocation = map.clickedLocation(mouseX,mouseY);
 		repaint();
 	}
 	public void mouseClicked(MouseEvent e){}

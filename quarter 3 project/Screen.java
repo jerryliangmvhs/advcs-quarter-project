@@ -1,7 +1,6 @@
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;

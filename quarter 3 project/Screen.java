@@ -28,7 +28,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 	private Location clickedLocation;
 	private Pair<DLList<Location>, Integer> shortestPath;
 
-	private BufferedImage bridge, castleHill, castleHotel, deepSeaAdventure, dinoValley, entrance, funtown, imaginationZone, legoFerrari, legolandHotel, legoMovieWorld, lostKingdomAdventure, minilandusa, modelShop, ninjagoWorld, pirateShores, restrooms, seaLifeAquarium, surfersCove, waterpark;
+	private BufferedImage bridge, castleHill, castleHotel, deepSeaAdventure, dinoValley, entrance, funtown, imaginationZone, legoFerrari, legolandHotel, legoMovieWorld, lostKingdomAdventure, minilandusa, modelShop, ninjagoWorld, pirateShores, drivingSchool, seaLifeAquarium, surfersCove, waterpark;
 	//private Avatar avatar;
 
 	public Screen(){
@@ -73,7 +73,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 			modelShop = ImageIO.read(new File("images/modelShop.jpg"));
 			ninjagoWorld = ImageIO.read(new File("images/ninjagoWorld.jpg"));
 			pirateShores = ImageIO.read(new File("images/pirateShores.jpg"));
-			restrooms = ImageIO.read(new File("images/restrooms.png"));
+			drivingSchool = ImageIO.read(new File("images/drivingSchool.jpg"));
 			seaLifeAquarium = ImageIO.read(new File("images/seaLifeAquarium.jpg"));
 			surfersCove = ImageIO.read(new File("images/surfersCove.jpg"));
 			waterpark = ImageIO.read(new File("images/waterpark.jpg"));
@@ -125,16 +125,16 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		map.add(msp);
 		Location igz = new Location("Imagination Zone", "igz", 560, 320, imaginationZone);
 		map.add(igz);
-		Location rtm = new Location("Restrooms", "rtm", 250, 260, restrooms);
-		map.add(rtm);
+		Location drs = new Location("Driving School", "drs", 240, 230, drivingSchool);
+		map.add(drs);
 		Location btl = new Location("Bridge @ the Lake", "btl", 400, 250, bridge);
 		map.add(btl);
 
 		map.addEdge(lmh, lch,5);
 		map.addEdge(lmh, ent, 4);
 		map.addEdge(lch, ent, 4);
-		map.addEdge(ent,rtm,3);
-		map.addEdge(rtm,btl,3);
+		map.addEdge(ent,drs,3);
+		map.addEdge(drs,btl,3);
 		map.addEdge(lmw,sla,3);
 		map.addEdge(dnv,sla,2);
 		map.addEdge(dnv,ent,3);
@@ -158,9 +158,9 @@ public class Screen extends JPanel implements ActionListener, KeyListener, Mouse
 		map.addEdge(dsa,chl,2);
 		map.addEdge(psh,dsa,3);
 		map.addEdge(psh,sfc,2);
-		map.addEdge(rtm,lmw,3);
-		map.addEdge(rtm,dnv,2);
-		map.addEdge(rtm,wpk,4);
+		map.addEdge(drs,lmw,3);
+		map.addEdge(drs,dnv,2);
+		map.addEdge(drs,wpk,4);
 		map.addEdge(btl,lgf,1);
 
 	}

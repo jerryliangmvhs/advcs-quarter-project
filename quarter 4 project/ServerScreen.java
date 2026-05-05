@@ -8,22 +8,21 @@ import java.net.*;
 import java.io.*;
 
 
-public class ServerScreen extends JPanel implements ActionListener, KeyListener, MouseListener{
+public class ServerScreen extends JPanel{
 
 	private Manager manager;
 	private int portNumber = 1024;
 
-	public Screen(){
+	public ServerScreen(){
 	    this.setLayout(null);
-		addMouseListener(this);
-		addKeyListener(this);
 	}
 	public void startServer(){
 		try {
-			ServerSocket server = new ServerSocket(portNumber);
+			ServerSocket serverSocket = new ServerSocket(portNumber);
 			System.out.println("Waiting for a connection");
 			while (true) {
 				Socket socket = serverSocket.accept();
+				System.out.println("Connection Successful!");
 				ServerThread serverThread = new ServerThread(socket, manager);
 				manager.add(serverThread);
 				serverThread.start();
@@ -46,14 +45,5 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 	}
-	public void actionPerformed(ActionEvent e){}
-	public void mousePressed(MouseEvent e){}
-	public void mouseClicked(MouseEvent e){}
-	public void mouseExited(MouseEvent e){}
-	public void mouseReleased(MouseEvent e){}
-	public void mouseEntered(MouseEvent e){}
-	public void keyPressed(KeyEvent e){}
-	public void keyTyped(KeyEvent e){}
-	public void keyReleased(KeyEvent e){}
 
 }

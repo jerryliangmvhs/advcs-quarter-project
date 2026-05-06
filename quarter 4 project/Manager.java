@@ -9,9 +9,16 @@ public class Manager {
     public void add(ServerThread s){
         threads.add(s);
     }
-    public void broadcast(){
+    public void remove(ServerThread s){
+        threads.remove(s);
+    }
+    public int size(){
+        return threads.size();
+    }
+    //need to pass in an object
+    public void broadcast(String string){
         for(int i=0; i<threads.size(); i++){
-            threads.get(i).send();
+            threads.get(i).send(string);
         }
     }
 }

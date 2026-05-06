@@ -8,34 +8,32 @@ import java.net.*;
 import java.io.*;
 
 
-public class ServerScreen extends JPanel{
-
-	private Manager manager;
-	private int portNumber = 1024;
-
+public class ServerScreen extends JPanel implements ActionListener, KeyListener, MouseListener{
+    private int users;
 	public ServerScreen(){
 	    this.setLayout(null);
+		addMouseListener(this);
+		addKeyListener(this);
+        users = 0;
 	}
-	public void startServer(){
-		try {
-			ServerSocket serverSocket = new ServerSocket(portNumber);
-			System.out.println("Waiting for a connection");
-			while (true) {
-				Socket socket = serverSocket.accept();
-				System.out.println("Connection Successful!");
-				ServerThread serverThread = new ServerThread(socket, manager);
-				manager.add(serverThread);
-				serverThread.start();
-			}
+    public void startServer() throws IOException{
+        int portNumber = 1024;
 
-		} catch (IOException e) {
-			System.out.println("Exception caught when trying to listen on port " +
-				portNumber + " or listening for a connection");
-			System.out.println(e.getMessage());
-		}
+		ServerSocket serverSocket = new ServerSocket(portNumber);
+		Manager mg = new Manager();
 		
-
-	}
+		while(true){
+			System.out.println("Waiting for a connection");
+			Socket clientSocket = serverSocket.accept();
+            System.out.println("Client Connected!");
+			ServerThread st = new ServerThread(clientSocket,mg);
+			mg.add(st);
+			users = mg.size();
+			Thread thread = new Thread(st);
+			thread.start();
+            repaint();
+		}
+    }
 	@Override
 	public Dimension getPreferredSize(){
 		return new Dimension(1200,900);
@@ -44,6 +42,26 @@ public class ServerScreen extends JPanel{
 	@Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
+        g.setFont(new Font("Arial",Font.PLAIN,20));
+        g.setColor(Color.BLACK);
+		users = mg.size();
+        try {
+            g.drawString("IP: " + InetAddress.getLocalHost().getHostAddress(),20,20);
+            g.drawString("Number of Clients: " + users,20,40);
+        } catch (UnknownHostException ex) {
+            System.out.println("Could not find IP address for this host");
+        }
+       
+
 	}
+	public void actionPerformed(ActionEvent e){}
+	public void mousePressed(MouseEvent e){}
+	public void mouseClicked(MouseEvent e){}
+	public void mouseExited(MouseEvent e){}
+	public void mouseReleased(MouseEvent e){}
+	public void mouseEntered(MouseEvent e){}
+	public void keyPressed(KeyEvent e){}
+	public void keyTyped(KeyEvent e){}
+	public void keyReleased(KeyEvent e){}
 
 }

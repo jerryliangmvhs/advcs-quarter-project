@@ -8,11 +8,11 @@ public class ServerThread implements Runnable{
         this.socket = socket;
         this.manager = manager;
     }
-    public void send(){
+    public void send(String string){
         try {
 			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             //send output
-			out.close();
+			out.println(string);
 
 		} catch (IOException e) {
 			
@@ -20,14 +20,26 @@ public class ServerThread implements Runnable{
     }
     @Override
     public void run(){
+        //prints only when the thread just started
+        System.out.println("broadcasting");
+        manager.broadcast("A client has connected!");
         while(true){
             //recieve message
             try {
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                in.close();
+                manager.broadcast(in.readLine());
+                
             } catch (IOException e) {
+                disconnect();
             }
-                manager.broadcast();
+        }
+    }
+    public void disconnect(){
+        try {
+            System.out.println("a client discconnected");
+            socket.close();
+        } catch (IOException e) {
+            manager.remove(this);
         }
     }
 }

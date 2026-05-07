@@ -10,6 +10,7 @@ import java.io.*;
 
 public class ServerScreen extends JPanel implements ActionListener, KeyListener, MouseListener{
     private int users;
+	private Manager mg;
 	public ServerScreen(){
 	    this.setLayout(null);
 		addMouseListener(this);
@@ -20,7 +21,7 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
         int portNumber = 1024;
 
 		ServerSocket serverSocket = new ServerSocket(portNumber);
-		Manager mg = new Manager();
+		mg = new Manager();
 		
 		while(true){
 			System.out.println("Waiting for a connection");
@@ -28,7 +29,7 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
             System.out.println("Client Connected!");
 			ServerThread st = new ServerThread(clientSocket,mg);
 			mg.add(st);
-			users = mg.size();
+			users++;
 			Thread thread = new Thread(st);
 			thread.start();
             repaint();
@@ -36,7 +37,7 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
     }
 	@Override
 	public Dimension getPreferredSize(){
-		return new Dimension(1200,900);
+		return new Dimension(300,200);
 	}
 	
 	@Override
@@ -44,7 +45,6 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 		super.paintComponent(g);
         g.setFont(new Font("Arial",Font.PLAIN,20));
         g.setColor(Color.BLACK);
-		users = mg.size();
         try {
             g.drawString("IP: " + InetAddress.getLocalHost().getHostAddress(),20,20);
             g.drawString("Number of Clients: " + users,20,40);

@@ -9,32 +9,33 @@ import javax.swing.*;
 
 public class ClientScreen extends JPanel implements ActionListener, KeyListener, MouseListener{
     private String message;
-    private JTextField messageInput;
-    private JButton sendButton;
     private PrintWriter out;
     private Socket socket;
-    private DLList<String> messages;
+    private JButton playButton;
+    private JTextField nameInput;
+    private String username;
 
 	public ClientScreen(){
 	    this.setLayout(null);
-        messageInput = new JTextField();
-        messageInput.setFont(new Font("Arial", Font.PLAIN, 20));
-        messageInput.setHorizontalAlignment(SwingConstants.LEFT);
-        messageInput.setBounds(40, 663, 800, 30);
-        messageInput.setText("");
-        this.add(messageInput);
+        
+        playButton = new JButton();
+        playButton.setFont(new Font("Arial", Font.BOLD, 25));
+        playButton.setHorizontalAlignment(SwingConstants.CENTER);
+        playButton.setBounds(355, 555, 500, 100);
+        playButton.setText("PLAY");
+        this.add(playButton);
+        playButton.addActionListener(this);
 
-        sendButton = new JButton();
-        sendButton.setFont(new Font("Arial", Font.BOLD, 20));
-        sendButton.setHorizontalAlignment(SwingConstants.CENTER);
-        sendButton.setBounds(902, 663, 200, 30);
-        sendButton.setText("Send");
-        this.add(sendButton);
-        sendButton.addActionListener(this);
+        nameInput = new JTextField();
+        nameInput.setFont(new Font("Arial", Font.PLAIN, 20));
+        nameInput.setHorizontalAlignment(SwingConstants.LEFT);
+        nameInput.setBounds(355, 485, 500, 50);
+        nameInput.setText("");
+        nameInput.addActionListener(this);
+        this.add(nameInput);
 
 		addMouseListener(this);
 		addKeyListener(this);
-        messages = new DLList<String>();
 	}
 	@Override
 	public Dimension getPreferredSize(){
@@ -53,10 +54,6 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
                 if(message==null){
                     break;
                 }
-                else if(message!=null && !message.equals("null")){
-                    messages.add(message);
-                    System.out.println(message);
-                }
 				repaint();
 			}
             in.close();
@@ -73,28 +70,16 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
 	@Override
 	public void paintComponent(Graphics g){
         super.paintComponent(g);
-        g.setFont(new Font("Arial",Font.PLAIN,20));
+        g.setColor(new Color(252, 144, 35));
+        g.fillRect(0,0,1200,900);
+        g.setFont(new Font("Arial",Font.BOLD,50));
         g.setColor(Color.BLACK);
-        int x= 50;
-        int y = 50;
-        for(int i=0; i<messages.size(); i++){
-			if(messages.get(i)!=null && !messages.get(i).equals("null")){
-				g.drawString("Message: " + messages.get(i),x,y);
-            	y+=20;
-			}
-        }
+        g.drawString("Lava Spleef",450,100);
 	}
 	public void actionPerformed(ActionEvent e){
-        if(e.getSource()==sendButton){
-            String message = messageInput.getText();
-            messageInput.setText("");
-
-            try {
-                out = new PrintWriter(socket.getOutputStream(), true);
-                out.println(message);
-            } catch (IOException ex) {
-               
-            }
+        if(e.getSource()==playButton || e.getSource()==nameInput){
+            username = nameInput.getText();
+            nameInput.setText("");
         }
         repaint();
     }

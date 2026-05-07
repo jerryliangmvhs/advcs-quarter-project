@@ -4,19 +4,32 @@ import java.io.*;
 public class ServerThread implements Runnable{
     private Socket socket;
     private Manager manager;
+    private BufferedReader in;
+    private PrintWriter out;
+
     public ServerThread(Socket socket, Manager manager){
         this.socket = socket;
         this.manager = manager;
+
+        try {
+            in = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream()));
+
+            out = new PrintWriter(
+                    socket.getOutputStream(), true);
+
+        } catch (IOException e) {
+            disconnect();
+        }
     }
     public void send(String string){
-        try {
-			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            //send output
-			out.println(string);
+        if (out != null) {
+            out.println(string);
 
-		} catch (IOException e) {
-			
-		}
+            if (out.checkError()) {
+                disconnect();
+            }
+        }
     }
     @Override
     public void run(){
@@ -24,22 +37,38 @@ public class ServerThread implements Runnable{
         System.out.println("broadcasting");
         manager.broadcast("A client has connected!");
         while(true){
-            //recieve message
+            //constantly recieve inputs
             try {
-                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 manager.broadcast(in.readLine());
+
+                if(in.readLine()==null){
+                    break;
+                }
                 
             } catch (IOException e) {
-                disconnect();
+                System.out.println("Connection lost");
             }
         }
+        disconnect();
     }
-    public void disconnect(){
+   public void disconnect() {
+        System.out.println("Client disconnected");
+        manager.remove(this);
+        manager.broadcast("A client disconnected!");
+
         try {
-            System.out.println("a client discconnected");
-            socket.close();
+            if (in != null) {
+                in.close();
+            }
+            if (out != null) {
+                out.close();
+            }
+            if (socket != null && !socket.isClosed()) {
+                socket.close();
+            }
+
         } catch (IOException e) {
-            manager.remove(this);
+            e.printStackTrace();
         }
     }
 }

@@ -29,7 +29,7 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
             System.out.println("Client Connected!");
 			ServerThread st = new ServerThread(clientSocket,mg);
 			mg.add(st);
-			users++;
+			users = mg.size();
 			Thread thread = new Thread(st);
 			thread.start();
             repaint();

@@ -14,6 +14,7 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
     private JButton playButton;
     private JTextField nameInput;
     private String username;
+    private int level = 0;
 
 	public ClientScreen(){
 	    this.setLayout(null);
@@ -22,7 +23,10 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
         playButton.setFont(new Font("Arial", Font.BOLD, 25));
         playButton.setHorizontalAlignment(SwingConstants.CENTER);
         playButton.setBounds(355, 555, 500, 100);
-        playButton.setText("PLAY");
+        playButton.setText("Ready");
+        playButton.setBackground(new Color(237, 83, 0));
+		playButton.setOpaque(true);
+		playButton.setBorderPainted(false);
         this.add(playButton);
         playButton.addActionListener(this);
 
@@ -48,6 +52,7 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
 		try {
             socket = new Socket(hostName, portNumber);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(socket.getOutputStream(), true);
 			while (true) {
                 System.out.println("Waiting for message");
                 message = in.readLine();
@@ -70,20 +75,38 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
 	@Override
 	public void paintComponent(Graphics g){
         super.paintComponent(g);
-        g.setColor(new Color(252, 144, 35));
-        g.fillRect(0,0,1200,900);
-        g.setFont(new Font("Arial",Font.BOLD,50));
-        g.setColor(Color.BLACK);
-        g.drawString("Lava Spleef",450,100);
+        if(level == 0){
+            g.setColor(new Color(252, 144, 35));
+            g.fillRect(0,0,1200,900);
+            g.setFont(new Font("Arial",Font.BOLD,50));
+            g.setColor(Color.BLACK);
+            g.drawString("Lava Spleef",450,100);
+            g.setFont(new Font("Arial",Font.BOLD,15));
+            g.drawString("Enter Username",360,480);
+            
+            g.setFont(new Font("Arial",Font.PLAIN,20));
+            g.drawString("Collect as many coins as possible by moving around the map",320,190);
+            g.drawString("You must move quickly as a trail of lava appears behind you",320,210);
+            g.drawString("Your goal is to have the other player accidentally walk into lava",320,230);
+            g.drawString("Do your best to not stay in one spot for too long.",320,250);
+            g.drawString("The map will reset every 30 seconds for 4 times for more chances.",320,270);
+            g.drawString("If you die, you have to wait for the map to reset to continue playing.",320,290);
+            g.drawString("The player with the most coins after round 5 wins!",320,310);
+        }
 	}
 	public void actionPerformed(ActionEvent e){
         if(e.getSource()==playButton || e.getSource()==nameInput){
             username = nameInput.getText();
             nameInput.setText("");
+            playButton.setVisible(false);
+            nameInput.setVisible(false);
+            level = 1;
         }
         repaint();
     }
-	public void mousePressed(MouseEvent e){}
+	public void mousePressed(MouseEvent e){
+        System.out.println("X: "+e.getX()+" Y: "+e.getY());
+    }
 	public void mouseClicked(MouseEvent e){}
 	public void mouseExited(MouseEvent e){}
 	public void mouseReleased(MouseEvent e){}

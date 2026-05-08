@@ -22,9 +22,10 @@ public class ServerThread implements Runnable{
             disconnect();
         }
     }
-    public void send(String string){
+    public void send(String data){
+        //sends message to client linked to this thread
         if (out != null) {
-            out.println(string);
+            out.println(data);
 
             if (out.checkError()) {
                 disconnect();
@@ -33,8 +34,8 @@ public class ServerThread implements Runnable{
     }
     @Override
     public void run(){
-        //prints only when the thread just started
         System.out.println("broadcasting");
+        //sends the message to all the clients through calling send of all serverthreads
         manager.broadcast("A client has connected!");
         while(true){
             //constantly recieve inputs
@@ -52,7 +53,6 @@ public class ServerThread implements Runnable{
         disconnect();
     }
    public void disconnect() {
-        System.out.println("Client disconnected");
         manager.remove(this);
         manager.broadcast("A client disconnected!");
 

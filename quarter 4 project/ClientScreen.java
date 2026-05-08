@@ -53,9 +53,10 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
             socket = new Socket(hostName, portNumber);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
+
 			while (true) {
-                System.out.println("Waiting for message");
                 message = in.readLine();
+                System.out.println(message);
                 if(message==null){
                     break;
                 }
@@ -98,6 +99,7 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
         if(e.getSource()==playButton || e.getSource()==nameInput){
             username = nameInput.getText();
             nameInput.setText("");
+            out.println(username + " is ready to play!");
             playButton.setVisible(false);
             nameInput.setVisible(false);
             level = 1;

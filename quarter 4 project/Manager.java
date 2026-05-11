@@ -16,9 +16,9 @@ public class Manager {
         return threads.size();
     }
     //need to pass in an object
-    public void broadcast(String string){
+    public void broadcast(Object data){
         for(int i=0; i<threads.size(); i++){
-            threads.get(i).send(string);
+            threads.get(i).send(data);
         }
     }
 }

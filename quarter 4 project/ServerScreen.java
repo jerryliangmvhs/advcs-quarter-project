@@ -11,23 +11,63 @@ import java.io.*;
 public class ServerScreen extends JPanel implements ActionListener, KeyListener, MouseListener{
     private int users;
 	private Manager mg;
+	private String ipAddress;
+	private int port;
+	private MyHashTable<Location,String> map;
+	private int resets = 0;
+
 	public ServerScreen(){
 	    this.setLayout(null);
 		addMouseListener(this);
 		addKeyListener(this);
         users = 0;
+		port = 1024;
+		map = new MyHashTable<Location,String>();
+		
+		//set up initial map
+		for(int i=0; i<18; i++){
+			for(int j=0; j<24; j++){
+				Location location = new Location(i,j);
+				map.put(location,"stone");
+
+				//RNG for coin generation
+				int random = (int)(Math.random()*100);
+				if(random<=30){
+					//~30% chance of a coin on a tile
+					map.put(location,"coin");
+				}
+				else if(random>=95){
+					//~5% chance of a fire resistance potion power up
+					map.put(location,"potion");
+				}
+				else if(random<=4){
+					//~4% chance of a multiplier power up
+					map.put(location,"multiplier");
+				}
+				
+			}
+		}
+
+		try {
+			ipAddress = InetAddress.getLocalHost().getHostAddress();
+        }
+		catch (UnknownHostException ex) {
+            System.out.println("Could not find IP address for this host");
+        }
 	}
     public void startServer() throws IOException{
-        int portNumber = 1024;
 
-		ServerSocket serverSocket = new ServerSocket(portNumber);
+		ServerSocket serverSocket = new ServerSocket(port);
 		mg = new Manager();
-		
+
+		//server broadcasts this to all clients once, clients then update afterwards and update in serverthread
+		mg.broadcast(map);
+
 		while(true){
 			System.out.println("Waiting for a connection");
 			Socket clientSocket = serverSocket.accept();
             System.out.println("Client Connected!");
-			ServerThread st = new ServerThread(clientSocket,mg);
+			ServerThread st = new ServerThread(clientSocket,mg,this);
 			mg.add(st);
 			users = mg.size();
 			Thread thread = new Thread(st);
@@ -45,14 +85,12 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 		super.paintComponent(g);
         g.setFont(new Font("Arial",Font.PLAIN,20));
         g.setColor(Color.BLACK);
-        try {
-            g.drawString("IP: " + InetAddress.getLocalHost().getHostAddress(),20,20);
-            g.drawString("Number of Clients: " + users,20,40);
-        } catch (UnknownHostException ex) {
-            System.out.println("Could not find IP address for this host");
-        }
-       
-
+		if(mg!=null){
+			users = mg.size();
+		}
+		g.drawString("IP: " + ipAddress,20,20);
+		g.drawString("Port: "+port,20,40);
+		g.drawString("Number of Clients: " + users,20,60);
 	}
 	public void actionPerformed(ActionEvent e){}
 	public void mousePressed(MouseEvent e){}

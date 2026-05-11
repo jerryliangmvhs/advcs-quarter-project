@@ -8,13 +8,15 @@ import java.io.*;
 import javax.swing.*;
 
 public class ClientScreen extends JPanel implements ActionListener, KeyListener, MouseListener{
-    private String message;
+   
     private PrintWriter out;
     private Socket socket;
     private JButton playButton;
     private JTextField nameInput;
     private String username;
     private int level = 0;
+    private Object data;
+    private MyHashTable<Location,String> map;
 
 	public ClientScreen(){
 	    this.setLayout(null);
@@ -55,9 +57,13 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
             out = new PrintWriter(socket.getOutputStream(), true);
 
 			while (true) {
-                message = in.readLine();
-                System.out.println(message);
-                if(message==null){
+                data = in.readLine();
+                if(data instanceof MyHashTable){
+                    map = (MyHashTable)data;
+                }
+                
+                if(data==null){
+                    System.out.println("Recieved data is null");
                     break;
                 }
 				repaint();
@@ -93,6 +99,9 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
             g.drawString("The map will reset every 30 seconds for 4 times for more chances.",320,270);
             g.drawString("If you die, you have to wait for the map to reset to continue playing.",320,290);
             g.drawString("The player with the most coins after round 5 wins!",320,310);
+        }
+        if(level==1){
+
         }
 	}
 	public void actionPerformed(ActionEvent e){

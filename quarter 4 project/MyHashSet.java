@@ -6,7 +6,7 @@ public class MyHashSet<E> implements Serializable{
     private DLList<E> DLList;
 
     public MyHashSet(){
-        hashArray = new Object[20000];
+        hashArray = new Object[999999];
         size = 0;
         DLList = new DLList<E>();
     }
@@ -22,7 +22,7 @@ public class MyHashSet<E> implements Serializable{
         return false;
     }
     public void clear(){
-        Object[] newHashArray = new Object[9999];
+        Object[] newHashArray = new Object[999999];
         hashArray = newHashArray;
         DLList.clear();
         size = 0;

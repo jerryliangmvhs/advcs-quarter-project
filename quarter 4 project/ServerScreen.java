@@ -14,6 +14,7 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 	private String ipAddress;
 	private int port;
 	private MyHashTable<Location,String> map;
+	private MyHashMap<PlayerID,PlayerData> players;
 	private int resets = 0;
 
 	public ServerScreen(){
@@ -23,6 +24,7 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
         users = 0;
 		port = 1024;
 		map = new MyHashTable<Location,String>();
+		players = new MyHashMap<PlayerID,PlayerData>();
 		
 		//set up initial map
 		for(int i=0; i<18; i++){
@@ -60,14 +62,11 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 		ServerSocket serverSocket = new ServerSocket(port);
 		mg = new Manager();
 
-		//server broadcasts this to all clients once, clients then update afterwards and update in serverthread
-		mg.broadcast(map);
-
 		while(true){
 			System.out.println("Waiting for a connection");
 			Socket clientSocket = serverSocket.accept();
             System.out.println("Client Connected!");
-			ServerThread st = new ServerThread(clientSocket,mg,this);
+			ServerThread st = new ServerThread(clientSocket,mg,this,map,players);
 			mg.add(st);
 			users = mg.size();
 			Thread thread = new Thread(st);

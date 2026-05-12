@@ -9,7 +9,6 @@ import javax.swing.*;
 
 public class ClientScreen extends JPanel implements ActionListener, KeyListener, MouseListener{
    
-    private PrintWriter out;
     private Socket socket;
     private JButton playButton;
     private JTextField nameInput;
@@ -17,6 +16,9 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
     private int level = 0;
     private Object data;
     private MyHashTable<Location,String> map;
+    private MyHashMap<PlayerID,PlayerData> players;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
 
 	public ClientScreen(){
 	    this.setLayout(null);
@@ -53,15 +55,17 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
 	
 		try {
             socket = new Socket(hostName, portNumber);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            out = new PrintWriter(socket.getOutputStream(), true);
-
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
+           
 			while (true) {
-                data = in.readLine();
+                data = in.readObject();
                 if(data instanceof MyHashTable){
                     map = (MyHashTable)data;
                 }
-                
+                if(data instanceof MyHashMap){
+                    players = (MyHashMap)players;
+                }
                 if(data==null){
                     System.out.println("Recieved data is null");
                     break;
@@ -77,6 +81,10 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
 			System.err.println("Couldn't get I/O for the connection to " + hostName);
 			System.exit(1);
 		}
+        catch (ClassNotFoundException e) {
+            System.out.println("Received unknown object type");
+            e.printStackTrace();
+        }
 	}
 
 	@Override
@@ -101,14 +109,42 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
             g.drawString("The player with the most coins after round 5 wins!",320,310);
         }
         if(level==1){
-
+            int x = 0;
+            int y = 0;
+            //draw map
+            if(map!=null){
+                for(int i=0; i<18; i++){
+                    for(int j=0; j<24; j++){
+        
+                        Location location = new Location(i, j);
+                        if(map.get(location).get(0).equals("stone")){
+                            g.setColor(Color.GRAY);
+                            g.fillRect(x,y,50,50);
+                        }
+                        if(map.get(location).get(1).equals("coin")){
+                            g.setColor(Color.YELLOW);
+                            g.fillOval(x+5,y+5,40,40);
+                        }
+                        
+                        g.setColor(Color.BLACK);
+                        g.drawRect(x,y,50,50);
+                        x+=50;
+                    }
+                        x=0;
+                        y+=50;
+                }
+            }
         }
 	}
 	public void actionPerformed(ActionEvent e){
         if(e.getSource()==playButton || e.getSource()==nameInput){
             username = nameInput.getText();
             nameInput.setText("");
-            out.println(username + " is ready to play!");
+
+            try {
+                out.writeObject(username);
+            } catch (IOException ex) {} 
+
             playButton.setVisible(false);
             nameInput.setVisible(false);
             level = 1;
@@ -122,7 +158,12 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
 	public void mouseExited(MouseEvent e){}
 	public void mouseReleased(MouseEvent e){}
 	public void mouseEntered(MouseEvent e){}
-	public void keyPressed(KeyEvent e){}
+
+    //controls, use out.writeObject() to send out updated positions after
+	public void keyPressed(KeyEvent e){
+        System.out.println(e.getKeyCode());
+        repaint();
+    }
 	public void keyTyped(KeyEvent e){}
 	public void keyReleased(KeyEvent e){}
 

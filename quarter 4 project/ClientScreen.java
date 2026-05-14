@@ -78,25 +78,22 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
                 else if(data instanceof PhaseData){
                     phase = ((PhaseData)data).getPhase();
                 }
+                //if recieved data is data of all players (hashmap)
+                else if (data instanceof PlayerID) {
+                    PlayerID movedPlayer = (PlayerID) data;
+                    Object next = in.readObject();
+                    if (next instanceof PlayerData) {
+                        PlayerData pd = (PlayerData) next;
+                        synchronized (players) {
+                            // apply map changes locally
+                            map.get(new Location(pd.getPrevRow(), pd.getPrevCol())).set(0, "lava");
+                            map.get(new Location(pd.getRow(), pd.getCol())).remove("coin");
+                            players.put(movedPlayer, pd);
+                        }
+                    }
+                }
                 else if(data instanceof MyHashMap){
-                    MyHashMap<PlayerID, PlayerData> serverPlayers = (MyHashMap) data;
-    
-                    //ensure own position is not overwritten
-                    if (players != null && username!=null) {
-                        myCurrentData = players.get(new PlayerID(username));
-                    }
-                    
-                    else {
-                       myCurrentData = null;
-                    }
-                    //update local players map with the one from the server
-                    players = serverPlayers;
-
-                    //put the client data into the map
-                    if (myCurrentData != null && username != null) {
-                        players.put(new PlayerID(username), myCurrentData);
-                    }
-                    
+                    players = (MyHashMap) data;
                 }
                 //so there's not a conflict with the network
 				SwingUtilities.invokeLater(() -> repaint());
@@ -219,28 +216,37 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
             int currentRow = me.getRow();
             int currentCol = me.getCol();
             me.moveLeft();
-            map.get(new Location(currentRow,currentCol)).set(0,"lava");
+            //map.get(new Location(currentRow,currentCol)).set(0,"lava");
+            repaint();
+
         }
         if(key == 38 && phase !=0){
             int currentRow = me.getRow();
             int currentCol = me.getCol();
             me.moveUp();
-            map.get(new Location(currentRow,currentCol)).set(0,"lava");
+            //map.get(new Location(currentRow,currentCol)).set(0,"lava");
+            repaint();
+
         }
         if(key == 39 && phase !=0){
             int currentRow = me.getRow();
             int currentCol = me.getCol();
             me.moveRight();
-            map.get(new Location(currentRow,currentCol)).set(0,"lava");
+            //map.get(new Location(currentRow,currentCol)).set(0,"lava");
+            repaint();
+
         }
         if(key == 40 && phase !=0){
             int currentRow = me.getRow();
             int currentCol = me.getCol();
             me.moveDown();
-            map.get(new Location(currentRow,currentCol)).set(0,"lava");
+            //map.get(new Location(currentRow,currentCol)).set(0,"lava");
+            repaint();
         }
-        myCurrentData = me;
+         
         repaint();
+        myCurrentData = me;
+
         try {
             out.reset();
             out.writeObject(myCurrentData);

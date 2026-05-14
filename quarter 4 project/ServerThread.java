@@ -82,21 +82,13 @@ public class ServerThread implements Runnable{
                 else if (data instanceof PlayerData){
                     PlayerData incoming = (PlayerData) data;
                     synchronized(players){
-                        PlayerData old = players.get(new PlayerID(username));
-                        if(old != null){
-                            // server applies lava to the old position
-                            map.get(new Location(old.getRow(), old.getCol())).set(0, "lava");
-                        }
+                        map.get(new Location(incoming.getPrevRow(), incoming.getPrevCol())).set(0, "lava");
+                        map.get(new Location(incoming.getRow(), incoming.getCol())).remove("coin");
                         players.put(new PlayerID(username), incoming);
-
-                        // clear coin from the tile the player just moved onto
-                        Location newLoc = new Location(incoming.getRow(), incoming.getCol());
-                        if(map.get(newLoc).get(1).equals("coin")){
-                            map.get(newLoc).remove("coin");
-                        }
                     }
-                    manager.broadcast(players);
-                     manager.broadcast(map);
+                    manager.broadcast(new PlayerID(username));
+                    manager.broadcast(incoming);
+                    //manager.broadcast(map);
                 }
                 else if(data instanceof MyHashTable){
                     map = (MyHashTable<Location,String>)data;

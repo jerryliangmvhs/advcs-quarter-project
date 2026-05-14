@@ -15,6 +15,9 @@ public class Client {
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 
-        sc.connect();
+        new Thread(() -> {
+			try { sc.connect(); } 
+			catch (IOException e) { e.printStackTrace(); }
+		}).start();
     }
 }

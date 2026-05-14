@@ -9,13 +9,16 @@ public class ServerThread implements Runnable{
     private ObjectInputStream in;
     private MyHashTable<Location,String> map;
     private MyHashMap<PlayerID,PlayerData> players;
+    private PhaseData phaseData;
+    private String username;
 
-    public ServerThread(Socket socket, Manager manager, ServerScreen sc, MyHashTable<Location,String> map, MyHashMap<PlayerID,PlayerData> players){
+    public ServerThread(Socket socket, Manager manager, ServerScreen sc, MyHashTable<Location,String> map, MyHashMap<PlayerID,PlayerData> players,PhaseData phaseData){
         this.socket = socket;
         this.manager = manager;
         this.sc = sc;
         this.map = map;
         this.players = players;
+        this.phaseData = phaseData;
 
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
@@ -30,6 +33,7 @@ public class ServerThread implements Runnable{
         //sends message to client linked to this thread
         if (out != null) {
             try {
+                out.reset();
                 out.writeObject(data);
                 out.flush();
             } catch (IOException e) {
@@ -42,7 +46,6 @@ public class ServerThread implements Runnable{
         send(map);
         System.out.println("broadcasting");
         //sends the message to all the clients through calling send of all serverthreads
-        manager.broadcast("A client has connected!");
         while(true){
             //constantly recieve inputs
             try {
@@ -50,14 +53,49 @@ public class ServerThread implements Runnable{
                 if(data==null){
                     break;
                 }
+                else if(data instanceof PhaseData){
+                    manager.broadcast(phaseData);
+                }
                 else if (data instanceof String){
-                   String username = (String)data;
-                   players.put(new PlayerID(username),new PlayerData(10,0));
+                    //after one presses the start button
+                   username = (String)data;
+                   synchronized(players){
+                     players.put(new PlayerID(username),new PlayerData(10,0,true));
+                   }
+                   manager.broadcast(players);
+                    int readyCounter = 0;
+                    synchronized(players){
+                    for(PlayerID each: players.keySet()){
+                        //if one player is not ready
+                        if(players.get(each).isReady()){
+                            readyCounter++;
+                        }
+                    }
+                    if(readyCounter>=2){
+                        phaseData.setPhase(1);
+                        manager.broadcast(phaseData);
+                    }
+                    }
+                    
+                }
+                
+                else if (data instanceof PlayerData){
+                    synchronized(players){
+                        players.put(new PlayerID(username), (PlayerData)data);
+                    }
+                    manager.broadcast(players);
                 }
                 else if(data instanceof MyHashTable){
-                    manager.broadcast((MyHashTable)data);
+                    map = (MyHashTable<Location,String>)data;
+                    manager.broadcast(map);
                 }
-                manager.broadcast(data);
+                else if(data instanceof MyHashMap){
+                    manager.broadcast((MyHashMap)data);
+                    
+                }
+                else{
+                     manager.broadcast(data);
+                }
                 
             } catch (IOException e) {
                 System.out.println("Connection lost");
@@ -73,7 +111,6 @@ public class ServerThread implements Runnable{
     }
    public void disconnect() {
         manager.remove(this);
-        manager.broadcast("A client disconnected!");
         sc.repaint();
 
         try {

@@ -16,6 +16,8 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 	private MyHashTable<Location,String> map;
 	private MyHashMap<PlayerID,PlayerData> players;
 	private int resets = 0;
+	private int phase = 0;
+	private PhaseData phaseData;
 
 	public ServerScreen(){
 	    this.setLayout(null);
@@ -25,8 +27,10 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 		port = 1024;
 		map = new MyHashTable<Location,String>();
 		players = new MyHashMap<PlayerID,PlayerData>();
+		phaseData = new PhaseData();
 		
 		//set up initial map
+		
 		for(int i=0; i<18; i++){
 			for(int j=0; j<24; j++){
 				Location location = new Location(i,j);
@@ -49,13 +53,7 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 				
 			}
 		}
-
-		try {
-			ipAddress = InetAddress.getLocalHost().getHostAddress();
-        }
-		catch (UnknownHostException ex) {
-            System.out.println("Could not find IP address for this host");
-        }
+			
 	}
     public void startServer() throws IOException{
 
@@ -66,7 +64,7 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 			System.out.println("Waiting for a connection");
 			Socket clientSocket = serverSocket.accept();
             System.out.println("Client Connected!");
-			ServerThread st = new ServerThread(clientSocket,mg,this,map,players);
+			ServerThread st = new ServerThread(clientSocket,mg,this,map,players,phaseData);
 			mg.add(st);
 			users = mg.size();
 			Thread thread = new Thread(st);
@@ -82,6 +80,13 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 	@Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
+		try {
+			ipAddress = InetAddress.getLocalHost().getHostAddress();
+        }
+		catch (UnknownHostException ex) {
+            System.out.println("Could not find IP address for this host");
+        }
+
         g.setFont(new Font("Arial",Font.PLAIN,20));
         g.setColor(Color.BLACK);
 		if(mg!=null){
@@ -98,7 +103,8 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 	public void mouseReleased(MouseEvent e){}
 	public void mouseEntered(MouseEvent e){}
 	public void keyPressed(KeyEvent e){}
-	public void keyTyped(KeyEvent e){}
+	public void keyTyped(KeyEvent e){
+	}
 	public void keyReleased(KeyEvent e){}
 
 }

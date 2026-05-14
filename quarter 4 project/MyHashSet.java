@@ -1,6 +1,10 @@
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.io.Serializable;
+import java.lang.Iterable;
 
-public class MyHashSet<E> implements Serializable{
+
+public class MyHashSet<E> implements Iterable<E>, Serializable{
     private Object[] hashArray;
     private int size;
     private DLList<E> DLList;
@@ -22,7 +26,7 @@ public class MyHashSet<E> implements Serializable{
         return false;
     }
     public void clear(){
-        Object[] newHashArray = new Object[999999];
+        Object[] newHashArray = new Object[9999];
         hashArray = newHashArray;
         DLList.clear();
         size = 0;
@@ -57,6 +61,32 @@ public class MyHashSet<E> implements Serializable{
             }
         }
         return DLList;
+    }
+
+    public Iterator<E> iterator(){
+        return new MyHashSetIterator();
+    }
+
+    private class MyHashSetIterator implements Iterator<E>{
+        private int i = 0;
+
+        public boolean hasNext(){
+            while(i< hashArray.length && hashArray[i] == null){
+                i++;
+            }
+            if(i < hashArray.length){
+                return true;
+            }
+            return false;
+        }
+
+        @SuppressWarnings("unchecked")
+        public E next(){
+            if(!hasNext()){
+                throw new NoSuchElementException();
+            }
+            return (E) hashArray[i++];
+        }
     }
 
 }

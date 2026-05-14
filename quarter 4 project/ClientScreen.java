@@ -13,15 +13,20 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
     private JButton playButton;
     private JTextField nameInput;
     private String username;
-    private int level = 0;
+    private int phase = 0;
     private Object data;
     private MyHashTable<Location,String> map;
     private MyHashMap<PlayerID,PlayerData> players;
     private ObjectInputStream in;
     private ObjectOutputStream out;
+    private PlayerData myCurrentData;
+    private PhaseData phaseData;
+    private boolean ready = false;
 
 	public ClientScreen(){
 	    this.setLayout(null);
+        phaseData = new PhaseData();
+
         
         playButton = new JButton();
         playButton.setFont(new Font("Arial", Font.BOLD, 25));
@@ -42,6 +47,8 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
         nameInput.addActionListener(this);
         this.add(nameInput);
 
+        players = new MyHashMap<PlayerID,PlayerData>();
+
 		addMouseListener(this);
 		addKeyListener(this);
 	}
@@ -49,6 +56,7 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
 	public Dimension getPreferredSize(){
 		return new Dimension(1200,900);
 	}
+    @SuppressWarnings("unchecked")
     public void connect() throws IOException{
 		String hostName = "localhost"; 
 		int portNumber = 1024;
@@ -60,17 +68,38 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
            
 			while (true) {
                 data = in.readObject();
-                if(data instanceof MyHashTable){
-                    map = (MyHashTable)data;
-                }
-                if(data instanceof MyHashMap){
-                    players = (MyHashMap)players;
-                }
                 if(data==null){
                     System.out.println("Recieved data is null");
                     break;
                 }
-				repaint();
+                else if(data instanceof MyHashTable){
+                    map = (MyHashTable)data;
+                }
+                else if(data instanceof PhaseData){
+                    phase = ((PhaseData)data).getPhase();
+                }
+                else if(data instanceof MyHashMap){
+                    MyHashMap<PlayerID, PlayerData> serverPlayers = (MyHashMap) data;
+    
+                    //ensure own position is not overwritten
+                    if (players != null && username!=null) {
+                        myCurrentData = players.get(new PlayerID(username));
+                    }
+                    
+                    else {
+                       myCurrentData = null;
+                    }
+                    //update local players map with the one from the server
+                    players = serverPlayers;
+
+                    //put the client data into the map
+                    if (myCurrentData != null && username != null) {
+                        players.put(new PlayerID(username), myCurrentData);
+                    }
+                    
+                }
+                //so there's not a conflict with the network
+				SwingUtilities.invokeLater(() -> repaint());
 			}
             in.close();
             socket.close();
@@ -90,17 +119,18 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
 	@Override
 	public void paintComponent(Graphics g){
         super.paintComponent(g);
-        if(level == 0){
+        if(phase == 0){
             g.setColor(new Color(252, 144, 35));
             g.fillRect(0,0,1200,900);
             g.setFont(new Font("Arial",Font.BOLD,50));
             g.setColor(Color.BLACK);
             g.drawString("Lava Spleef",450,100);
             g.setFont(new Font("Arial",Font.BOLD,15));
-            g.drawString("Enter Username",360,480);
+
+            
             
             g.setFont(new Font("Arial",Font.PLAIN,20));
-            g.drawString("Collect as many coins as possible by moving around the map",320,190);
+            g.drawString("Collect as many coins as possible by moving around the map (use arrow keys).",320,190);
             g.drawString("You must move quickly as a trail of lava appears behind you",320,210);
             g.drawString("Your goal is to have the other player accidentally walk into lava",320,230);
             g.drawString("Do your best to not stay in one spot for too long.",320,250);
@@ -108,7 +138,7 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
             g.drawString("If you die, you have to wait for the map to reset to continue playing.",320,290);
             g.drawString("The player with the most coins after round 5 wins!",320,310);
         }
-        if(level==1){
+        if(phase==1){
             int x = 0;
             int y = 0;
             //draw map
@@ -119,6 +149,10 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
                         Location location = new Location(i, j);
                         if(map.get(location).get(0).equals("stone")){
                             g.setColor(Color.GRAY);
+                            g.fillRect(x,y,50,50);
+                        }
+                        if(map.get(location).get(0).equals("lava")){
+                            g.setColor(Color.ORANGE);
                             g.fillRect(x,y,50,50);
                         }
                         if(map.get(location).get(1).equals("coin")){
@@ -134,21 +168,32 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
                         y+=50;
                 }
             }
+            if(players!=null){
+                g.setColor(Color.RED); 
+                for(PlayerID key: players.keySet()){
+                    g.fillRect(players.get(key).getCol()*50,players.get(key).getRow()*50,50,50);
+                }
+            }
         }
 	}
 	public void actionPerformed(ActionEvent e){
         if(e.getSource()==playButton || e.getSource()==nameInput){
             username = nameInput.getText();
+            ready = true;
             nameInput.setText("");
 
             try {
+                out.reset();
                 out.writeObject(username);
+                out.flush();
             } catch (IOException ex) {} 
 
             playButton.setVisible(false);
             nameInput.setVisible(false);
-            level = 1;
         }
+        requestFocus();
+	    setFocusable(true);		
+
         repaint();
     }
 	public void mousePressed(MouseEvent e){
@@ -161,8 +206,48 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
 
     //controls, use out.writeObject() to send out updated positions after
 	public void keyPressed(KeyEvent e){
-        System.out.println(e.getKeyCode());
+        if(username==null){
+            return;
+        }
+        int key = e.getKeyCode();
+        PlayerData me = players.get(new PlayerID(username));
+        if(me == null){
+            return;
+        }
+    
+        if(key == 37 && phase!=0){
+            int currentRow = me.getRow();
+            int currentCol = me.getCol();
+            me.moveLeft();
+            map.get(new Location(currentRow,currentCol)).set(0,"lava");
+        }
+        if(key == 38 && phase !=0){
+            int currentRow = me.getRow();
+            int currentCol = me.getCol();
+            me.moveUp();
+            map.get(new Location(currentRow,currentCol)).set(0,"lava");
+        }
+        if(key == 39 && phase !=0){
+            int currentRow = me.getRow();
+            int currentCol = me.getCol();
+            me.moveRight();
+            map.get(new Location(currentRow,currentCol)).set(0,"lava");
+        }
+        if(key == 40 && phase !=0){
+            int currentRow = me.getRow();
+            int currentCol = me.getCol();
+            me.moveDown();
+            map.get(new Location(currentRow,currentCol)).set(0,"lava");
+        }
+        myCurrentData = me;
         repaint();
+        try {
+            out.reset();
+            out.writeObject(myCurrentData);
+            out.writeObject(map);
+            out.flush();
+        } catch (IOException ex) {} 
+        
     }
 	public void keyTyped(KeyEvent e){}
 	public void keyReleased(KeyEvent e){}

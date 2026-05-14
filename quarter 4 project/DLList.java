@@ -17,7 +17,7 @@ public class DLList<E> implements Serializable{
         if(index >=size/2){
             //traverse backwards
             Node<E> current = tail.prev();
-            for(int i=size; i>index+1; i--){
+            for(int i=size-1; i>index; i--){
                 current = current.prev();
             }
             return current;

@@ -244,7 +244,6 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
         try {
             out.reset();
             out.writeObject(myCurrentData);
-            out.writeObject(map);
             out.flush();
         } catch (IOException ex) {} 
         

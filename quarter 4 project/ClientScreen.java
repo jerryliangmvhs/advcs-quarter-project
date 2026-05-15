@@ -2,7 +2,7 @@ import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.*;
-import java.awt.Font;
+import java.awt.*;
 import java.net.*;
 import java.io.*;
 import javax.swing.*;
@@ -22,14 +22,23 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
     private PlayerData myCurrentData;
     private PhaseData phaseData;
     private boolean ready = false;
+    private Font titleFont, buttonFont;
 
 	public ClientScreen(){
 	    this.setLayout(null);
         phaseData = new PhaseData();
 
+         try{
+            titleFont = Font.createFont(Font.TRUETYPE_FONT,new File("minecraft-five.ttf")).deriveFont(35f);
+            buttonFont = Font.createFont(Font.TRUETYPE_FONT,new File("minecraft-five.ttf")).deriveFont(15f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(titleFont);
+            } catch (IOException | FontFormatException e){
+            e.printStackTrace();
+        }
         
         playButton = new JButton();
-        playButton.setFont(new Font("Arial", Font.BOLD, 25));
+        playButton.setFont(buttonFont);
         playButton.setHorizontalAlignment(SwingConstants.CENTER);
         playButton.setBounds(355, 555, 500, 100);
         playButton.setText("Ready");
@@ -51,6 +60,8 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
 
 		addMouseListener(this);
 		addKeyListener(this);
+
+       
 	}
 	@Override
 	public Dimension getPreferredSize(){
@@ -119,9 +130,9 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
         if(phase == 0){
             g.setColor(new Color(252, 144, 35));
             g.fillRect(0,0,1200,900);
-            g.setFont(new Font("Arial",Font.BOLD,50));
+            g.setFont(titleFont);
             g.setColor(Color.BLACK);
-            g.drawString("Lava Spleef",450,100);
+            g.drawString("Lava Spleef",390,100);
             g.setFont(new Font("Arial",Font.BOLD,15));
 
             
@@ -149,7 +160,7 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
                             g.fillRect(x,y,50,50);
                         }
                         if(map.get(location).get(0).equals("lava")){
-                            g.setColor(Color.ORANGE);
+                            g.setColor(new Color(255, 128, 0));
                             g.fillRect(x,y,50,50);
                         }
                         if(map.get(location).get(1).equals("coin")){
@@ -168,11 +179,27 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
             if(players!=null){
                 g.setColor(Color.RED); 
                 for(PlayerID key: players.keySet()){
-                    g.fillRect(players.get(key).getCol()*50,players.get(key).getRow()*50,50,50);
+                    if(players.get(key).isVisible()){
+                        g.fillRect(players.get(key).getCol()*50,players.get(key).getRow()*50,50,50);
+                    }
                 }
             }
+            displayScores(g);
         }
 	}
+    public void displayScores(Graphics g){
+        System.out.println("displaying scores");
+        g.setFont(new Font("Arial",Font.BOLD,20));
+        g.setColor(Color.BLACK);
+        int x = 20;
+        int y = 50;
+        for(PlayerID each: players.keySet()){
+            int score = players.get(each).getScore();
+            String playerName = each.getName();
+            g.drawString(playerName+"'s Score: "+score,x,y);
+            y+=20;
+        }
+    }
 	public void actionPerformed(ActionEvent e){
         if(e.getSource()==playButton || e.getSource()==nameInput){
             username = nameInput.getText();

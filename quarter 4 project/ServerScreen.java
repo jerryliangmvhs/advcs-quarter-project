@@ -64,6 +64,7 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 			System.out.println("Waiting for a connection");
 			Socket clientSocket = serverSocket.accept();
             System.out.println("Client Connected!");
+			//give this info upon user connection
 			ServerThread st = new ServerThread(clientSocket,mg,this,map,players,phaseData);
 			mg.add(st);
 			users = mg.size();

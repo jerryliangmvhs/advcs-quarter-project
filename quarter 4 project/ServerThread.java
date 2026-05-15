@@ -42,6 +42,7 @@ public class ServerThread implements Runnable{
         }
     }
     @Override
+    @SuppressWarnings("unchecked")
     public void run(){
         send(map);
         System.out.println("broadcasting");
@@ -83,7 +84,14 @@ public class ServerThread implements Runnable{
                     PlayerData incoming = (PlayerData) data;
                     synchronized(players){
                         map.get(new Location(incoming.getPrevRow(), incoming.getPrevCol())).set(0, "lava");
-                        map.get(new Location(incoming.getRow(), incoming.getCol())).remove("coin");
+                        if(map.get(new Location(incoming.getRow(), incoming.getCol())).remove("coin")){
+                            incoming.increaseScore();
+                        }
+
+                        if(map.get(new Location(incoming.getRow(), incoming.getCol())).get(0).equals("lava")){
+                            incoming.setVisible(false);
+                        }
+
                         players.put(new PlayerID(username), incoming);
                     }
                     manager.broadcast(new PlayerID(username));
@@ -116,6 +124,12 @@ public class ServerThread implements Runnable{
     }
    public void disconnect() {
         manager.remove(this);
+        if (username != null) {
+        synchronized (players) {
+            players.remove(new PlayerID(username));
+        }
+        manager.broadcast(players);
+        }
         sc.repaint();
 
         try {

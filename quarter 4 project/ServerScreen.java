@@ -42,12 +42,12 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 					//~30% chance of a coin on a tile
 					map.put(location,"coin");
 				}
-				else if(random>=95){
-					//~5% chance of a fire resistance potion power up
+				if(random>=98){
+					//~2% chance of a fire resistance potion power up
 					map.put(location,"potion");
 				}
-				else if(random<=4){
-					//~4% chance of a multiplier power up
+				if(random>=31 && random<=32){
+					//~2% chance of a multiplier power up
 					map.put(location,"multiplier");
 				}
 				

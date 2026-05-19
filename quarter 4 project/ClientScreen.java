@@ -2,10 +2,14 @@ import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.awt.*;
 import java.net.*;
 import java.io.*;
 import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 public class ClientScreen extends JPanel implements ActionListener, KeyListener, MouseListener{
    
@@ -23,6 +27,7 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
     private PhaseData phaseData;
     private boolean ready = false;
     private Font titleFont, buttonFont;
+    private BufferedImage coin, lava, rock, potion, multiplier;
 
 	public ClientScreen(){
 	    this.setLayout(null);
@@ -33,9 +38,17 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
             buttonFont = Font.createFont(Font.TRUETYPE_FONT,new File("minecraft-five.ttf")).deriveFont(15f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(titleFont);
+
+            coin = ImageIO.read(new File("coin.png"));
+            lava = ImageIO.read(new File("lava.jpg"));
+            rock = ImageIO.read(new File("rock.jpg"));
+            multiplier = ImageIO.read(new File("multiplier.png"));
+            potion = ImageIO.read(new File("potion.png"));
             } catch (IOException | FontFormatException e){
             e.printStackTrace();
         }
+
+        
         
         playButton = new JButton();
         playButton.setFont(buttonFont);
@@ -156,16 +169,19 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
         
                         Location location = new Location(i, j);
                         if(map.get(location).get(0).equals("stone")){
-                            g.setColor(Color.GRAY);
-                            g.fillRect(x,y,50,50);
+                            g.drawImage(rock,x,y,50,50,null);
                         }
                         if(map.get(location).get(0).equals("lava")){
-                            g.setColor(new Color(255, 128, 0));
-                            g.fillRect(x,y,50,50);
+                            g.drawImage(lava,x,y,50,50,null);
                         }
                         if(map.get(location).get(1).equals("coin")){
-                            g.setColor(Color.YELLOW);
-                            g.fillOval(x+5,y+5,40,40);
+                            g.drawImage(coin,x,y,50,50,null);
+                        }
+                        if(map.get(location).get(1).equals("potion")){
+                            g.drawImage(potion,x,y,50,50,null);
+                        }
+                        if(map.get(location).get(1).equals("multiplier")){
+                            g.drawImage(multiplier,x,y,50,50,null);
                         }
                         
                         g.setColor(Color.BLACK);
@@ -188,9 +204,8 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
         }
 	}
     public void displayScores(Graphics g){
-        System.out.println("displaying scores");
         g.setFont(new Font("Arial",Font.BOLD,20));
-        g.setColor(Color.BLACK);
+        g.setColor(Color.WHITE);
         int x = 20;
         int y = 50;
         for(PlayerID each: players.keySet()){

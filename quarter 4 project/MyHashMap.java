@@ -39,7 +39,7 @@ public class MyHashMap<K, V> implements Serializable{
     return prev;
   }
 
-  public int size() {
+  public int size(){
     return size;
   }
   public MyHashSet<K> keySet() {

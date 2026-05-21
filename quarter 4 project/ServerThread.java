@@ -58,10 +58,16 @@ public class ServerThread implements Runnable{
                     manager.broadcast(phaseData);
                 }
                 else if (data instanceof String){
-                    //after one presses the start button
+                    //after one presses the start button, username gets obtained from client
                    username = (String)data;
                    synchronized(players){
-                     players.put(new PlayerID(username),new PlayerData(10,0,true));
+                    if(players.size()==0){
+                        players.put(new PlayerID(username),new PlayerData(10,0,true));
+                    }
+                    else if(players.size()>0){
+                        players.put(new PlayerID(username),new PlayerData(10,23,true));
+                    }
+                     
                    }
                    manager.broadcast(players);
                     int readyCounter = 0;
@@ -75,6 +81,7 @@ public class ServerThread implements Runnable{
                     if(readyCounter>=2){
                         phaseData.setPhase(1);
                         manager.broadcast(phaseData);
+                        sc.startCountdown();
                     }
                     }
                     
@@ -84,6 +91,9 @@ public class ServerThread implements Runnable{
                     PlayerData incoming = (PlayerData) data;
                     synchronized(players){
                         map.get(new Location(incoming.getPrevRow(), incoming.getPrevCol())).set(0, "lava");
+                        map.get(new Location(incoming.getPrevRow(), incoming.getPrevCol())).remove("potion");
+                        map.get(new Location(incoming.getPrevRow(), incoming.getPrevCol())).remove("multiplier");
+                        
                         if(map.get(new Location(incoming.getRow(), incoming.getCol())).remove("coin")){
                             incoming.increaseScore();
                         }

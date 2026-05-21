@@ -1,7 +1,7 @@
 import java.net.*;
 import java.io.*;
 
-public class Manager {
+public class Manager implements Serializable{
     private DLList<ServerThread> threads;
     public Manager(){
         threads = new DLList<ServerThread>();

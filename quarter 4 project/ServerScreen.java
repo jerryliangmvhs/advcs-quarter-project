@@ -18,6 +18,8 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 	private int resets = 0;
 	private int phase = 0;
 	private PhaseData phaseData;
+	private Countdown countdown;
+	private Thread myTimer;
 
 	public ServerScreen(){
 	    this.setLayout(null);
@@ -30,7 +32,10 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 		phaseData = new PhaseData();
 		
 		//set up initial map
-		
+		createMap();
+			
+	}
+	public void createMap(){
 		for(int i=0; i<18; i++){
 			for(int j=0; j<24; j++){
 				Location location = new Location(i,j);
@@ -38,28 +43,35 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 
 				//RNG for coin generation
 				int random = (int)(Math.random()*100);
-				if(random<=30){
+				if(random<=29){
 					//~30% chance of a coin on a tile
 					map.put(location,"coin");
 				}
-				if(random>=98){
+				if(random==99){
 					//~2% chance of a fire resistance potion power up
 					map.put(location,"potion");
 				}
-				if(random>=31 && random<=32){
-					//~2% chance of a multiplier power up
+				if(random==30){
+					//~1% chance of a multiplier power up
 					map.put(location,"multiplier");
 				}
 				
 			}
 		}
-			
+	}
+	public void startCountdown(){
+		if(countdown != null && !countdown.isStarted()){
+			countdown.start();
+			myTimer = new Thread(countdown);
+			myTimer.start();
+		}
 	}
     public void startServer() throws IOException{
 
 		ServerSocket serverSocket = new ServerSocket(port);
 		mg = new Manager();
-
+		countdown = new Countdown(mg);
+		
 		while(true){
 			System.out.println("Waiting for a connection");
 			Socket clientSocket = serverSocket.accept();

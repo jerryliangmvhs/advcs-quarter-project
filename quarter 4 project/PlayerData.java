@@ -40,33 +40,41 @@ public class PlayerData implements Serializable {
     public boolean isReady(){
         return isReady;
     }
-    public void moveRight(){
+    public boolean moveRight(){
         if(col<23 && visible){
             prevRow = row;
             prevCol = col;
             col++;
+            return true;
         }
+        return false;
     }
-    public void moveLeft(){
+    public boolean moveLeft(){
         if(col>0 && visible){
             prevRow = row;
             prevCol = col;
             col--;
+            return true;
         }
+        return false;
     }
-    public void moveUp(){
+    public boolean moveUp(){
         if(row>0 && visible){
             prevCol = col;
             prevRow = row;
             row--;
+            return true;
         }
+        return false;
     }
-    public void moveDown(){
+    public boolean moveDown(){
         if(row<17 && visible){
             prevCol = col;
             prevRow = row;
             row++;
+            return true;
         }
+        return false;
     }
     public void increaseScore(){
         score++;

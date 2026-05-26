@@ -30,8 +30,9 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
     private PhaseData phaseData;
     private boolean ready = false;
     private Font titleFont, buttonFont, timerFont;
-    private BufferedImage coin, lava, rock, potion, multiplier;
+    private BufferedImage coin, lava, rock, potion, multiplier, titleBackground;
     private int seconds;
+    private JComboBox colorDropdown;
 
 	public ClientScreen(){
 	    this.setLayout(null);
@@ -52,6 +53,7 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
             rock = ImageIO.read(new File("rock.jpg"));
             multiplier = ImageIO.read(new File("multiplier.png"));
             potion = ImageIO.read(new File("potion.png"));
+            titleBackground = ImageIO.read(new File("titleBackground.jpg"));
             } catch (IOException | FontFormatException e){
             e.printStackTrace();
         }
@@ -77,6 +79,18 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
         nameInput.addActionListener(this);
         this.add(nameInput);
 
+        colorDropdown = new JComboBox();
+        colorDropdown.setFont(new Font("Arial", Font.BOLD, 20));
+        colorDropdown.setBounds(887, 593, 200, 30);
+        this.add(colorDropdown);
+        colorDropdown.addItem("select color"); 
+        colorDropdown.addItem("red");
+        colorDropdown.addItem("orange");
+        colorDropdown.addItem("yellow");
+        colorDropdown.addItem("green");
+        colorDropdown.addItem("blue");
+        colorDropdown.addItem("purple");
+
         players = new MyHashMap<PlayerID,PlayerData>();
 
 		addMouseListener(this);
@@ -91,7 +105,7 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
     @SuppressWarnings("unchecked")
     public void connect() throws IOException{
 		String hostName = "localhost"; 
-		int portNumber = 1024;
+		int portNumber = 5700;
 	
 		try {
             socket = new Socket(hostName, portNumber);
@@ -162,14 +176,11 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
 	public void paintComponent(Graphics g){
         super.paintComponent(g);
         if(phase == 0){
-            g.setColor(new Color(252, 144, 35));
-            g.fillRect(0,0,1200,900);
+            g.drawImage(titleBackground,0,0,1200,900,null);
             g.setFont(titleFont);
-            g.setColor(Color.BLACK);
+            g.setColor(Color.WHITE);
             g.drawString("Lava Spleef",390,100);
             g.setFont(new Font("Arial",Font.BOLD,15));
-
-            
             
             g.setFont(new Font("Arial",Font.PLAIN,20));
             g.drawString("Collect as many coins as possible by moving around the map (use arrow keys).",320,190);
@@ -187,22 +198,25 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
             if(map!=null){
                 for(int i=0; i<18; i++){
                     for(int j=0; j<24; j++){
-        
                         Location location = new Location(i, j);
-                        if(map.get(location).get(0).equals("stone")){
-                            g.drawImage(rock,x,y,50,50,null);
-                        }
-                        if(map.get(location).get(0).equals("lava")){
-                            g.drawImage(lava,x,y,50,50,null);
-                        }
-                        if(map.get(location).get(1).equals("coin")){
-                            g.drawImage(coin,x,y,50,50,null);
-                        }
-                        if(map.get(location).get(1).equals("potion")){
-                            g.drawImage(potion,x,y,50,50,null);
-                        }
-                        if(map.get(location).get(1).equals("multiplier")){
-                            g.drawImage(multiplier,x,y,50,50,null);
+                        if(map.get(location)!=null){
+                            if(map.get(location).get(0).equals("stone")){
+                                g.drawImage(rock,x,y,50,50,null);
+                            }
+                            if(map.get(location).get(0).equals("lava")){
+                                g.drawImage(lava,x,y,50,50,null);
+                            }
+                            if(map.get(location).size() > 1){
+                                if(map.get(location).get(1).equals("coin")){
+                                    g.drawImage(coin,x,y,50,50,null);
+                                }
+                                if(map.get(location).get(1).equals("potion")){
+                                    g.drawImage(potion,x,y,50,50,null);
+                                }
+                                if(map.get(location).get(1).equals("multiplier")){
+                                    g.drawImage(multiplier,x,y,50,50,null);
+                                }
+                            }
                         }
                         
                         g.setColor(Color.BLACK);

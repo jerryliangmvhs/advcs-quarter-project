@@ -7,16 +7,14 @@ public class ServerThread implements Runnable{
     private ServerScreen sc;
     private ObjectOutputStream out;
     private ObjectInputStream in;
-    private MyHashTable<Location,String> map;
     private MyHashMap<PlayerID,PlayerData> players;
     private PhaseData phaseData;
     private String username;
 
-    public ServerThread(Socket socket, Manager manager, ServerScreen sc, MyHashTable<Location,String> map, MyHashMap<PlayerID,PlayerData> players,PhaseData phaseData){
+    public ServerThread(Socket socket, Manager manager, ServerScreen sc, MyHashMap<PlayerID,PlayerData> players,PhaseData phaseData){
         this.socket = socket;
         this.manager = manager;
         this.sc = sc;
-        this.map = map;
         this.players = players;
         this.phaseData = phaseData;
 
@@ -29,7 +27,7 @@ public class ServerThread implements Runnable{
             disconnect();
         }
     }
-    public void send(Object data){
+    public synchronized void send(Object data){
         //sends message to client linked to this thread
         if (out != null) {
             try {
@@ -44,8 +42,8 @@ public class ServerThread implements Runnable{
     @Override
     @SuppressWarnings("unchecked")
     public void run(){
-        send(map);
-        System.out.println("broadcasting");
+
+        send(sc.getMap());
         //sends the message to all the clients through calling send of all serverthreads
         while(true){
             //constantly recieve inputs
@@ -90,15 +88,15 @@ public class ServerThread implements Runnable{
                 else if (data instanceof PlayerData){
                     PlayerData incoming = (PlayerData) data;
                     synchronized(players){
-                        map.get(new Location(incoming.getPrevRow(), incoming.getPrevCol())).set(0, "lava");
-                        map.get(new Location(incoming.getPrevRow(), incoming.getPrevCol())).remove("potion");
-                        map.get(new Location(incoming.getPrevRow(), incoming.getPrevCol())).remove("multiplier");
+                        sc.getMap().get(new Location(incoming.getPrevRow(), incoming.getPrevCol())).set(0, "lava");
+                        sc.getMap().get(new Location(incoming.getPrevRow(), incoming.getPrevCol())).remove("potion");
+                        sc.getMap().get(new Location(incoming.getPrevRow(), incoming.getPrevCol())).remove("multiplier");
                         
-                        if(map.get(new Location(incoming.getRow(), incoming.getCol())).remove("coin")){
+                        if(sc.getMap().get(new Location(incoming.getRow(), incoming.getCol())).remove("coin")){
                             incoming.increaseScore();
                         }
 
-                        if(map.get(new Location(incoming.getRow(), incoming.getCol())).get(0).equals("lava")){
+                        if(sc.getMap().get(new Location(incoming.getRow(), incoming.getCol())).get(0).equals("lava")){
                             incoming.setVisible(false);
                         }
 
@@ -107,10 +105,6 @@ public class ServerThread implements Runnable{
                     manager.broadcast(new PlayerID(username));
                     manager.broadcast(incoming);
                     //manager.broadcast(map);
-                }
-                else if(data instanceof MyHashTable){
-                    map = (MyHashTable<Location,String>)data;
-                    manager.broadcast(map);
                 }
                 else if(data instanceof MyHashMap){
                     manager.broadcast((MyHashMap)data);

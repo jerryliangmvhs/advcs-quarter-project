@@ -6,7 +6,7 @@ public class MyHashTable<K,V> implements Serializable{
 
     @SuppressWarnings("unchecked")
     public MyHashTable(){
-        table = new DLList[200000];
+        table = new DLList[500];
         //each slot is null by default
         keySet = new MyHashSet<K>();
     }
@@ -31,5 +31,11 @@ public class MyHashTable<K,V> implements Serializable{
         if(table[key.hashCode()].size()==0){
             table[key.hashCode()] = null;
         }
+    }
+    @SuppressWarnings("unchecked")
+    public void clear(){
+        table = new DLList[500];
+        //each slot is null by default
+        keySet = new MyHashSet<K>();
     }
 }

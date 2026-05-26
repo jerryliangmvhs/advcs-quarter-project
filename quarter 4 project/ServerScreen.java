@@ -26,7 +26,7 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 		addMouseListener(this);
 		addKeyListener(this);
         users = 0;
-		port = 1024;
+		port = 5700;
 		map = new MyHashTable<Location,String>();
 		players = new MyHashMap<PlayerID,PlayerData>();
 		phaseData = new PhaseData();
@@ -55,10 +55,33 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 					//~1% chance of a multiplier power up
 					map.put(location,"multiplier");
 				}
-				
 			}
 		}
 	}
+	public MyHashTable<Location,String> getMap(){
+		return map;
+	}
+	 
+	public void resetRound(){
+		synchronized(map){
+			map.clear();
+			createMap();
+		}
+		synchronized(players){
+			int i = 0;
+			for(PlayerID each : players.keySet()){
+				if(i == 0){
+					players.put(each, new PlayerData(10, 0, true));
+				} else {
+					players.put(each, new PlayerData(10, 23, true));
+				}
+				i++;
+			}
+		}
+		mg.broadcast(map);
+		mg.broadcast(players);
+	}
+
 	public void startCountdown(){
 		if(countdown != null && !countdown.isStarted()){
 			countdown.start();
@@ -70,14 +93,14 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 
 		ServerSocket serverSocket = new ServerSocket(port);
 		mg = new Manager();
-		countdown = new Countdown(mg);
+		countdown = new Countdown(mg,this);
 		
 		while(true){
 			System.out.println("Waiting for a connection");
 			Socket clientSocket = serverSocket.accept();
             System.out.println("Client Connected!");
 			//give this info upon user connection
-			ServerThread st = new ServerThread(clientSocket,mg,this,map,players,phaseData);
+			ServerThread st = new ServerThread(clientSocket,mg,this,players,phaseData);
 			mg.add(st);
 			users = mg.size();
 			Thread thread = new Thread(st);

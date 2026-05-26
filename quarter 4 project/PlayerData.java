@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.awt.Color;
 
 public class PlayerData implements Serializable {
     private int row;
@@ -9,6 +10,7 @@ public class PlayerData implements Serializable {
     private int score;
     //visible = alive, not visible = dead
     private boolean visible;
+    private Color color;
 
     public PlayerData(int row, int col, boolean isReady){
         this.row = row;

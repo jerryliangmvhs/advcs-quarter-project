@@ -78,6 +78,11 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 				i++;
 			}
 		}
+		resets++;
+		if(resets>=5){
+			phaseData.setPhase(2);
+        	mg.broadcast(phaseData);
+		}
 		mg.broadcast(map);
 		mg.broadcast(players);
 	}

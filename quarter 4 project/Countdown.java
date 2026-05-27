@@ -8,7 +8,7 @@ public class Countdown implements Runnable, Serializable {
     private transient ServerScreen sc;
 
     public Countdown(Manager manager, ServerScreen sc){
-        seconds = 31;
+        seconds = 10;
         started = false;
         this.manager = manager;
         restarts = 0;
@@ -39,7 +39,7 @@ public class Countdown implements Runnable, Serializable {
                 manager.broadcast(this);
                 if(seconds==0){
                     sc.resetRound();
-                    seconds = 31;
+                    seconds = 10;
                     restarts++;
                 }
                 if(restarts>=5){

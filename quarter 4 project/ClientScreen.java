@@ -7,10 +7,7 @@ import java.awt.*;
 import java.net.*;
 import java.io.*;
 import javax.swing.*;
-import java.io.File;
-import java.io.IOException;
 import javax.imageio.ImageIO;
-import java.net.URL;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
@@ -32,7 +29,6 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
     private Font titleFont, buttonFont, timerFont;
     private BufferedImage coin, lava, rock, potion, multiplier, titleBackground;
     private int seconds;
-    private JComboBox colorDropdown;
 
 	public ClientScreen(){
 	    this.setLayout(null);
@@ -79,18 +75,6 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
         nameInput.addActionListener(this);
         this.add(nameInput);
 
-        colorDropdown = new JComboBox();
-        colorDropdown.setFont(new Font("Arial", Font.BOLD, 20));
-        colorDropdown.setBounds(887, 593, 200, 30);
-        this.add(colorDropdown);
-        colorDropdown.addItem("select color"); 
-        colorDropdown.addItem("red");
-        colorDropdown.addItem("orange");
-        colorDropdown.addItem("yellow");
-        colorDropdown.addItem("green");
-        colorDropdown.addItem("blue");
-        colorDropdown.addItem("purple");
-
         players = new MyHashMap<PlayerID,PlayerData>();
 
 		addMouseListener(this);
@@ -120,18 +104,13 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
                 }
                 else if(data instanceof Countdown){
                     seconds = ((Countdown)data).getSeconds();
-                    if(seconds>=10){
-                         System.out.println("0:"+seconds);
-                    }   
-                    else if(seconds<10){
-                        System.out.println("0:0"+seconds);
-                    }
                 }
                 else if(data instanceof MyHashTable){
                     map = (MyHashTable)data;
                 }
                 else if(data instanceof PhaseData){
                     phase = ((PhaseData)data).getPhase();
+                    System.out.println("Phase: " + phase);
                 }
                 //if recieved data is data of all players (hashmap)
                 else if (data instanceof PlayerID) {
@@ -228,15 +207,24 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
                 }
             }
             if(players!=null){
-                g.setColor(Color.RED); 
+                g.setFont(new Font("Arial",Font.BOLD,10));
                 for(PlayerID key: players.keySet()){
                     if(players.get(key).isVisible()){
+                        g.setColor(Color.RED); 
                         g.fillRect(players.get(key).getCol()*50,players.get(key).getRow()*50,50,50);
+                        g.setColor(Color.WHITE);
+                        g.drawString(key.getName(),players.get(key).getCol()*50,(players.get(key).getRow()*50)-10);
                     }
                 }
             }
             displayScores(g);
             displayTimer(g);
+        }
+        if(phase==2){
+            g.drawImage(titleBackground,0,0,1200,900,null);
+            g.setFont(titleFont);
+            g.setColor(Color.WHITE);
+            g.drawString("Game Over!",475,400);
         }
 	}
     public void displayTimer(Graphics g){
@@ -315,6 +303,15 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
 
     //controls, use out.writeObject() to send out updated positions after
 	public void keyPressed(KeyEvent e){
+        if(e.getKeyCode()==85 && phase == 1){
+            phaseData.setPhase(2);
+            try {
+                out.writeObject(phaseData);
+                System.out.println("attempting to skip to end screen.");
+            } catch (IOException ex) {
+                System.out.println("failed to update phase data.");
+            }
+        }
         boolean successfullyMoved = false;
         if(username==null){
             return;

@@ -53,6 +53,8 @@ public class ServerThread implements Runnable{
                     break;
                 }
                 else if(data instanceof PhaseData){
+                    PhaseData incoming = (PhaseData)data;
+                    phaseData.setPhase(incoming.getPhase());
                     manager.broadcast(phaseData);
                 }
                 else if (data instanceof String){

@@ -29,11 +29,15 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
     private Font titleFont, buttonFont, timerFont;
     private BufferedImage coin, lava, rock, potion, multiplier, titleBackground;
     private int seconds;
+    private String finalWinnerName;
+    private int finalWinnerScore;
 
 	public ClientScreen(){
 	    this.setLayout(null);
         phaseData = new PhaseData();
         seconds = 30;
+        finalWinnerName = null;
+        finalWinnerScore = 0;
 
          try{
             titleFont = Font.createFont(Font.TRUETYPE_FONT,new File("minecraft-five.ttf")).deriveFont(35f);
@@ -225,6 +229,7 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
             g.setFont(titleFont);
             g.setColor(Color.WHITE);
             g.drawString("Game Over!",475,400);
+            displayFinalResults(g);
         }
 	}
     public void displayTimer(Graphics g){
@@ -300,6 +305,40 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
 	public void mouseExited(MouseEvent e){}
 	public void mouseReleased(MouseEvent e){}
 	public void mouseEntered(MouseEvent e){}
+
+    public void displayFinalResults(Graphics g) {
+    System.out.println("displaying final results");
+
+    int highestScore = -1;
+    DLList<String> winners = new DLList<String>();
+
+    for (PlayerID each : players.keySet()) {
+        int score = players.get(each).getScore();
+        if (score > highestScore) {
+            highestScore = score;
+            winners.clear();
+            winners.add(each.getName());
+        } else if (score == highestScore) {
+            winners.add(each.getName());
+        }
+    }
+
+    finalWinnerScore = highestScore;
+
+    String resultMessage;
+    if (winners.size() == 1) {
+        finalWinnerName = winners.get(0);
+        resultMessage = finalWinnerName + " won with a score of " + finalWinnerScore + " points!";
+    } else {
+        resultMessage = "The game ended in a tie, with both players scoring " + finalWinnerScore + " points";
+    }
+
+    g.setColor(Color.WHITE);
+    g.setFont(new Font("Arial", Font.BOLD, 20));
+    g.drawString(resultMessage, 400, 700);
+}
+
+
 
     //controls, use out.writeObject() to send out updated positions after
 	public void keyPressed(KeyEvent e){

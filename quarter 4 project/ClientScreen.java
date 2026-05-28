@@ -27,10 +27,11 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
     private PhaseData phaseData;
     private boolean ready = false;
     private Font titleFont, buttonFont, timerFont;
-    private BufferedImage coin, lava, rock, potion, multiplier, titleBackground;
+    private BufferedImage coin, lava, rock, potion, multiplier, titleBackground, sprite;
     private int seconds;
     private String finalWinnerName;
     private int finalWinnerScore;
+    private int lastMoveSecond = -1;
 
 	public ClientScreen(){
 	    this.setLayout(null);
@@ -51,6 +52,7 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
             coin = ImageIO.read(new File("coin.png"));
             lava = ImageIO.read(new File("lava.jpg"));
             rock = ImageIO.read(new File("rock.jpg"));
+            sprite = ImageIO.read(new File("player.png"));
             multiplier = ImageIO.read(new File("multiplier.png"));
             potion = ImageIO.read(new File("potion.png"));
             titleBackground = ImageIO.read(new File("titleBackground.jpg"));
@@ -119,6 +121,7 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
                 }
                 else if(data instanceof Countdown){
                     seconds = ((Countdown)data).getSeconds();
+                    checkIdleTimeout();
                 }
                 else if(data instanceof MyHashTable){
                     map = (MyHashTable)data;
@@ -133,7 +136,7 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
                         playButton.setVisible(true);
                     }
                     else if(phase == 1){
-                        
+                        lastMoveSecond = -1;
                         nameInput.setVisible(false);
                         playButton.setVisible(false);
                         
@@ -152,6 +155,10 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
                         PlayerData pd = (PlayerData) next;
                         synchronized (players) {
                             // apply map changes locally
+                            if (!pd.isVisible()) {
+                                // idle death — turn current tile to lava
+                                map.get(new Location(pd.getRow(), pd.getCol())).set(0, "lava");
+                            }
                             map.get(new Location(pd.getPrevRow(), pd.getPrevCol())).set(0, "lava");
                             if(map.get(new Location(pd.getRow(), pd.getCol())).remove("coin")){
                                 coinSound();
@@ -197,7 +204,7 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
             g.drawString("Collect as many coins as possible by moving around the map (use arrow keys).",320,190);
             g.drawString("You must move quickly as a trail of lava appears behind you",320,210);
             g.drawString("Your goal is to have the other player accidentally walk into lava",320,230);
-            g.drawString("Do your best to not stay in one spot for too long.",320,250);
+            g.drawString("The rocks below you will crumble if you stop moving for 5 seconds",320,250);
             g.drawString("The map will reset every 30 seconds for 4 times for more chances.",320,270);
             g.drawString("If you die, you have to wait for the map to reset to continue playing.",320,290);
             g.drawString("The player with the most coins after round 5 wins!",320,310);
@@ -246,8 +253,7 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
                 g.setFont(new Font("Arial",Font.BOLD,10));
                 for(PlayerID key: players.keySet()){
                     if(players.get(key).isVisible()){
-                        g.setColor(Color.RED); 
-                        g.fillRect(players.get(key).getCol()*50,players.get(key).getRow()*50,50,50);
+                        g.drawImage(sprite,players.get(key).getCol()*50,players.get(key).getRow()*50,50,50,null);
                         g.setColor(Color.WHITE);
                         g.drawString(key.getName(),players.get(key).getCol()*50,(players.get(key).getRow()*50)-10);
                     }
@@ -286,6 +292,39 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
             String playerName = each.getName();
             g.drawString(playerName+"'s Score: "+score,x,y);
             y+=20;
+        }
+    }
+    @SuppressWarnings("unchecked")
+    public void checkIdleTimeout() {
+        if (phase != 1 || username == null){
+            return;
+        }
+        if (lastMoveSecond == -1 || seconds == 30) {
+            lastMoveSecond = seconds;
+            return;
+        }
+
+        // seconds counts down, so idle time = lastMoveSecond - seconds
+        int idleSeconds = lastMoveSecond - seconds;
+        if (idleSeconds >= 5) {
+            PlayerData me = players.get(new PlayerID(username));
+            if (me == null || !me.isVisible()) return;
+
+            me.setVisible(false);
+            if (map != null) {
+                map.get(new Location(me.getRow(), me.getCol())).set(0, "lava");
+            }
+
+            try {
+                out.reset();
+                out.writeObject(me);
+                out.flush();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            //reset so no instant death when round resets
+            lastMoveSecond = seconds;
+            repaint();
         }
     }
 	public void actionPerformed(ActionEvent e){
@@ -448,6 +487,7 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
         repaint();
         myCurrentData = me;
         if(successfullyMoved){
+            lastMoveSecond = seconds;
             lavaSound();
             try {
             out.reset();

@@ -78,8 +78,8 @@ public class PlayerData implements Serializable {
         }
         return false;
     }
-    public void increaseScore(){
-        score++;
+    public void increaseScore(int amount){
+        score+=amount;
     }
     public void setVisible(boolean visible){
         this.visible = visible;

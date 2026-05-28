@@ -121,7 +121,7 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 			Socket clientSocket = serverSocket.accept();
             System.out.println("Client Connected!");
 			//give this info upon user connection
-			ServerThread st = new ServerThread(clientSocket,mg,this,players,phaseData);
+			ServerThread st = new ServerThread(clientSocket,mg,this);
 			mg.add(st);
 			users = mg.size();
 			Thread thread = new Thread(st);
@@ -153,6 +153,12 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 		g.drawString("Port: "+port,20,40);
 		g.drawString("Number of Clients: " + users,20,60);
 	}
+	public MyHashMap<PlayerID, PlayerData> getPlayers(){
+    	return players;
+	}
+	public PhaseData getPhaseData(){
+		return phaseData;
+	}
 	public void actionPerformed(ActionEvent e){}
 	public void mousePressed(MouseEvent e){}
 	public void mouseClicked(MouseEvent e){}
@@ -163,5 +169,7 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 	public void keyTyped(KeyEvent e){
 	}
 	public void keyReleased(KeyEvent e){}
+
+
 
 }

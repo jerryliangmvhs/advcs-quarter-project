@@ -44,6 +44,7 @@ public class Countdown implements Runnable, Serializable {
                 }
                 if(restarts>=5){
                     stop();
+                    break;
                 }
                 try {
                     Thread.sleep(1000);

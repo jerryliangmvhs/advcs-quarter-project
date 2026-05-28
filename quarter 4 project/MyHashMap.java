@@ -10,6 +10,11 @@ public class MyHashMap<K, V> implements Serializable{
     hashArray = new Object[999999];
     keySet = new MyHashSet<K>();
   }
+  public void clear(){
+    size = 0;
+    hashArray = new Object[999999];
+    keySet = new MyHashSet<K>();
+  }
 
   public V put(K key, V value) {
     V prev = get(key);

@@ -14,7 +14,7 @@ import javax.sound.sampled.Clip;
 public class ClientScreen extends JPanel implements ActionListener, KeyListener, MouseListener{
    
     private Socket socket;
-    private JButton playButton;
+    private JButton playButton, restartButton;
     private JTextField nameInput;
     private String username;
     private int phase = 0;
@@ -71,6 +71,17 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
         this.add(playButton);
         playButton.addActionListener(this);
 
+        restartButton = new JButton();
+        restartButton.setFont(buttonFont);
+        restartButton.setBounds(355,555,500,100);
+        restartButton.setText("Restart");
+        restartButton.setBackground(new Color(237,83,0));
+        restartButton.setOpaque(true);
+        restartButton.setBorderPainted(false);
+        this.add(restartButton);
+        restartButton.addActionListener(this);
+        restartButton.setVisible(false);
+
         nameInput = new JTextField();
         nameInput.setFont(new Font("Arial", Font.PLAIN, 20));
         nameInput.setHorizontalAlignment(SwingConstants.LEFT);
@@ -115,6 +126,23 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
                 else if(data instanceof PhaseData){
                     phase = ((PhaseData)data).getPhase();
                     System.out.println("Phase: " + phase);
+                    if(phase == 0){
+                        username = null;
+                        nameInput.setVisible(true);
+                        nameInput.setText("");
+                        playButton.setVisible(true);
+                    }
+                    else if(phase == 1){
+                        
+                        nameInput.setVisible(false);
+                        playButton.setVisible(false);
+                        
+                    }
+                    else if(phase == 2){
+                        restartButton.setVisible(true);
+                        nameInput.setVisible(false);
+                        playButton.setVisible(false);
+                    }
                 }
                 //if recieved data is data of all players (hashmap)
                 else if (data instanceof PlayerID) {
@@ -173,10 +201,14 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
             g.drawString("The map will reset every 30 seconds for 4 times for more chances.",320,270);
             g.drawString("If you die, you have to wait for the map to reset to continue playing.",320,290);
             g.drawString("The player with the most coins after round 5 wins!",320,310);
+            restartButton.setVisible(false);
         }
         if(phase==1){
+            restartButton.setVisible(false);
+            playButton.setVisible(false);
             int x = 0;
             int y = 0;
+            
             //draw map
             if(map!=null){
                 for(int i=0; i<18; i++){
@@ -273,6 +305,20 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
                 nameInput.setVisible(false);
             }
         }
+        if(e.getSource()==restartButton){
+            playButton.setVisible(true);
+            nameInput.setVisible(true);
+            restartButton.setVisible(false);
+            try {
+                PhaseData resetPhase = new PhaseData();
+                resetPhase.setPhase(0);
+                out.reset();
+                out.writeObject(resetPhase);
+                out.flush();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
         requestFocus();
 	    setFocusable(true);		
 
@@ -307,36 +353,36 @@ public class ClientScreen extends JPanel implements ActionListener, KeyListener,
 	public void mouseEntered(MouseEvent e){}
 
     public void displayFinalResults(Graphics g) {
-    System.out.println("displaying final results");
+        System.out.println("displaying final results");
 
-    int highestScore = -1;
-    DLList<String> winners = new DLList<String>();
+        int highestScore = -1;
+        DLList<String> winners = new DLList<String>();
 
-    for (PlayerID each : players.keySet()) {
-        int score = players.get(each).getScore();
-        if (score > highestScore) {
-            highestScore = score;
-            winners.clear();
-            winners.add(each.getName());
-        } else if (score == highestScore) {
-            winners.add(each.getName());
+        for (PlayerID each : players.keySet()) {
+            int score = players.get(each).getScore();
+            if (score > highestScore) {
+                highestScore = score;
+                winners.clear();
+                winners.add(each.getName());
+            } else if (score == highestScore) {
+                winners.add(each.getName());
+            }
         }
+
+        finalWinnerScore = highestScore;
+
+        String resultMessage;
+        if (winners.size() == 1) {
+            finalWinnerName = winners.get(0);
+            resultMessage = finalWinnerName + " won with a score of " + finalWinnerScore + " points!";
+        } else {
+            resultMessage = "The game ended in a tie, with both players scoring " + finalWinnerScore + " points";
+        }
+
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 20));
+        g.drawString(resultMessage, 160, 490);
     }
-
-    finalWinnerScore = highestScore;
-
-    String resultMessage;
-    if (winners.size() == 1) {
-        finalWinnerName = winners.get(0);
-        resultMessage = finalWinnerName + " won with a score of " + finalWinnerScore + " points!";
-    } else {
-        resultMessage = "The game ended in a tie, with both players scoring " + finalWinnerScore + " points";
-    }
-
-    g.setColor(Color.WHITE);
-    g.setFont(new Font("Arial", Font.BOLD, 20));
-    g.drawString(resultMessage, 400, 700);
-}
 
 
 

@@ -61,7 +61,23 @@ public class ServerScreen extends JPanel implements ActionListener, KeyListener,
 	public MyHashTable<Location,String> getMap(){
 		return map;
 	}
-	 
+	 public void resetGame(){
+		if(countdown != null){
+			countdown.stop();
+		}
+		if(myTimer != null){
+			myTimer.interrupt();
+		}
+		synchronized(players){
+			players.clear();
+		}
+		synchronized(map){
+			map.clear();
+			createMap();
+		}
+		resets = 0;
+		countdown = new Countdown(mg, this);
+	}
 	public void resetRound(){
 		synchronized(map){
 			map.clear();

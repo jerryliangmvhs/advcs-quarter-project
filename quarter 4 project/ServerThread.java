@@ -56,6 +56,13 @@ public class ServerThread implements Runnable{
                     PhaseData incoming = (PhaseData)data;
                     phaseData.setPhase(incoming.getPhase());
                     manager.broadcast(phaseData);
+
+                    if(incoming.getPhase()==0){
+                        //if reset button is clicked, a phasedata of phase = 0 is sent through , clear player data
+                        sc.resetGame();
+                        manager.broadcast(players); // now broadcasts the cleared shared map
+                        manager.broadcast(sc.getMap());
+                    }
                 }
                 else if (data instanceof String){
                     //after one presses the start button, username gets obtained from client
